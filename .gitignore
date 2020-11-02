@@ -1,0 +1,6 @@
+emcenter_gateway_django_app.egg-info/
+*.pyc
+venv
+.vscode
+.idea
+build
