@@ -89,8 +89,12 @@ export default {
 
     getLoggedUsername() {
         let token = localStorage.getItem(ACCESS_TOKEN_KEY)
-        let decodedToken = decode(token)
-        return decodedToken.preferred_username
+        if (token) {
+            let decodedToken = decode(token)
+            return decodedToken.preferred_username
+        } else {
+            return null
+        }
     }
 
 }

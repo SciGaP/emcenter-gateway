@@ -9,7 +9,7 @@ const state = {
     idToken: localStorage.getItem('id_token') || '',
     accessToken: localStorage.getItem('access_token') || '',
     refreshToken: localStorage.getItem('refresh_token') || '',
-    currentUserName: null
+    currentUserName: auth.getLoggedUsername()
 }
 const actions = {
 
@@ -22,15 +22,15 @@ const actions = {
 
     },
 
-    async authenticateUsingCode({dispatch}, data) {
+    async authenticateUsingCode({commit}, data) {
         let resp = await identity_management.getToken(data);
-        dispatch("setAuthToken", resp.data);
+        commit('SET_AUTH_TOKEN', resp.data);
     },
 
-    async authenticateLocally({dispatch}, data) {
+    async authenticateLocally({commit}, data) {
         try {
             let resp = await identity_management.localLogin(data);
-            dispatch("setAuthToken", resp.data);
+            commit('SET_AUTH_TOKEN', resp.data);
         }catch (e) {
             return false
         }
@@ -46,13 +46,6 @@ const actions = {
         commit('CLEAR_AUTH_TOKEN', data)
     },
 
-    setAuthToken({commit}, data) {
-        commit('SET_AUTH_TOKEN', data)
-
-        let currentUserName = auth.getLoggedUsername();
-        commit('SET_CURRENT_USER_NAME', {currentUserName});
-    },
-
     // eslint-disable-next-line no-unused-vars
     async isAuthenticated({commit, getters, dispatch}, data) {
         try {
@@ -63,7 +56,7 @@ const actions = {
                     refresh_token: auth.getRefreshToken()
                 }
                 let response = await identity_management.getTokenUsingRefreshToken(dat).catch();
-                dispatch("setAuthToken", response.data);
+                commit('SET_AUTH_TOKEN', response.data);
 
                 return getters.isAuthenticated;
             }
@@ -71,7 +64,6 @@ const actions = {
         } catch (e) {
             commit('CLEAR_AUTH_TOKEN')
         }
-
     },
 
 
@@ -104,10 +96,7 @@ const mutations = {
         state.idToken = data.id_token
         state.accessToken = data.access_token
         state.refreshToken = data.refresh_token
-    },
-
-    SET_CURRENT_USER_NAME(state, data) {
-        state.currentUserName = data.currentUserName
+        state.currentUserName = auth.getLoggedUsername()
     },
 
     // eslint-disable-next-line no-unused-vars
