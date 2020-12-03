@@ -4,11 +4,12 @@
       EMC Gateway
     </div>
     <div class="h-100 p-3 page-body">
+
       <div class="p-3 left-menu" v-if="authenticated">
         <div class="p-3 left-menu-profile" v-if="user">
           <b-icon icon="person" style="width: 100px; height: 100px;"></b-icon>
           <div class="left-menu-profile-name">{{ user.first_name }} {{ user.last_name }}</div>
-          <div class="left-menu-profile-role">Researcher</div>
+          <div class="left-menu-profile-role">{{ user.roles.join(" / ") }}</div>
         </div>
         <div class="p-3 left-menu-navigation">
           <ul>
@@ -37,7 +38,7 @@
               </router-link>
             </li>
             <li style="margin-top: 100px;">
-              <a v-on:click="logout">
+              <a v-on:click.prevent="logout" href="#">
                 <b-icon icon="box-arrow-left"></b-icon>
                 Logout
               </a>
@@ -45,9 +46,11 @@
           </ul>
         </div>
       </div>
+
       <div class="p-3" style="flex: 1;">
         <router-view/>
       </div>
+
     </div>
   </div>
 </template>
@@ -98,7 +101,7 @@ export default {
               email: obj.email,
               status: obj.state,
               attributes: [],
-              roles: []
+              roles: obj.realm_roles
             }
           })
         }
