@@ -4,7 +4,7 @@
       EMC Gateway
     </div>
     <div class="h-100 p-3 page-body">
-      <div class="p-3 left-menu">
+      <div class="p-3 left-menu" v-if="authenticated">
         <div class="p-3 left-menu-profile">
           <b-icon icon="person" style="width: 100px; height: 100px;"></b-icon>
           <div class="left-menu-profile-name">Joe David</div>
@@ -53,8 +53,24 @@
 </template>
 
 <script>
+import store from "@/store";
+import {mapGetters} from "vuex";
+
 export default {
-  name: 'App'
+  name: 'App',
+  store: store,
+  data: function () {
+    return {
+      isAdmin: false,
+      user: null
+    }
+  },
+  computed: {
+    ...mapGetters({
+      authenticated: 'identity/isAuthenticated',
+      currentUserName: 'identity/getCurrentUserName',
+    })
+  }
 }
 </script>
 
