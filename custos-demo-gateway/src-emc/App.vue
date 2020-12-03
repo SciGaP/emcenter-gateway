@@ -36,6 +36,12 @@
                 Settings
               </router-link>
             </li>
+            <li style="margin-top: 100px;">
+              <router-link to="/settings">
+                <b-icon icon="box-arrow-left"></b-icon>
+                Logout
+              </router-link>
+            </li>
           </ul>
         </div>
       </div>
