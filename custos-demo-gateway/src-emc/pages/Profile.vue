@@ -1,10 +1,13 @@
 <template>
-  <div>Profile</div>
+  <DefaultUserProfile />
 </template>
 
 <script>
+import DefaultUserProfile from "../../src/components/workspace/Profile"
+
 export default {
-  name: "Profile"
+  name: "Profile",
+  components: {DefaultUserProfile}
 }
 </script>
 
