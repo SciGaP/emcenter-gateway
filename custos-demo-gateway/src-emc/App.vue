@@ -5,9 +5,9 @@
     </div>
     <div class="h-100 p-3 page-body">
       <div class="p-3 left-menu" v-if="authenticated">
-        <div class="p-3 left-menu-profile">
+        <div class="p-3 left-menu-profile" v-if="user">
           <b-icon icon="person" style="width: 100px; height: 100px;"></b-icon>
-          <div class="left-menu-profile-name">Joe David</div>
+          <div class="left-menu-profile-name">{{ user.first_name }} {{ user.last_name }}</div>
           <div class="left-menu-profile-role">Researcher</div>
         </div>
         <div class="p-3 left-menu-navigation">
@@ -37,10 +37,10 @@
               </router-link>
             </li>
             <li style="margin-top: 100px;">
-              <router-link to="/settings">
+              <a v-on:click="logout">
                 <b-icon icon="box-arrow-left"></b-icon>
                 Logout
-              </router-link>
+              </a>
             </li>
           </ul>
         </div>
@@ -55,6 +55,7 @@
 <script>
 import store from "@/store";
 import {mapGetters} from "vuex";
+import config from "@/config";
 
 export default {
   name: 'App',
@@ -70,6 +71,54 @@ export default {
       authenticated: 'identity/isAuthenticated',
       currentUserName: 'identity/getCurrentUserName',
     })
+  },
+  methods: {
+    async logout() {
+      await this.$store.dispatch('identity/logout', {
+        client_id: config.value('clientId'),
+        client_sec: config.value('clientSec'),
+      });
+    },
+    async fetchAuthenticatedUser() {
+      this.isAdmin = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
+      if (this.authenticated && (!this.user || this.user.username !== this.currentUserName)) {
+        let resp = await this.$store.dispatch('user/users', {
+          offset: 0,
+          limit: 1,
+          client_id: config.value('clientId'),
+          client_sec: config.value('clientSec'),
+          username: this.currentUserName
+        })
+        if (Array.isArray(resp) && resp.length > 0) {
+          resp.forEach(obj => {
+            this.user = {
+              username: obj.username,
+              first_name: obj.first_name,
+              last_name: obj.last_name,
+              email: obj.email,
+              status: obj.state,
+              attributes: [],
+              roles: []
+            }
+          })
+        }
+      }
+    }
+  },
+  watch: {
+    async authenticated() {
+      if (this.authenticated !== true) {
+        await this.$router.push('/')
+      }
+    },
+    currentUserName() {
+      if (this.currentUserName) {
+        this.fetchAuthenticatedUser()
+      }
+    }
+  },
+  beforeMount() {
+    this.fetchAuthenticatedUser()
   }
 }
 </script>

@@ -43,34 +43,34 @@ export default new Router({
             name: "dashboard",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
-                import(/*webpackChunkName:"groups"*/  "./pages/Dashboard")
+                import("./pages/Dashboard")
         },
         {
             path: "/datasets",
             name: "datasets",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
-                import(/*webpackChunkName:"groups"*/  "./pages/Datasets")
+                import("./pages/Datasets")
         },
         {
             path: "/profile",
             name: "profile",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
-                import(/*webpackChunkName:"groups"*/  "./pages/Profile")
+                import("./pages/Profile")
         },
         {
             path: "/settings",
             name: "settings",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
-                import(/*webpackChunkName:"groups"*/  "./pages/Settings")
+                import("./pages/Settings")
         },
         {
             path: "/callback",
             name: "callback",
             component: () =>
-                import(/*webpackChunkName:"users"*/  "../src/components/Callback")
+                import("../src/components/Callback")
         },
 
     ]
