@@ -1,8 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Landing from "../src/components/landing/Landing.vue";
 import store from '../src/store/index'
 import config from "../src/config";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
 
 Vue.use(Router)
 
@@ -14,7 +15,7 @@ async function _validateAuthenticationBeforeEnter(to, from, next) {
         // You can use store variable here to access globalError or commit mutation
         next(true)
     } else {
-        next('/')
+        next('/login')
     }
 }
 
@@ -24,7 +25,12 @@ export default new Router({
         {
             path: "/",
             name: "home",
-            component: Landing
+            component: Home
+        },
+        {
+            path: "/login",
+            name: "login",
+            component: Login
         },
         {
             path: "/register",
