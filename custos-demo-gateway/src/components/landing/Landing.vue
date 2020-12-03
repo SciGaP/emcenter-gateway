@@ -66,7 +66,8 @@
         props: {
             msg: String,
             seen: Boolean,
-            todos: Array
+            todos: Array,
+            successRedirect: String
         },
         data: function () {
             return {
@@ -105,19 +106,24 @@
                 let params = {client_id: this.custosId, redirect_uri: config.value('redirectURI')};
                 await this.$store.dispatch('identity/fetchAuthorizationEndpoint', params)
                 window.location.href = this.$store.getters['identity/getAuthorizationEndpoint']
+            },
+            redirectIfAuthenticated() {
+              if (this.authenticated === true) {
+                 if (this.successRedirect) {
+                   this.$router.push(this.successRedirect);
+                 } else {
+                   this.$router.push('workspace');
+                 }
+              }
             }
         },
         watch: {
           authenticated() {
-            if (this.authenticated === true) {
-               this.$router.push('workspace')
-            }
+            this.redirectIfAuthenticated();
           }
         },
         mounted() {
-          if (this.authenticated === true) {
-            this.$router.push('workspace')
-          }
+          this.redirectIfAuthenticated();
         }
     }
 </script>
