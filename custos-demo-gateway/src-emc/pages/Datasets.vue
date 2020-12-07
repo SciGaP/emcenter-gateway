@@ -19,7 +19,16 @@
       </b-col>
     </b-row>
     <b-row class="pt-4">
-      <b-table striped hover small :items="items"></b-table>
+      <b-col>
+        <b-table striped hover small :items="items" :busy="items === null">
+          <template #table-busy>
+            <div class="text-center my-2">
+              <b-spinner class="align-middle"></b-spinner>
+              <strong>Loading...</strong>
+            </div>
+          </template>
+        </b-table>
+      </b-col>
     </b-row>
     <b-row>
       <b-col>
@@ -35,6 +44,9 @@
 </template>
 
 <script>
+import store from "../store";
+import {mapGetters, mapActions} from "vuex";
+
 export default {
   name: "Datasets",
   data() {
@@ -43,100 +55,28 @@ export default {
         fromDate: "",
         toDate: ""
       },
-      items: [
-        {
-          principleInvestigator: "Thomas",
-          microscope: 'Microscope 1',
-          collection: 'session 1',
-          date: "10/23/2020 09:00",
-          status: "Accessed"
-        },
-        {
-          principleInvestigator: "Thomas",
-          microscope: 'Microscope 1',
-          collection: 'session 1 (1)',
-          date: "10/23/2020 12:00",
-          status: "Accessed"
-        },
-        {
-          principleInvestigator: "Thomas",
-          microscope: 'Microscope 2',
-          collection: 'session 2',
-          date: "10/23/2020 07:00",
-          status: "Accessed"
-        },
-        {
-          principleInvestigator: "Adam",
-          microscope: 'Microscope 6',
-          collection: 'session 1',
-          date: "10/23/2020 15:00",
-          status: "Accessed"
-        },
-        {
-          principleInvestigator: "Thomas",
-          microscope: 'Microscope 1',
-          collection: 'session 1 (1)',
-          date: "10/23/2020 12:00",
-          status: "Accessed"
-        },
-        {
-          principleInvestigator: "Thomas",
-          microscope: 'Microscope 2',
-          collection: 'session 2',
-          date: "10/23/2020 07:00",
-          status: "Accessed"
-        },
-        {
-          principleInvestigator: "Adam",
-          microscope: 'Microscope 6',
-          collection: 'session 1',
-          date: "10/23/2020 15:00",
-          status: "Accessed"
-        },
-        {
-          principleInvestigator: "Thomas",
-          microscope: 'Microscope 1',
-          collection: 'session 1 (1)',
-          date: "10/23/2020 12:00",
-          status: "Accessed"
-        },
-        {
-          principleInvestigator: "Thomas",
-          microscope: 'Microscope 2',
-          collection: 'session 2',
-          date: "10/23/2020 07:00",
-          status: "Accessed"
-        },
-        {
-          principleInvestigator: "Adam",
-          microscope: 'Microscope 6',
-          collection: 'session 1',
-          date: "10/23/2020 15:00",
-          status: "Accessed"
-        },
-        {
-          principleInvestigator: "Thomas",
-          microscope: 'Microscope 1',
-          collection: 'session 1 (1)',
-          date: "10/23/2020 12:00",
-          status: "Accessed"
-        },
-        {
-          principleInvestigator: "Thomas",
-          microscope: 'Microscope 2',
-          collection: 'session 2',
-          date: "10/23/2020 07:00",
-          status: "Accessed"
-        },
-        {
-          principleInvestigator: "Adam",
-          microscope: 'Microscope 6',
-          collection: 'session 1',
-          date: "10/23/2020 15:00",
-          status: "Accessed"
-        },
-      ]
+      items: null
     }
+  },
+  store: store,
+  computed: {
+    ...mapGetters({
+      getCollections: "collection/getCollections",
+      getCollection: "collection/getCollection",
+    })
+  },
+  methods: {
+    ...mapActions({
+      fetchCollections: "collection/fetchCollections"
+    })
+  },
+  async mounted() {
+    const params = {
+      fromDate: this.filter.fromDate,
+      toDate: this.filter.toDate
+    };
+    await this.fetchCollections(params);
+    this.items = this.getCollections(params);
   }
 }
 </script>
