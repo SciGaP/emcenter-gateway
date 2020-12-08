@@ -20,7 +20,7 @@
     </b-row>
     <b-row class="pt-4">
       <b-col>
-        <b-table striped hover small :items="collections" :busy="collections === null"
+        <b-table striped hover small :items="collections" :busy="collections === null" :fields="fields"
                  selectable select-mode="single" @row-selected="onRowSelected">
           <template #table-busy>
             <div class="text-center my-2">
@@ -56,6 +56,24 @@ export default {
         fromDate: "",
         toDate: ""
       },
+      fields: [
+        {
+          key: 'microscope',
+          label: 'Microscope'
+        },
+        {
+          key: 'collectionName',
+          label: 'Collection'
+        },
+        {
+          key: 'pi',
+          label: 'Principle Investigator'
+        },
+        {
+          key: 'status',
+          label: 'Status'
+        }
+      ],
       collections: null
     }
   },
