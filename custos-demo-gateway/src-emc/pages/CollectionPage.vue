@@ -7,10 +7,10 @@
       </b-col>
     </b-row>
     <b-row class="pt-4">
-      <b-col v-for="item in items" :key="item.datasetId" class="m-1"
+      <b-col v-for="datasets in datasetss" :key="datasets.datasetId" class="m-1"
              style="background-color: white; padding: 10px; border-radius: 10px; min-width: 250px; max-width: 250px;">
         <div class="w-100" style="display: flex; flex-direction: row">
-          <div style="flex: 1;">{{ item.datasetName }}</div>
+          <div style="flex: 1;">{{ datasets.datasetName }}</div>
           <div>
             <a href="#" class="ml-2">
               <b-icon icon="share-fill"></b-icon>
@@ -53,7 +53,7 @@ export default {
         fromDate: "",
         toDate: ""
       },
-      items: null,
+      datasetss: null,
       collection: null
     }
   },
@@ -80,7 +80,7 @@ export default {
     await this.fetchCollection({collectionId});
     await this.fetchDatasets(params);
     this.collection = this.getCollection({collectionId});
-    this.items = this.getDatasets(params);
+    this.datasetss = this.getDatasets(params);
   }
 }
 </script>

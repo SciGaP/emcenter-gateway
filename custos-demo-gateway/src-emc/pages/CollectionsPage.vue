@@ -20,7 +20,7 @@
     </b-row>
     <b-row class="pt-4">
       <b-col>
-        <b-table striped hover small :items="items" :busy="items === null"
+        <b-table striped hover small :items="collections" :busy="collections === null"
                  selectable select-mode="single" @row-selected="onRowSelected">
           <template #table-busy>
             <div class="text-center my-2">
@@ -56,7 +56,7 @@ export default {
         fromDate: "",
         toDate: ""
       },
-      items: null
+      collections: null
     }
   },
   store: store,
@@ -79,7 +79,7 @@ export default {
       toDate: this.filter.toDate
     };
     await this.fetchCollections(params);
-    this.items = this.getCollections(params);
+    this.collections = this.getCollections(params);
   }
 }
 </script>
