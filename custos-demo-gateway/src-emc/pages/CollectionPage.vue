@@ -2,7 +2,8 @@
   <b-container class="p-2">
     <b-row class="mb-3">
       <b-col>
-        <h2>Datasets</h2> / jane.sep(34)
+        <h2>Datasets</h2>
+        <div v-if="collection">{{ collection.collectionName }}</div>
       </b-col>
     </b-row>
     <b-row class="pt-4">
@@ -52,18 +53,21 @@ export default {
         fromDate: "",
         toDate: ""
       },
-      items: null
+      items: null,
+      collection: null
     }
   },
   store: store,
   computed: {
     ...mapGetters({
-      getDatasets: "dataset/getDatasets"
+      getDatasets: "dataset/getDatasets",
+      getCollection: "collection/getCollection"
     })
   },
   methods: {
     ...mapActions({
-      fetchDatasets: "dataset/fetchDatasets"
+      fetchDatasets: "dataset/fetchDatasets",
+      fetchCollection: "collection/fetchCollection"
     })
   },
   async mounted() {
@@ -73,8 +77,10 @@ export default {
       toDate: this.filter.toDate,
       collectionId
     };
+    await this.fetchCollection({collectionId});
     await this.fetchDatasets(params);
-    this.items = this.getDatasets(params)
+    this.collection = this.getCollection({collectionId});
+    this.items = this.getDatasets(params);
   }
 }
 </script>

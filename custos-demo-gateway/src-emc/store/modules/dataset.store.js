@@ -63,12 +63,12 @@ const getters = {
         const queryString = _getDatasetsQueryString({datasetId, collectionId, datasetName, createdBy, createdAt});
         const datasetIds = state.paginatedDatasetListMap[queryString];
         if (datasetIds) {
-            return datasetIds.map(datasetId => getters.getDataset(datasetId));
+            return datasetIds.map(datasetId => getters.getDataset({datasetId}));
         } else {
             return null;
         }
     },
-    getDataset: (state) => (datasetId) => {
+    getDataset: (state) => ({datasetId}) => {
         return state.datasetMap[datasetId];
     }
 }

@@ -17,6 +17,29 @@ function _getCollectionsQueryString({offset = 0, limit = 20, pi = null, author =
 }
 
 const actions = {
+    async fetchCollection({commit}, {collectionId}) {
+
+        // TODO
+        console.log(`[FETCH] /collection/${collectionId}`);
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        const collection = {
+            collectionId,
+            collectionName: `Collection ${collectionId}`,
+            createdBy: "Jane",
+            createdAt: "12/22/2020",
+            pi: "Thomas",
+            author: "Ron",
+            microscope: "Microscope 1",
+            status: "Accessed"
+        }
+
+        const {collectionName, createdBy, createdAt, pi, author, microscope, status} = collection;
+
+        commit("SET_COLLECTION", {
+            collectionId, collectionName, createdBy, createdAt, pi, author, microscope, status
+        });
+    },
     async fetchCollections({commit}, {offset, limit, pi, author, fromDate, toDate}) {
         const queryString = _getCollectionsQueryString({offset, limit, pi, author, fromDate, toDate});
 
@@ -75,12 +98,12 @@ const getters = {
         const queryString = _getCollectionsQueryString({offset, limit, pi, author, fromDate, toDate});
         const collectionsIds = state.paginatedCollectionListMap[queryString];
         if (collectionsIds) {
-            return collectionsIds.map(collectionId => getters.getCollection(collectionId));
+            return collectionsIds.map(collectionId => getters.getCollection({collectionId}));
         } else {
             return null;
         }
     },
-    getCollection: (state) => (collectionId) => {
+    getCollection: (state) => ({collectionId}) => {
         return state.collectionMap[collectionId];
     }
 }
