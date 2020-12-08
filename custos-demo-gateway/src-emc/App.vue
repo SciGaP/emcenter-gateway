@@ -20,7 +20,7 @@
               </router-link>
             </li>
             <li>
-              <router-link to="/datasets">
+              <router-link to="/collections">
                 <b-icon icon="bar-chart-line-fill"></b-icon>
                 Datasets
               </router-link>

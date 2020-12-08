@@ -46,11 +46,18 @@ export default new Router({
                 import("./pages/Dashboard")
         },
         {
-            path: "/datasets",
-            name: "datasets",
+            path: "/collections",
+            name: "collections",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
-                import("./pages/Datasets")
+                import("./pages/CollectionsPage")
+        },
+        {
+            path: "/collections/:collectionId",
+            name: "collection",
+            beforeEnter: _validateAuthenticationBeforeEnter,
+            component: () =>
+                import("./pages/CollectionPage")
         },
         {
             path: "/profile",
