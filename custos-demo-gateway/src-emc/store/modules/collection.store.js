@@ -17,6 +17,11 @@ function _getCollectionsQueryString({offset = 0, limit = 20, pi = null, author =
 }
 
 const actions = {
+    /**
+     * @param commit
+     * @param collectionId
+     * @returns {Promise}
+     */
     async fetchCollection({commit}, {collectionId}) {
 
         // TODO
@@ -40,6 +45,17 @@ const actions = {
             collectionId, collectionName, createdBy, createdAt, pi, author, microscope, status
         });
     },
+
+    /**
+     * @param commit
+     * @param offset
+     * @param limit
+     * @param pi
+     * @param author
+     * @param fromDate
+     * @param toDate
+     * @returns {Promise}
+     */
     async fetchCollections({commit}, {offset, limit, pi, author, fromDate, toDate}) {
         const queryString = _getCollectionsQueryString({offset, limit, pi, author, fromDate, toDate});
 
@@ -100,21 +116,50 @@ const mutations = {
     }
 }
 
+
 const getters = {
-    getCollections: (state, getters) => ({offset, limit, pi, author, fromDate, toDate}) => {
-        const queryString = _getCollectionsQueryString({offset, limit, pi, author, fromDate, toDate});
-        const collectionsIds = state.paginatedCollectionListMap[queryString];
-        if (collectionsIds) {
-            return collectionsIds.map(collectionId => getters.getCollection({collectionId}));
-        } else {
-            return null;
+    /**
+     * @param state
+     * @param getters
+     * @returns {getCollectionsCallback}
+     */
+    getCollections: (state, getters) => {
+        /**
+         * @typedef {function} getCollectionsCallback
+         * @param {number} offset
+         * @param {number} limit
+         * @param {string} pi
+         * @param {string} fromDate
+         * @param {string} toDate
+         * @returns {(import('../typedefs').Collection[] | null)}
+         */
+        return ({offset, limit, pi, author, fromDate, toDate}) => {
+            const queryString = _getCollectionsQueryString({offset, limit, pi, author, fromDate, toDate});
+            const collectionsIds = state.paginatedCollectionListMap[queryString];
+            if (collectionsIds) {
+                return collectionsIds.map(collectionId => getters.getCollection({collectionId}));
+            } else {
+                return null;
+            }
         }
     },
-    getCollection: (state) => ({collectionId}) => {
-        if (state.collectionMap[collectionId]) {
-            return state.collectionMap[collectionId];
-        } else {
-            return null;
+
+    /**
+     * @param state
+     * @returns {getCollectionCallback}
+     */
+    getCollection: (state) => {
+        /**
+         * @typedef {function} getCollectionCallback
+         * @param {number} collectionId
+         * @returns {import('../typedefs').Collection}
+         */
+        return ({collectionId}) => {
+            if (state.collectionMap[collectionId]) {
+                return state.collectionMap[collectionId];
+            } else {
+                return null;
+            }
         }
     }
 }
