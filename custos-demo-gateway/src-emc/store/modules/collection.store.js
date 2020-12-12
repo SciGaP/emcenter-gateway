@@ -84,12 +84,19 @@ const actions = {
 
 const mutations = {
     SET_COLLECTION(state, {collectionId, collectionName, createdBy, createdAt, pi, author, microscope, status}) {
-        state.collectionMap[collectionId] = {
-            collectionId, collectionName, createdBy, createdAt, pi, author, microscope, status
+        state.collectionMap = {
+            ...state.collectionMap,
+            [collectionId]: {
+                ...state.collectionMap[collectionId],
+                collectionId, collectionName, createdBy, createdAt, pi, author, microscope, status
+            }
         };
     },
     SET_PAGINATED_COLLECTION_LIST(state, {queryString, collectionIds}) {
-        state.paginatedCollectionListMap[queryString] = collectionIds;
+        state.paginatedCollectionListMap = {
+            ...state.paginatedCollectionListMap,
+            [queryString]: collectionIds
+        };
     }
 }
 
