@@ -104,7 +104,11 @@ const getters = {
         }
     },
     getDataset: (state) => ({datasetId}) => {
-        return state.datasetMap[datasetId];
+        if (state.datasetMap[datasetId]) {
+            return state.datasetMap[datasetId];
+        } else {
+            return null;
+        }
     },
     getDatasetThumbnailDataUrl: (state, getters) => ({datasetId}) => {
         const dataset = getters.getDataset({datasetId});

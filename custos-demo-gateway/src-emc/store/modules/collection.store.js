@@ -111,7 +111,11 @@ const getters = {
         }
     },
     getCollection: (state) => ({collectionId}) => {
-        return state.collectionMap[collectionId];
+        if (state.collectionMap[collectionId]) {
+            return state.collectionMap[collectionId];
+        } else {
+            return null;
+        }
     }
 }
 

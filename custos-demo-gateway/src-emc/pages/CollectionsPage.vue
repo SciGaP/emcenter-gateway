@@ -73,15 +73,22 @@ export default {
           key: 'status',
           label: 'Status'
         }
-      ],
-      collections: null
+      ]
     }
   },
   store: store,
   computed: {
     ...mapGetters({
       getCollections: "collection/getCollections"
-    })
+    }),
+    collections() {
+      const params = {
+        fromDate: this.filter.fromDate,
+        toDate: this.filter.toDate
+      };
+
+      return this.getCollections(params);
+    }
   },
   methods: {
     ...mapActions({
@@ -91,13 +98,12 @@ export default {
       this.$router.push(`collections/${collectionId}`);
     },
   },
-  async mounted() {
+  mounted() {
     const params = {
       fromDate: this.filter.fromDate,
       toDate: this.filter.toDate
     };
-    await this.fetchCollections(params);
-    this.collections = this.getCollections(params);
+    this.fetchCollections(params);
   }
 }
 </script>

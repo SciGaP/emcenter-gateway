@@ -67,11 +67,7 @@ export default {
       return this.$route.params.collectionId;
     },
     collection() {
-      if (this.collectionId) {
-        return this.getCollection({collectionId: this.collectionId});
-      } else {
-        return null;
-      }
+      return this.getCollection({collectionId: this.collectionId});
     },
     datasets() {
       if (this.datasetIds) {
@@ -91,11 +87,7 @@ export default {
       };
       const datasetIds = this.getDatasetIds(params);
 
-      if (datasetIds) {
-        return datasetIds;
-      } else {
-        return null;
-      }
+      return datasetIds;
     }
   },
   methods: {
