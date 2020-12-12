@@ -7,10 +7,10 @@
       </b-col>
     </b-row>
     <b-row class="pt-4">
-      <b-col v-for="datasets in datasetss" :key="datasets.datasetId" class="m-1"
+      <b-col v-for="dataset in datasets" :key="dataset.datasetId" class="m-1"
              style="background-color: white; padding: 10px; border-radius: 10px; min-width: 250px; max-width: 250px;">
         <div class="w-100" style="display: flex; flex-direction: row">
-          <div style="flex: 1;">{{ datasets.datasetName }}</div>
+          <div style="flex: 1;">{{ dataset.datasetName }}</div>
           <div>
             <a href="#" class="ml-2">
               <b-icon icon="share-fill"></b-icon>
@@ -24,7 +24,8 @@
           </div>
         </div>
         <div class="w-100 text-center" style="font-size: 150px">
-          <b-icon icon="image"></b-icon>
+          <img v-if="dataset.thumbnailDataUrl" :src="dataset.thumbnailDataUrl"/>
+          <b-icon v-else icon="image"></b-icon>
         </div>
       </b-col>
     </b-row>
@@ -52,35 +53,74 @@ export default {
       filter: {
         fromDate: "",
         toDate: ""
-      },
-      datasetss: null,
-      collection: null
+      }
     }
   },
   store: store,
   computed: {
     ...mapGetters({
-      getDatasets: "dataset/getDatasets",
+      getDatasetIds: "dataset/getDatasetIds",
+      getDataset: "dataset/getDataset",
       getCollection: "collection/getCollection"
-    })
+    }),
+    collectionId() {
+      return this.$route.params.collectionId;
+    },
+    collection() {
+      if (this.collectionId) {
+        return this.getCollection({collectionId: this.collectionId});
+      } else {
+        return null;
+      }
+    },
+    datasets() {
+      if (this.datasetIds) {
+        return this.datasetIds.map(datasetId => {
+          return this.getDataset({datasetId});
+        });
+      } else {
+        return null;
+      }
+    },
+    datasetIds() {
+      const collectionId = this.$route.params.collectionId;
+      const params = {
+        fromDate: this.filter.fromDate,
+        toDate: this.filter.toDate,
+        collectionId
+      };
+      const datasetIds = this.getDatasetIds(params);
+
+      if (datasetIds) {
+        return datasetIds;
+      } else {
+        return null;
+      }
+    }
   },
   methods: {
     ...mapActions({
       fetchDatasets: "dataset/fetchDatasets",
+      fetchDatasetThumbnail: "dataset/fetchDatasetThumbnail",
       fetchCollection: "collection/fetchCollection"
     })
   },
+  watch: {
+    datasetIds() {
+      for (let i = 0; i < this.datasetIds.length; i++) {
+        const datasetId = this.datasetIds[i];
+        this.fetchDatasetThumbnail({datasetId});
+      }
+    }
+  },
   async mounted() {
-    const collectionId = this.$route.params.collectionId;
     const params = {
       fromDate: this.filter.fromDate,
       toDate: this.filter.toDate,
-      collectionId
+      collectionId: this.collectionId
     };
-    await this.fetchCollection({collectionId});
-    await this.fetchDatasets(params);
-    this.collection = this.getCollection({collectionId});
-    this.datasetss = this.getDatasets(params);
+    this.fetchCollection({collectionId: this.collectionId});
+    this.fetchDatasets(params);
   }
 }
 </script>
