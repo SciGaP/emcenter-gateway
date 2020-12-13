@@ -10,17 +10,19 @@
       <b-col v-for="dataset in datasets" :key="dataset.datasetId" class="m-1"
              style="background-color: white; padding: 10px; border-radius: 10px; min-width: 200px; max-width: 200px;">
         <div class="w-100" style="display: flex; flex-direction: row">
-          <div style="flex: 1;">{{ dataset.datasetName }}</div>
+          <div style="flex: 1;">
+            <button type="button" class="btn btn-link p-1">{{ dataset.datasetName }}</button>
+          </div>
           <div>
-            <a href="#" class="ml-2">
+            <button type="button" class="btn btn-link btn-sm p-1">
               <b-icon icon="share-fill"></b-icon>
-            </a>
-            <a href="#" class="ml-2">
+            </button>
+            <button type="button" class="btn btn-link btn-sm p-1">
               <b-icon icon="pencil"></b-icon>
-            </a>
-            <a href="#" class="ml-2">
+            </button>
+            <button type="button" class="btn btn-link btn-sm p-1">
               <b-icon icon="download"></b-icon>
-            </a>
+            </button>
           </div>
         </div>
         <div class="w-100 text-center"
