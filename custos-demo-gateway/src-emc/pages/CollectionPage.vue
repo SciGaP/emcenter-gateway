@@ -8,7 +8,7 @@
     </b-row>
     <b-row class="pt-4">
       <b-col v-for="dataset in datasets" :key="dataset.datasetId" class="m-1"
-             style="background-color: white; padding: 10px; border-radius: 10px; min-width: 250px; max-width: 250px;">
+             style="background-color: white; padding: 10px; border-radius: 10px; min-width: 200px; max-width: 200px;">
         <div class="w-100" style="display: flex; flex-direction: row">
           <div style="flex: 1;">{{ dataset.datasetName }}</div>
           <div>
@@ -23,8 +23,10 @@
             </a>
           </div>
         </div>
-        <div class="w-100 text-center" style="font-size: 150px">
-          <img v-if="dataset.thumbnailDataUrl" :src="dataset.thumbnailDataUrl"/>
+        <div class="w-100 text-center"
+             style="font-size: 10px;height: 180px;overflow: hidden; display: flex; flex-direction: column;">
+          <div style="flex: 1;"></div>
+          <img v-if="dataset.thumbnailDataUrl" width="100%" :src="dataset.thumbnailDataUrl"/>
           <b-icon v-else icon="image"></b-icon>
         </div>
       </b-col>
