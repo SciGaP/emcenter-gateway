@@ -125,12 +125,13 @@ const getters = {
      */
     getCollections: (state, getters) => {
         /**
-         * @typedef {function} getCollectionsCallback
-         * @param {number} offset
-         * @param {number} limit
-         * @param {string} pi
-         * @param {string} fromDate
-         * @param {string} toDate
+         * @callback getCollectionsCallback
+         * @param {Object} filter
+         * @param {number} filter.offset
+         * @param {number} filter.limit
+         * @param {string} filter.pi
+         * @param {string} filter.fromDate
+         * @param {string} filter.toDate
          * @returns {(import('../typedefs').Collection[] | null)}
          */
         return ({offset, limit, pi, author, fromDate, toDate}) => {
@@ -150,8 +151,9 @@ const getters = {
      */
     getCollection: (state) => {
         /**
-         * @typedef {function} getCollectionCallback
-         * @param {number} collectionId
+         * @callback getCollectionCallback
+         * @param {Object} collection
+         * @param {number} collection.collectionId
          * @returns {import('../typedefs').Collection}
          */
         return ({collectionId}) => {

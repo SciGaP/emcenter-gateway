@@ -105,12 +105,13 @@ const getters = {
      */
     getDatasetIds: (state) => {
         /**
-         * @typedef {function} getDatasetIdsCallback
-         * @param {number} datasetId
-         * @param {number} collectionId
-         * @param {string} datasetName
-         * @param {string} createdBy
-         * @param {string} createdAt
+         * @callback getDatasetIdsCallback
+         * @param {Object} filter
+         * @param {number} filter.datasetId
+         * @param {number} filter.collectionId
+         * @param {string} filter.datasetName
+         * @param {string} filter.createdBy
+         * @param {string} filter.createdAt
          * @return {number[] | null}
          */
         return ({datasetId, collectionId, datasetName, createdBy, createdAt}) => {
@@ -131,15 +132,17 @@ const getters = {
      */
     getDatasets: (state, getters) => {
         /**
-         * @typedef {function} getDatasetsCallback
-         * @param {number} datasetId
-         * @param {number} collectionId
-         * @param {string} datasetName
-         * @param {string} createdBy
-         * @param {string} createdAt
+         * @callback getDatasetsCallback
+         * @param {Object} filter
+         * @param {number} filter.datasetId
+         * @param {number} filter.collectionId
+         * @param {string} filter.datasetName
+         * @param {string} filter.createdBy
+         * @param {string} filter.createdAt
          * @return {(import('../typedefs').Dataset)[] | null}
          */
         return ({datasetId, collectionId, datasetName, createdBy, createdAt}) => {
+            console.log("Haaaaaaaaaaaaaaaai");
             const datasetIds = getters.getDatasetIds({datasetId, collectionId, datasetName, createdBy, createdAt});
             if (datasetIds) {
                 return datasetIds.map(datasetId => getters.getDataset({datasetId}));
@@ -155,8 +158,9 @@ const getters = {
      */
     getDataset: (state) => {
         /**
-         * @typedef {function} getDatasetCallback
-         * @param {number} datasetId
+         * @callback getDatasetCallback
+         * @param {Object} dataset
+         * @param {number} dataset.datasetId
          * @return {(import('../typedefs').Dataset) | null}
          */
         return ({datasetId}) => {
@@ -175,8 +179,9 @@ const getters = {
      */
     getDatasetThumbnailDataUrl: (state, getters) => {
         /**
-         * @typedef {function} getDatasetThumbnailDataUrlCallback
-         * @param {number} datasetId
+         * @callback getDatasetThumbnailDataUrlCallback
+         * @param {Object} dataset
+         * @param {number} dataset.datasetId
          * @return {string | null}
          */
         return ({datasetId}) => {
