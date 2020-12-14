@@ -1,0 +1,8 @@
+{
+  "app.top-header.title": "EMC Gateway",
+  "app.left-nav.menu.item.name.dashboard": "Dashboard",
+  "app.left-nav.menu.item.name.datasets": "Datasets",
+  "app.left-nav.menu.item.name.logout": "Logout",
+  "app.left-nav.menu.item.name.profile": "Profile",
+  "app.left-nav.menu.item.name.settings": "Settings"
+}

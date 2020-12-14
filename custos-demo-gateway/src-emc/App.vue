@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="h-100 page-header">
-      EMC Gateway
+      {{ $t('app.top-header.title') }}
     </div>
     <div class="h-100 p-3 page-body">
 
@@ -16,31 +16,31 @@
             <li>
               <router-link to="/dashboard">
                 <b-icon icon="bounding-box"></b-icon>
-                Dashboard
+                {{ $t('app.left-nav.menu.item.name.dashboard') }}
               </router-link>
             </li>
             <li>
               <router-link to="/collections">
                 <b-icon icon="bar-chart-line-fill"></b-icon>
-                Datasets
+                {{ $t('app.left-nav.menu.item.name.datasets') }}
               </router-link>
             </li>
             <li>
               <router-link to="/profile">
                 <b-icon icon="person-fill"></b-icon>
-                Profile
+                {{ $t('app.left-nav.menu.item.name.profile') }}
               </router-link>
             </li>
             <li>
               <router-link to="/settings">
                 <b-icon icon="tools"></b-icon>
-                Settings
+                {{ $t('app.left-nav.menu.item.name.settings') }}
               </router-link>
             </li>
             <li style="margin-top: 100px;">
               <a v-on:click.prevent="logout" href="#">
                 <b-icon icon="box-arrow-left"></b-icon>
-                Logout
+                {{ $t('app.left-nav.menu.item.name.logout') }}
               </a>
             </li>
           </ul>
