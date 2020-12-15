@@ -3,10 +3,10 @@
 </template>
 
 <script>
-import Login from "./Login";
+import Login from "./LoginPage";
 
 export default {
-  name: "Home",
+  name: "HomePage",
   components: {Login}
 }
 </script>

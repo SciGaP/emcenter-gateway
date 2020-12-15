@@ -8,7 +8,7 @@ import config from "../config";
 import {mapActions, mapGetters} from "vuex";
 
 export default {
-  name: "Callback",
+  name: "CallbackPage",
   methods: {
     ...mapActions({
       authenticateLocally: "auth/authenticateLocally",

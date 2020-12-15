@@ -1,10 +1,11 @@
 <template>
-  <div>Dashboard</div>
+  <div>Profile</div>
 </template>
 
 <script>
+
 export default {
-  name: "Dashboard"
+  name: "ProfilePage"
 }
 </script>
 

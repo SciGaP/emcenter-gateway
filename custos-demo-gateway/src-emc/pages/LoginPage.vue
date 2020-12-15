@@ -62,7 +62,7 @@ import {mapGetters, mapActions} from "vuex";
 import store from "../store";
 
 export default {
-  name: 'Login',
+  name: 'LoginPage',
   store: store,
   props: {
     msg: String,

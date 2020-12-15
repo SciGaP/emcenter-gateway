@@ -2,8 +2,8 @@ import Vue from "vue";
 import Router from "vue-router";
 import store from './store/index'
 import config from "./config";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
+import Home from "./pages/HomePage";
+import Login from "./pages/LoginPage";
 
 Vue.use(Router)
 
@@ -42,7 +42,7 @@ export default new Router({
             name: "dashboard",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
-                import("./pages/Dashboard")
+                import("./pages/DashboardPage")
         },
         {
             path: "/collections",
@@ -63,20 +63,20 @@ export default new Router({
             name: "profile",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
-                import("./pages/Profile")
+                import("./pages/ProfilePage")
         },
         {
             path: "/settings",
             name: "settings",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
-                import("./pages/Settings")
+                import("./pages/SettingsPage")
         },
         {
             path: "/callback",
             name: "callback",
             component: () =>
-                import("./pages/Callback")
+                import("./pages/CallbackPage")
         },
 
     ]
