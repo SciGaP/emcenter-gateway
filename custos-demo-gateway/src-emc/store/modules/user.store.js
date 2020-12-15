@@ -26,14 +26,7 @@ const actions = {
             {id, username, first_name, last_name, email, realm_roles, client_roles, attributes}
         ) => {
             commit("SET_USER", {
-                id,
-                username,
-                first_name,
-                last_name,
-                email,
-                realm_roles,
-                client_roles,
-                attributes
+                id, username, first_name, last_name, email, realm_roles, client_roles, attributes
             })
         });
 
