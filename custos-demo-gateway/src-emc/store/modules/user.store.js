@@ -1,5 +1,5 @@
 import {custosApiAxios, getCustosApiAuthorizationHeader, userMgtEndpoint} from "../util/custos.util";
-
+import {clientId, clientSecret} from "../util/config.util";
 
 const getDefaultState = () => {
     return {
@@ -11,16 +11,15 @@ const getDefaultState = () => {
 const state = getDefaultState()
 
 const actions = {
-    async fetchUsers({commit}, {clientId, clientSecret, username, offset, limit}) {
+    async fetchUsers({commit}, {username, offset, limit}) {
         const params = {offset, limit: limit, client_id: clientId, 'user.id': username};
-        const resp = await custosApiAxios.get(
+        const {data: {users}} = await custosApiAxios.get(
             `${userMgtEndpoint}/users`,
             {
                 params: params,
                 headers: getCustosApiAuthorizationHeader({clientId, clientSecret})
             }
-        );
-        const {data: {users}} = resp;
+        )
 
         const userIds = users.map((
             {id, username, first_name, last_name, email, realm_roles, client_roles, attributes}

@@ -58,7 +58,6 @@
 <script>
 import store from "./store";
 import {mapGetters, mapActions} from "vuex";
-import config from "@/config";
 
 export default {
   name: 'App',
@@ -81,18 +80,13 @@ export default {
       refreshAuthentication: "auth/refreshAuthentication"
     }),
     async logout() {
-      await this.logoutAction({
-        clientId: config.value('clientId'),
-        clientSecret: config.value('clientSec'),
-      })
+      await this.logoutAction();
     },
     async fetchAuthenticatedUser() {
       if (this.authenticated && (!this.user || this.user.username !== this.currentUsername)) {
         await this.fetchUsers({
           offset: 0,
           limit: 1,
-          clientId: config.value('clientId'),
-          clientSecret: config.value('clientSec'),
           username: this.currentUsername
         });
       }
@@ -114,10 +108,7 @@ export default {
     }
   },
   beforeMount() {
-    this.refreshAuthentication({
-      clientId: config.value('clientId'),
-      clientSecret: config.value('clientSec'),
-    });
+    this.refreshAuthentication();
     this.fetchAuthenticatedUser();
     this.redirectToLoginIfNotAuthenticated();
   }

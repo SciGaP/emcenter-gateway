@@ -1,21 +1,14 @@
 import Vue from "vue";
 import Router from "vue-router";
-import store from './store/index'
-import config from "./config";
+import store from './store/index';
 import Home from "./pages/HomePage";
 import Login from "./pages/LoginPage";
 
 Vue.use(Router)
 
 async function _validateAuthenticationBeforeEnter(to, from, next) {
-    await store.dispatch('auth/refreshAuthentication', {
-        clientId: config.value('clientId'),
-        clientSecret: config.value('clientSec'),
-    });
-
+    await store.dispatch('auth/refreshAuthentication');
     const authenticated = store.getters['auth/authenticated'];
-
-    console.log("ROUTER authenticated ", authenticated)
 
     if (!authenticated) {
         next('/login');

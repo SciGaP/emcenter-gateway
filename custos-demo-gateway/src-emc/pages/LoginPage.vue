@@ -57,7 +57,6 @@
 </template>
 
 <script>
-import config from "@/config";
 import {mapGetters, mapActions} from "vuex";
 import store from "../store";
 
@@ -92,8 +91,6 @@ export default {
       this.loginDisabled = true
       if (this.username != null && this.username != '' && this.password != null && this.password != '') {
         await this.authenticateLocally({
-          clientId: config.value('clientId'),
-          clientSecret: config.value('clientSec'),
           username: this.username,
           password: this.password,
           tokenEndpoint: "https://custos.scigap.org/apiserver/identity-management/v1.0.0/token"
@@ -107,11 +104,7 @@ export default {
       this.loginError = false
     },
     async loadAuthURL() {
-      await this.fetchAuthorizationEndpoint({
-        clientId: config.value('clientId'),
-        clientSecret: config.value('clientSec'),
-        redirectUri: config.value('redirectURI')
-      });
+      await this.fetchAuthorizationEndpoint();
     },
     redirectIfAuthenticated() {
       if (this.authenticated === true) {

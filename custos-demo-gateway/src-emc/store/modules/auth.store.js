@@ -1,6 +1,7 @@
 import decode from "jwt-decode";
 import {hasTokenExpired} from "../util/jwt.util";
 import {custosApiAxios, getCustosApiAuthorizationHeader, identityMgtEndpoint} from "../util/custos.util";
+import {clientId, clientSecret, redirectUri} from "../util/config.util";
 
 const ACCESS_TOKEN_KEY = 'access_token';
 const ID_TOKEN_KEY = 'id_token';
@@ -12,8 +13,9 @@ const state = {
     refreshToken: localStorage.getItem(REFRESH_TOKEN_KEY)
 };
 
+
 const actions = {
-    async fetchAuthorizationEndpoint(obj, {clientId, clientSecret, redirectUri}) {
+    async fetchAuthorizationEndpoint() {
         const {data: {authorization_endpoint}} = await custosApiAxios.get(
             `${identityMgtEndpoint}/.well-known/openid-configuration`,
             {
@@ -23,7 +25,7 @@ const actions = {
         );
         window.location.href = `${authorization_endpoint}?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=openid&kc_idp_hint=oidc`;
     },
-    async authenticateUsingCode({commit}, {clientId, clientSecret, redirectUri, tokenEndpoint, code}) {
+    async authenticateUsingCode({commit}, {tokenEndpoint, code}) {
         let {data: {access_token, id_token, refresh_token}} = await custosApiAxios.post(
             tokenEndpoint,
             {'code': code, 'redirect_uri': redirectUri, 'grant_type': 'authorization_code'},
@@ -33,7 +35,7 @@ const actions = {
         );
         commit("SET_TOKENS", {accessToken: access_token, idToken: id_token, refreshToken: refresh_token});
     },
-    async authenticateLocally({commit}, {clientId, clientSecret, tokenEndpoint, username, password}) {
+    async authenticateLocally({commit}, {tokenEndpoint, username, password}) {
         let {data: {access_token, id_token, refresh_token}} = await custosApiAxios.post(
             tokenEndpoint,
             {'grant_type': 'password', 'username': username, 'password': password},
@@ -43,7 +45,7 @@ const actions = {
         );
         commit("SET_TOKENS", {accessToken: access_token, idToken: id_token, refreshToken: refresh_token});
     },
-    async logout({commit, state}, {clientId, clientSecret}) {
+    async logout({commit, state}) {
         await custosApiAxios.post(
             `${identityMgtEndpoint}/user/logout`,
             {refresh_token: state.refreshToken},
@@ -53,7 +55,7 @@ const actions = {
         );
         commit("CLEAR_TOKENS");
     },
-    async refreshAuthentication({commit, state}, {clientId, clientSecret}) {
+    async refreshAuthentication({commit, state}) {
         if (state.refreshToken && hasTokenExpired(state.refreshToken)) {
             let {data: {access_token, id_token, refresh_token}} = await custosApiAxios.post(
                 `${identityMgtEndpoint}/token`,
@@ -65,7 +67,6 @@ const actions = {
 
             commit("SET_TOKENS", {accessToken: access_token, idToken: id_token, refreshToken: refresh_token});
         }
-
     }
 }
 

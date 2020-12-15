@@ -3,8 +3,6 @@
 </template>
 
 <script>
-
-import config from "../config";
 import {mapActions, mapGetters} from "vuex";
 
 export default {
@@ -17,9 +15,6 @@ export default {
     }),
     async authenticate() {
       await this.authenticateUsingCode({
-        clientId: config.value('clientId'),
-        clientSecret: config.value('clientSec'),
-        redirectUri: config.value('redirectURI'),
         tokenEndpoint: "https://custos.scigap.org/apiserver/identity-management/v1.0.0/token",
         code: this.code
       })

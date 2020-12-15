@@ -142,7 +142,6 @@ const getters = {
          * @return {(import('../typedefs').Dataset)[] | null}
          */
         return ({datasetId, collectionId, datasetName, createdBy, createdAt}) => {
-            console.log("Haaaaaaaaaaaaaaaai");
             const datasetIds = getters.getDatasetIds({datasetId, collectionId, datasetName, createdBy, createdAt});
             if (datasetIds) {
                 return datasetIds.map(datasetId => getters.getDataset({datasetId}));
