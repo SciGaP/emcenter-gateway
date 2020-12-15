@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from "./router.js";
-import store from '../src/store/index.js'
+import store from './store/index.js'
 import {BootstrapVue, IconsPlugin} from 'bootstrap-vue'
 import Vuelidate from 'vuelidate'
 

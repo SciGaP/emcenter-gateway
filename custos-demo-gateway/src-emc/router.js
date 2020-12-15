@@ -1,21 +1,26 @@
 import Vue from "vue";
 import Router from "vue-router";
-import store from '../src/store/index'
-import config from "../src/config";
+import store from './store/index'
+import config from "./config";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 
 Vue.use(Router)
 
 async function _validateAuthenticationBeforeEnter(to, from, next) {
-    if (await store.dispatch('identity/isAuthenticated', {
+    await store.dispatch('auth/refreshAuthentication', {
         client_id: config.value('clientId'),
         client_sec: config.value('clientSec'),
-    }) === true) {
-        // You can use store variable here to access globalError or commit mutation
-        next(true)
+    });
+
+    const authenticated = store.getters['auth/authenticated'];
+
+    console.log("ROUTER authenticated ", authenticated)
+
+    if (!authenticated) {
+        next('/login');
     } else {
-        next('/login')
+        next(true);
     }
 }
 
@@ -31,12 +36,6 @@ export default new Router({
             path: "/login",
             name: "login",
             component: Login
-        },
-        {
-            path: "/register",
-            name: "account",
-            component: () =>
-                import(/*webpackChunkName:"account"*/  "../src/components/registration/CreateAccount")
         },
         {
             path: "/dashboard",
@@ -77,7 +76,7 @@ export default new Router({
             path: "/callback",
             name: "callback",
             component: () =>
-                import("../src/components/Callback")
+                import("./pages/Callback")
         },
 
     ]

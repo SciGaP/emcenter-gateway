@@ -1,13 +1,13 @@
 <template>
-  <Landing success-redirect="dashboard"/>
+  <Login success-redirect="dashboard"/>
 </template>
 
 <script>
-import Landing from "../../src/components/landing/Landing";
+import Login from "./Login";
 
 export default {
   name: "Home",
-  components: {Landing}
+  components: {Login}
 }
 </script>
 

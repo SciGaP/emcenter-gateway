@@ -9,7 +9,7 @@
         <div class="p-3 left-menu-profile" v-if="user">
           <b-icon icon="person" style="width: 100px; height: 100px;"></b-icon>
           <div class="left-menu-profile-name">{{ user.first_name }} {{ user.last_name }}</div>
-          <div class="left-menu-profile-role">{{ user.roles.join(" / ") }}</div>
+          <div class="left-menu-profile-role">{{ user.realm_roles.join(" / ") }}</div>
         </div>
         <div class="p-3 left-menu-navigation">
           <ul>
@@ -56,8 +56,8 @@
 </template>
 
 <script>
-import store from "@/store";
-import {mapGetters} from "vuex";
+import store from "./store";
+import {mapGetters, mapActions} from "vuex";
 import config from "@/config";
 
 export default {
@@ -65,63 +65,69 @@ export default {
   store: store,
   data: function () {
     return {
-      isAdmin: false,
-      user: null
+      // authenticated: false,
+      // currentUsername: null,
+      // isAdmin: false
+      // user: null
     }
   },
   computed: {
     ...mapGetters({
-      authenticated: 'identity/isAuthenticated',
-      currentUserName: 'identity/getCurrentUserName',
-    })
+      authenticated: "auth/authenticated",
+      currentUsername: "auth/currentUsername",
+      isAdmin: "auth/isAdmin",
+      getUser: "user/getUser"
+    }),
+    user() {
+      return this.getUser({username: this.currentUsername});
+    }
   },
   methods: {
+    ...mapActions({
+      fetchUsers: "user/fetchUsers",
+      logoutAction: "auth/logout",
+      refreshAuthentication: "auth/refreshAuthentication"
+    }),
     async logout() {
-      await this.$store.dispatch('identity/logout', {
-        client_id: config.value('clientId'),
-        client_sec: config.value('clientSec'),
-      });
+      await this.logoutAction({
+        clientId: config.value('clientId'),
+        clientSecret: config.value('clientSec'),
+      })
     },
     async fetchAuthenticatedUser() {
-      this.isAdmin = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
-      if (this.authenticated && (!this.user || this.user.username !== this.currentUserName)) {
-        let resp = await this.$store.dispatch('user/users', {
+      if (this.authenticated && (!this.user || this.user.username !== this.currentUsername)) {
+        await this.fetchUsers({
           offset: 0,
           limit: 1,
-          client_id: config.value('clientId'),
-          client_sec: config.value('clientSec'),
-          username: this.currentUserName
-        })
-        if (Array.isArray(resp) && resp.length > 0) {
-          resp.forEach(obj => {
-            this.user = {
-              username: obj.username,
-              first_name: obj.first_name,
-              last_name: obj.last_name,
-              email: obj.email,
-              status: obj.state,
-              attributes: [],
-              roles: obj.realm_roles
-            }
-          })
-        }
+          clientId: config.value('clientId'),
+          clientSecret: config.value('clientSec'),
+          username: this.currentUsername
+        });
+      }
+    },
+    redirectToLoginIfNotAuthenticated() {
+      if (!this.authenticated && this.$router.currentRoute.path !== "/") {
+        this.$router.push('/')
       }
     }
   },
   watch: {
-    async authenticated() {
-      if (this.authenticated !== true) {
-        await this.$router.push('/')
-      }
+    authenticated() {
+      this.redirectToLoginIfNotAuthenticated();
     },
-    currentUserName() {
-      if (this.currentUserName) {
+    currentUsername() {
+      if (this.currentUsername) {
         this.fetchAuthenticatedUser()
       }
     }
   },
   beforeMount() {
-    this.fetchAuthenticatedUser()
+    this.refreshAuthentication({
+      clientId: config.value('clientId'),
+      clientSecret: config.value('clientSec'),
+    });
+    this.fetchAuthenticatedUser();
+    this.redirectToLoginIfNotAuthenticated();
   }
 }
 </script>

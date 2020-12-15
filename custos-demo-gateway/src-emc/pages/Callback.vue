@@ -1,0 +1,56 @@
+<template>
+  <p>Redirecting ...</p>
+</template>
+
+<script>
+
+import config from "../config";
+import {mapActions, mapGetters} from "vuex";
+
+export default {
+  name: "Callback",
+  data: function () {
+    return {
+      username: "",
+      password: "",
+      custosId: null,
+      custosSec: null,
+      redirectURI: null,
+      tokenEndpoint: null
+    }
+  },
+  methods: {
+    ...mapActions({
+      authenticateLocally: "auth/authenticateLocally",
+      fetchAuthorizationEndpoint: "auth/fetchAuthorizationEndpoint",
+      authenticateUsingCode: "auth/authenticateUsingCode"
+    }),
+    async authenticate() {
+      await this.authenticateUsingCode({
+        clientId: config.value('clientId'),
+        clientSecret: config.value('clientSec'),
+        redirectUri: config.value('redirectURI'),
+        tokenEndpoint: "https://custos.scigap.org/apiserver/identity-management/v1.0.0/token",
+        code: this.code
+      })
+    }
+  },
+
+  computed: {
+    ...mapGetters({
+      authenticated: 'auth/authenticated'
+    }),
+    code() {
+      return this.$route.query.code;
+    }
+  },
+  async mounted() {
+    await this.authenticate()
+    await this.$router.push('workspace')
+  }
+}
+</script>
+
+<style scoped>
+
+</style>
