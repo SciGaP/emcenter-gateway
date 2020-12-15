@@ -112,10 +112,8 @@ const getters = {
         return roles.indexOf("admin")
     },
     currentUsername(state, getters) {
-        console.log("##### currentUsername ")
         if (getters.accessToken) {
             let {preferred_username} = decode(getters.accessToken);
-            console.log("##### currentUsername ", preferred_username);
             return preferred_username;
         } else {
             return null

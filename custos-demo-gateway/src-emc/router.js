@@ -9,8 +9,8 @@ Vue.use(Router)
 
 async function _validateAuthenticationBeforeEnter(to, from, next) {
     await store.dispatch('auth/refreshAuthentication', {
-        client_id: config.value('clientId'),
-        client_sec: config.value('clientSec'),
+        clientId: config.value('clientId'),
+        clientSecret: config.value('clientSec'),
     });
 
     const authenticated = store.getters['auth/authenticated'];
@@ -80,7 +80,4 @@ export default new Router({
         },
 
     ]
-})
-
-
-
+});

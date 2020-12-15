@@ -63,14 +63,6 @@ import config from "@/config";
 export default {
   name: 'App',
   store: store,
-  data: function () {
-    return {
-      // authenticated: false,
-      // currentUsername: null,
-      // isAdmin: false
-      // user: null
-    }
-  },
   computed: {
     ...mapGetters({
       authenticated: "auth/authenticated",

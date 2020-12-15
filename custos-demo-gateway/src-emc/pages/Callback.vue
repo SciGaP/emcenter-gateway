@@ -9,16 +9,6 @@ import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "Callback",
-  data: function () {
-    return {
-      username: "",
-      password: "",
-      custosId: null,
-      custosSec: null,
-      redirectURI: null,
-      tokenEndpoint: null
-    }
-  },
   methods: {
     ...mapActions({
       authenticateLocally: "auth/authenticateLocally",

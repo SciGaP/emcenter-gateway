@@ -60,7 +60,6 @@
 import config from "@/config";
 import {mapGetters, mapActions} from "vuex";
 import store from "../store";
-// import CustosAuthenticationProvider from "../services/custos-authentication.provider";
 
 export default {
   name: 'Login',
@@ -76,8 +75,7 @@ export default {
       username: "",
       password: "",
       loginDisabled: false,
-      loginError: false,
-      // authenticated: null
+      loginError: false
     }
   },
   computed: {
@@ -93,21 +91,13 @@ export default {
     async login() {
       this.loginDisabled = true
       if (this.username != null && this.username != '' && this.password != null && this.password != '') {
-        // let params = {
-        //   client_id: config.value('clientId'),
-        //   client_sec: config.value('clientSec'),
-        //   username: this.username,
-        //   password: this.password,
-        //   token_endpoint: "https://custos.scigap.org/apiserver/identity-management/v1.0.0/token"
-        // };
         await this.authenticateLocally({
           clientId: config.value('clientId'),
           clientSecret: config.value('clientSec'),
           username: this.username,
           password: this.password,
           tokenEndpoint: "https://custos.scigap.org/apiserver/identity-management/v1.0.0/token"
-        })
-        // await this.$store.dispatch('identity/authenticateLocally', params);
+        });
       } else {
         this.loginError = true
       }
@@ -122,9 +112,6 @@ export default {
         clientSecret: config.value('clientSec'),
         redirectUri: config.value('redirectURI')
       });
-      // let params = {client_id: this.custosId, redirect_uri: config.value('redirectURI')};
-      // await this.$store.dispatch('identity/fetchAuthorizationEndpoint', params)
-      // window.location.href = this.$store.getters['identity/getAuthorizationEndpoint']
     },
     redirectIfAuthenticated() {
       if (this.authenticated === true) {
