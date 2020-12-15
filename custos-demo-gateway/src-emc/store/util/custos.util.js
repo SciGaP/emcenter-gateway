@@ -11,3 +11,9 @@ export const custosApiAxios = axios.create({
         'Content-Type': 'application/json'
     }
 });
+
+export function getCustosApiAuthorizationHeader({clientId, clientSecret}) {
+    return {
+        'Authorization': `Bearer ${btoa(`${clientId}:${clientSecret}`)}`
+    };
+}

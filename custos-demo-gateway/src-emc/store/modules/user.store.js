@@ -1,4 +1,4 @@
-import {custosApiAxios, userMgtEndpoint} from "../util/custos.util";
+import {custosApiAxios, getCustosApiAuthorizationHeader, userMgtEndpoint} from "../util/custos.util";
 
 
 const getDefaultState = () => {
@@ -17,7 +17,7 @@ const actions = {
             `${userMgtEndpoint}/users`,
             {
                 params: params,
-                headers: {'Authorization': 'Bearer ' + btoa(`${clientId}:${clientSecret}`)}
+                headers: getCustosApiAuthorizationHeader({clientId, clientSecret})
             }
         );
         const {data: {users}} = resp;

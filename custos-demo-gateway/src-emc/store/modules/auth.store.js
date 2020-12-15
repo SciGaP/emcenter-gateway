@@ -1,6 +1,6 @@
 import decode from "jwt-decode";
 import {hasTokenExpired} from "../util/jwt.util";
-import {custosApiAxios, identityMgtEndpoint} from "../util/custos.util";
+import {custosApiAxios, getCustosApiAuthorizationHeader, identityMgtEndpoint} from "../util/custos.util";
 
 const ACCESS_TOKEN_KEY = 'access_token';
 const ID_TOKEN_KEY = 'id_token';
@@ -18,7 +18,7 @@ const actions = {
             `${identityMgtEndpoint}/.well-known/openid-configuration`,
             {
                 params: {client_id: clientId},
-                headers: {'Authorization': `Bearer ${btoa(`${clientId}:${clientSecret}`)}`}
+                headers: getCustosApiAuthorizationHeader({clientId, clientSecret})
             }
         );
         window.location.href = `${authorization_endpoint}?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=openid&kc_idp_hint=oidc`;
@@ -28,7 +28,7 @@ const actions = {
             tokenEndpoint,
             {'code': code, 'redirect_uri': redirectUri, 'grant_type': 'authorization_code'},
             {
-                headers: {'Authorization': `Bearer ${btoa(`${clientId}:${clientSecret}`)}`}
+                headers: getCustosApiAuthorizationHeader({clientId, clientSecret})
             }
         );
         commit("SET_TOKENS", {accessToken: access_token, idToken: id_token, refreshToken: refresh_token});
@@ -38,7 +38,7 @@ const actions = {
             tokenEndpoint,
             {'grant_type': 'password', 'username': username, 'password': password},
             {
-                headers: {'Authorization': `Bearer ${btoa(`${clientId}:${clientSecret}`)}`}
+                headers: getCustosApiAuthorizationHeader({clientId, clientSecret})
             }
         );
         commit("SET_TOKENS", {accessToken: access_token, idToken: id_token, refreshToken: refresh_token});
@@ -48,7 +48,7 @@ const actions = {
             `${identityMgtEndpoint}/user/logout`,
             {refresh_token: state.refreshToken},
             {
-                headers: {'Authorization': `Bearer ${btoa(`${clientId}:${clientSecret}`)}`}
+                headers: getCustosApiAuthorizationHeader({clientId, clientSecret})
             }
         );
         commit("CLEAR_TOKENS");
@@ -59,7 +59,7 @@ const actions = {
                 `${identityMgtEndpoint}/token`,
                 {'refresh_token': state.refreshToken, 'grant_type': 'refresh_token'},
                 {
-                    headers: {'Authorization': `Bearer ${btoa(`${clientId}:${clientSecret}`)}`}
+                    headers: getCustosApiAuthorizationHeader({clientId, clientSecret})
                 }
             ).catch(() => commit("CLEAR_TOKENS"))
 
