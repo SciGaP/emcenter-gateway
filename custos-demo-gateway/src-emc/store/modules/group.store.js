@@ -1,4 +1,4 @@
-import CustosService from "../service";
+import CustosService from "../../service/custos-service";
 import {clientId, clientSecret, baseURL} from "../util/config.util";
 
 const getDefaultState = () => {

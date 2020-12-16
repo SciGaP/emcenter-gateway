@@ -1,7 +1,7 @@
 import axios from "axios";
-import CustosGroups from "./group_management";
-import CustosUsers from "./user_management";
-import CustosIdentity from "./identity_management";
+import CustosGroups from "./custos-service-groups";
+import CustosUsers from "./custos-service-users";
+import CustosIdentity from "./custos-service-identity";
 
 export const identityMgtEndpoint = "/identity-management/v1.0.0";
 export const userMgtEndpoint = "user-management/v1.0.0";
