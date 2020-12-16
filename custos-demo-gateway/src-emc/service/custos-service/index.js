@@ -3,50 +3,6 @@ import CustosGroups from "./custos-service-groups";
 import CustosUsers from "./custos-service-users";
 import CustosIdentity from "./custos-service-identity";
 
-export const identityMgtEndpoint = "/identity-management/v1.0.0";
-export const userMgtEndpoint = "user-management/v1.0.0";
-export const groupMgtEndpoint = "group-management/v1.0.0";
-
-
-export const custosApiAxios = axios.create({
-    baseURL: 'https://custos.scigap.org/apiserver/',
-    withCredentials: false,
-    headers: {
-        'Accept': '*/*',
-        'Content-Type': 'application/json'
-    }
-});
-
-export function getCustosApiAuthorizationHeader({clientId, clientSecret}) {
-    return {
-        'Authorization': `Bearer ${btoa(`${clientId}:${clientSecret}`)}`
-    };
-}
-
-// export class CustosApiBase {
-//     _clientId = null;
-//     _clientSecret = null;
-//     _baseURL = null;
-//
-//     constructor({clientId, clientSecret, baseURL}) {
-//         this._clientId = clientId;
-//         this._clientId = clientSecret;
-//         this._baseURL = baseURL;
-//     }
-//
-//     get clientId() {
-//         return this._clientId;
-//     }
-//
-//     get clientSecret() {
-//         return this._clientSecret;
-//     }
-//
-//     get baseURL() {
-//         return this._baseURL;
-//     }
-// }
-
 export default class CustosService {
     static ENDPOINTS = {
         IDENTITY: "/identity-management/v1.0.0",
