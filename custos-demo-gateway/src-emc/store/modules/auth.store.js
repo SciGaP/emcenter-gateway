@@ -1,7 +1,6 @@
 import decode from "jwt-decode";
 import {hasTokenExpired} from "../util/jwt.util";
-import {custosApiAxios, getCustosApiAuthorizationHeader, identityMgtEndpoint} from "../util/custos.util";
-import {clientId, clientSecret, redirectUri} from "../util/config.util";
+import {custosService} from "../util/custos.util";
 
 const ACCESS_TOKEN_KEY = 'access_token';
 const ID_TOKEN_KEY = 'id_token';
@@ -13,58 +12,33 @@ const state = {
     refreshToken: localStorage.getItem(REFRESH_TOKEN_KEY)
 };
 
-
 const actions = {
     async fetchAuthorizationEndpoint() {
-        const {data: {authorization_endpoint}} = await custosApiAxios.get(
-            `${identityMgtEndpoint}/.well-known/openid-configuration`,
-            {
-                params: {client_id: clientId},
-                headers: getCustosApiAuthorizationHeader({clientId, clientSecret})
-            }
-        );
+        const {clientId, redirectUri} = custosService;
+        const {data: {authorization_endpoint}} = await custosService.identity.getOpenIdConfig();
         window.location.href = `${authorization_endpoint}?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=openid&kc_idp_hint=oidc`;
     },
     async authenticateUsingCode({commit}, {tokenEndpoint, code}) {
-        let {data: {access_token, id_token, refresh_token}} = await custosApiAxios.post(
-            tokenEndpoint,
-            {'code': code, 'redirect_uri': redirectUri, 'grant_type': 'authorization_code'},
-            {
-                headers: getCustosApiAuthorizationHeader({clientId, clientSecret})
-            }
-        );
+        const {data: {access_token, id_token, refresh_token}} = await custosService.identity.getToken({
+            tokenEndpoint, code
+        });
         commit("SET_TOKENS", {accessToken: access_token, idToken: id_token, refreshToken: refresh_token});
     },
     async authenticateLocally({commit}, {tokenEndpoint, username, password}) {
-        let {data: {access_token, id_token, refresh_token}} = await custosApiAxios.post(
-            tokenEndpoint,
-            {'grant_type': 'password', 'username': username, 'password': password},
-            {
-                headers: getCustosApiAuthorizationHeader({clientId, clientSecret})
-            }
-        );
+        const {data: {access_token, id_token, refresh_token}} = await custosService.identity.localLogin({
+            tokenEndpoint, username, password
+        });
         commit("SET_TOKENS", {accessToken: access_token, idToken: id_token, refreshToken: refresh_token});
     },
-    async logout({commit, state}) {
-        await custosApiAxios.post(
-            `${identityMgtEndpoint}/user/logout`,
-            {refresh_token: state.refreshToken},
-            {
-                headers: getCustosApiAuthorizationHeader({clientId, clientSecret})
-            }
-        );
+    async logout({commit}) {
+        await custosService.identity.logout();
         commit("CLEAR_TOKENS");
     },
     async refreshAuthentication({commit, state}) {
         if (state.refreshToken && hasTokenExpired(state.refreshToken)) {
-            let {data: {access_token, id_token, refresh_token}} = await custosApiAxios.post(
-                `${identityMgtEndpoint}/token`,
-                {'refresh_token': state.refreshToken, 'grant_type': 'refresh_token'},
-                {
-                    headers: getCustosApiAuthorizationHeader({clientId, clientSecret})
-                }
-            ).catch(() => commit("CLEAR_TOKENS"))
-
+            const {
+                data: {access_token, id_token, refresh_token}
+            } = await custosService.identity.getTokenUsingRefreshToken().catch(() => commit("CLEAR_TOKENS"));
             commit("SET_TOKENS", {accessToken: access_token, idToken: id_token, refreshToken: refresh_token});
         }
     }

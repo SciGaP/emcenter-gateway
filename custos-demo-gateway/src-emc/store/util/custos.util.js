@@ -1,19 +1,9 @@
-import axios from "axios";
+import CustosService from "../service";
+import config from "../../config";
 
-export const identityMgtEndpoint = "/identity-management/v1.0.0";
-export const userMgtEndpoint = "user-management/v1.0.0";
-
-export const custosApiAxios = axios.create({
-    baseURL: 'https://custos.scigap.org/apiserver/',
-    withCredentials: false,
-    headers: {
-        'Accept': '*/*',
-        'Content-Type': 'application/json'
-    }
+export const custosService = new CustosService({
+    clientId: config.value('clientId'),
+    clientSecret: config.value('clientSec'),
+    redirectURI: config.value('redirectURI'),
+    baseURL: "https://custos.scigap.org/apiserver/"
 });
-
-export function getCustosApiAuthorizationHeader({clientId, clientSecret}) {
-    return {
-        'Authorization': `Bearer ${btoa(`${clientId}:${clientSecret}`)}`
-    };
-}
