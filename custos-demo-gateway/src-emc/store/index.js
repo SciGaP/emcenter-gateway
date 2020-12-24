@@ -4,6 +4,7 @@ import createLogger from 'vuex/dist/logger';
 import collection from "./modules/collection.store"
 import dataset from "./modules/dataset.store"
 import user from "./modules/user.store"
+import group from "./modules/group.store"
 import auth from "./modules/auth.store"
 
 
@@ -15,8 +16,9 @@ export default new Vuex.Store({
     modules: {
         collection,
         dataset,
+        auth,
         user,
-        auth
+        group
     },
     strict: debug,
     plugins: debug ? [createLogger()] : [],

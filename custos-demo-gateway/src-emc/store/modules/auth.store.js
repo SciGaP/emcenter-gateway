@@ -36,10 +36,11 @@ const actions = {
     },
     async refreshAuthentication({commit, state}) {
         if (state.refreshToken && hasTokenExpired(state.refreshToken)) {
-            const {
-                data: {access_token, id_token, refresh_token}
-            } = await custosService.identity.getTokenUsingRefreshToken().catch(() => commit("CLEAR_TOKENS"));
-            commit("SET_TOKENS", {accessToken: access_token, idToken: id_token, refreshToken: refresh_token});
+            await custosService.identity.getTokenUsingRefreshToken()
+                .catch(() => commit("CLEAR_TOKENS"))
+                .then(({data: {access_token, id_token, refresh_token}}) => {
+                    commit("SET_TOKENS", {accessToken: access_token, idToken: id_token, refreshToken: refresh_token});
+                });
         }
     }
 }
