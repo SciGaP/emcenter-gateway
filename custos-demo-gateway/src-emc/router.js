@@ -66,6 +66,13 @@ export default new Router({
                 import("./pages/SettingsPage")
         },
         {
+            path: "/groups/:groupId",
+            name: "settings",
+            beforeEnter: _validateAuthenticationBeforeEnter,
+            component: () =>
+                import("./pages/GroupPage")
+        },
+        {
             path: "/callback",
             name: "callback",
             component: () =>
