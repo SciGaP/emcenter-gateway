@@ -56,13 +56,26 @@ export default class CustosUsers {
         );
     }
 
-    findUsers({offset, limit, username}) {
-        return this.custosService.axiosInstanceWithClientAuthorization.get(
-            `${CustosService.ENDPOINTS.USERS}/users`,
-            {
-                params: {offset: offset, limit: limit, client_id: this.custosService.clientId, 'user.id': username}
-            }
-        );
+    findUsers({offset = null, limit = null, username = null, groupId = null}) {
+        if (groupId) {
+            return this.custosService.axiosInstanceWithClientAuthorization.get(
+                `${CustosService.ENDPOINTS.GROUPS}/user/group/memberships/child`,
+                {
+                    params: {"group.id": groupId}
+                }
+            ).then(({data: {profiles}}) => {
+                return profiles;
+            });
+        } else {
+            return this.custosService.axiosInstanceWithClientAuthorization.get(
+                `${CustosService.ENDPOINTS.USERS}/users`,
+                {
+                    params: {offset: offset, limit: limit, client_id: this.custosService.clientId, 'user.id': username}
+                }
+            ).then(({data: {users}}) => {
+                return users;
+            });
+        }
     }
 
     /**

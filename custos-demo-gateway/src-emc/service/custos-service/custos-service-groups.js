@@ -9,7 +9,7 @@ export default class CustosGroups {
     constructor(custosService) {
         this._custosService = custosService;
     }
-    
+
     get custosService() {
         return this._custosService;
     }
@@ -69,7 +69,7 @@ export default class CustosGroups {
      */
     findGroup({groupId}) {
         return this.custosService.axiosInstanceWithClientAuthorization.get(
-            `${CustosService.ENDPOINTS.GROUPS}/group`,
+            `${CustosService.ENDPOINTS.GROUPS}/groups`,
             {
                 params: {id: groupId}
             }
@@ -82,7 +82,7 @@ export default class CustosGroups {
      */
     getAllGroups() {
         return this.custosService.axiosInstanceWithClientAuthorization.get(
-            `${CustosService.ENDPOINTS.GROUPS}/group`
+            `${CustosService.ENDPOINTS.GROUPS}/groups`
         );
     }
 
