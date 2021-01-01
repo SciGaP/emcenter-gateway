@@ -1,11 +1,16 @@
 <template>
   <div>
-    <h1>Groups</h1>
+    <h1>PI Groups</h1>
     <ul>
       <li v-for="group in groups" :key="group.groupId">
-        <a v-on:click.prevent="onGroupSelect({groupId:group.groupId})">
-          {{ group.groupId }} - {{ group.name }} - {{ group.description }}
-        </a>
+        <router-link
+            :to="getGroupLink({groupId: group.groupId})"
+            v-slot="{ href, route, navigate}"
+        >
+          <a :href="href" @click="navigate">
+            {{ group.name }}
+          </a>
+        </router-link>
       </li>
     </ul>
   </div>
@@ -31,8 +36,8 @@ export default {
     ...mapActions({
       fetchGroups: "group/fetchGroups",
     }),
-    onGroupSelect({groupId}) {
-      this.$router.push(`groups/${groupId}`);
+    getGroupLink({groupId}) {
+      return `groups/${groupId}`;
     }
   },
   beforeMount() {
