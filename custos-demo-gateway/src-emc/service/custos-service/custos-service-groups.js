@@ -69,9 +69,13 @@ export default class CustosGroups {
      */
     findGroup({groupId}) {
         return this.custosService.axiosInstanceWithClientAuthorization.get(
-            `${CustosService.ENDPOINTS.GROUPS}/groups`,
+            `${CustosService.ENDPOINTS.GROUPS}/group`,
             {
-                params: {id: groupId}
+                params: {
+                    group: {
+                        id: groupId
+                    }
+                }
             }
         ).then(({data: {groups: [group]}}) => group);
     }
