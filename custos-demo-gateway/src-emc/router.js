@@ -66,6 +66,13 @@ export default new Router({
                 import("./pages/SettingsPage")
         },
         {
+            path: "/groups",
+            name: "groups",
+            beforeEnter: _validateAuthenticationBeforeEnter,
+            component: () =>
+                import("./pages/GroupsPage")
+        },
+        {
             path: "/groups/:groupId",
             name: "settings",
             beforeEnter: _validateAuthenticationBeforeEnter,

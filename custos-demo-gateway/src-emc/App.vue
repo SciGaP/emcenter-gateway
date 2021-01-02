@@ -32,6 +32,12 @@
               </router-link>
             </li>
             <li>
+              <router-link to="/groups">
+                <b-icon icon="people-fill"></b-icon>
+                {{ $t('app.left-nav.menu.item.name.groups') }}
+              </router-link>
+            </li>
+            <li>
               <router-link to="/settings">
                 <b-icon icon="tools"></b-icon>
                 {{ $t('app.left-nav.menu.item.name.settings') }}

@@ -2,7 +2,7 @@
   <b-container>
     <b-row>
       <b-col>
-        <router-link to="groups">PI Group</router-link>
+        <router-link to="/groups">PI Group</router-link>
         <span> / </span>
         <router-link :to="groupLink" v-if="group">{{ group.name }}</router-link>
       </b-col>
@@ -123,7 +123,7 @@ export default {
       return this.getUsers({groupId: this.groupId});
     },
     groupLink() {
-      return `groups/${this.groupId}`;
+      return `/groups/${this.groupId}`;
     }
   },
   methods: {
