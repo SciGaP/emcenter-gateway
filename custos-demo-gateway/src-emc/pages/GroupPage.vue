@@ -38,6 +38,7 @@
             <b-form-checkbox
                 :id="`checkbox-group-user-${user.username}`"
                 :name="`checkbox-group-user-${user.username}`"
+                :checked="true"
             >
               {{ user.username }}
             </b-form-checkbox>
@@ -45,20 +46,32 @@
         </ul>
       </b-col>
       <b-col class="pt-2">
-        <b-row>
-          <b-col>
+        <div class="w-100" style="display: flex;">
+          <div style="flex: 1;">
             /
-          </b-col>
-        </b-row>
-        <b-row class="pt-4">
+          </div>
+          <div>
+            <b-button size="sm" :variant="displayMode === 'list' ? 'primary':'outline-primary'"
+                      v-on:click="switchDisplayMode('list')">
+              <b-icon icon="list" aria-hidden="true"></b-icon>
+            </b-button>
+            <b-button size="sm" :variant="displayMode === 'grid' ? 'primary':'outline-primary'" class="ml-2"
+                      v-on:click="switchDisplayMode('grid')">
+              <b-icon icon="grid" aria-hidden="true"></b-icon>
+            </b-button>
+          </div>
+        </div>
+
+        <div class="w-100 pt-4"></div>
+
+        <b-row v-if="displayMode === 'grid'">
           <b-col style="min-width: 120px;max-width: 120px;" v-for="folder in folders" :key="folder.folderId">
             <a>
               <b-icon icon="folder-fill" aria-hidden="true"></b-icon>
               <div style="display: inline; padding-left: 5px;">{{ folder.name }}</div>
             </a>
           </b-col>
-        </b-row>
-        <b-row class="pt-4">
+          <div class="w-100 pt-5"></div>
           <b-col style="min-width: 120px;max-width: 120px;" v-for="file in files" :key="file.fileId">
             <a>
               <b-icon icon="card-image" aria-hidden="true"></b-icon>
@@ -66,6 +79,35 @@
             </a>
           </b-col>
         </b-row>
+
+
+        <div class="w-100" v-if="displayMode === 'list'">
+          <b-row style="border-bottom: 1px solid #dee2e6; margin-bottom: 5px;" v-for="folder in folders"
+                 :key="folder.folderId">
+            <b-col>
+              <b-icon icon="folder-fill" aria-hidden="true"></b-icon>
+              <div style="display: inline; padding-left: 5px;">{{ folder.name }}</div>
+            </b-col>
+            <b-col style="padding-top: 2px; padding-bottom: 2px;">
+              <b-progress style="height: 100%;" :value="30" :max="100" show-progress animated></b-progress>
+            </b-col>
+            <b-col>Dec 23, 2020</b-col>
+            <b-col>Thomas</b-col>
+          </b-row>
+          <div class="w-100 pt-5"></div>
+          <b-row style="border-bottom: 1px solid #dee2e6; margin-bottom: 5px;" v-for="file in files" :key="file.fileId">
+            <b-col>
+              <b-icon icon="card-image" aria-hidden="true"></b-icon>
+              <div style="display: inline; padding-left: 5px;">{{ file.name }}</div>
+            </b-col>
+            <b-col style="padding-top: 2px; padding-bottom: 2px;">
+              <b-progress style="height: 100%;" :value="30" :max="100" show-progress animated></b-progress>
+            </b-col>
+            <b-col>Dec 23, 2020</b-col>
+            <b-col>Thomas</b-col>
+          </b-row>
+        </div>
+
       </b-col>
     </b-row>
   </b-container>
@@ -81,6 +123,7 @@ export default {
   store: store,
   data() {
     return {
+      displayMode: "list",
       folders: [
         {folderId: 1, name: "Dinuka"},
         {folderId: 2, name: "Isuru"},
@@ -130,7 +173,10 @@ export default {
     ...mapActions({
       fetchGroup: "group/fetchGroup",
       fetchUsers: "user/fetchUsers",
-    })
+    }),
+    switchDisplayMode(displayMode) {
+      this.displayMode = displayMode;
+    }
   },
   beforeMount() {
     this.fetchGroup({groupId: this.groupId});
