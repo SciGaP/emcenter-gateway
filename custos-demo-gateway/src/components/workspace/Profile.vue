@@ -1,5 +1,14 @@
 <template>
     <div>
+        <div class="navigation text-left" v-if="!this.tenantModeactivated">
+            <router-link to="/tenants">
+
+                <b-icon icon="house-door-fill"></b-icon>
+
+            </router-link>
+
+
+        </div>
         <div class="w-100 mb-5">
             <h2>User Profile</h2>
         </div>
@@ -225,7 +234,7 @@
 
                 // eslint-disable-next-line no-useless-escape
                 let emailRegs = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-                let regexPucn = /[~!" "@#$%^&*()+=;"'<>,.]/
+                let regexPucn = /[~!@#$%^&*()+=;"'<>.]/
 
                 if (this.first_name == null || this.first_name == '' || regexPucn.test(this.first_name) || this.first_name.length > 20) {
                     this.firstNameError = true
@@ -244,10 +253,9 @@
                 }
 
                 if (!(this.firstNameError || this.lastnameError || this.emailError)) {
-
+                    let accessToken = await this.$store.getters['identity/getAccessToken']
                     let data = {
-                        client_id: this.custosId,
-                        client_sec: this.custosSec,
+                        usertoken:accessToken,
                         body: {
                             username: this.currentUserName,
                             first_name: this.first_name,
@@ -260,7 +268,7 @@
                 }
             },
             async goToWorkspace() {
-                await this.$router.push('/workspace')
+                await this.$router.push({name: 'workspace'})
             },
 
 
@@ -276,49 +284,55 @@
         async mounted() {
             this.custosId = config.value('clientId')
             this.custosSec = config.value('clientSec')
+            this.tenantModeactivated = await this.$store.dispatch('tenant/isTenantModeActivated')
+            if (this.tenantModeactivated) {
+                this.custosId = await this.$store.dispatch('tenant/getActivatedClientId')
+                this.custosSec = await this.$store.dispatch('tenant/getActivatedClientSecret');
+            }
             this.isAdminUser = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
             this.currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
-            let data = {
-                offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
-                username: this.currentUserName
-            }
-            let resp = await this.$store.dispatch('user/users', data)
-            if (Array.isArray(resp) && resp.length > 0) {
-                resp.forEach(obj => {
-                    this.user = {
-                        username: obj.username,
-                        first_name: obj.first_name,
-                        last_name: obj.last_name,
-                        email: obj.email,
-                        status: obj.state,
-                        attributes: [],
-                        roles: []
-                    }
-
-                    obj.realm_roles.forEach(role => {
-                        let r = {
-                            name: role
+            let accessToken = await this.$store.getters['identity/getAccessToken']
+                let data = {
+                    offset: 0, limit: 1, usertoken:accessToken,
+                    username: this.currentUserName
+                }
+                let resp = await this.$store.dispatch('user/users', data)
+                if (Array.isArray(resp) && resp.length > 0) {
+                    resp.forEach(obj => {
+                        this.user = {
+                            username: obj.username,
+                            first_name: obj.first_name,
+                            last_name: obj.last_name,
+                            email: obj.email,
+                            status: obj.state,
+                            attributes: [],
+                            roles: []
                         }
-                        this.roles.push(r)
+
+                        obj.realm_roles.forEach(role => {
+                            let r = {
+                                name: role
+                            }
+                            this.roles.push(r)
+                        })
+                        let attribs = obj.attributes
+                        attribs.forEach(r => {
+                            let newAt = {
+                                key: r.key,
+                                value: r.values.join(",")
+                            }
+                            this.attributes.push(newAt)
+                        })
+
+
+                        this.user = obj
+                        this.first_name = obj.first_name
+                        this.last_name = obj.last_name
+                        this.email = obj.email
+                        this.status = obj.state
+
+
                     })
-                    let attribs = obj.attributes
-                    attribs.forEach(r => {
-                        let newAt = {
-                            key: r.key,
-                            value: r.values.join(",")
-                        }
-                        this.attributes.push(newAt)
-                    })
-
-
-                    this.user = obj
-                    this.first_name = obj.first_name
-                    this.last_name = obj.last_name
-                    this.email = obj.email
-                    this.status = obj.state
-
-
-                })
             }
         }
     }
@@ -332,5 +346,16 @@
         font-weight: 600;
         text-align: left;
         color: #203a43;
+    }
+
+    .navigation a {
+        font-family: Avenir;
+        font-size: 15px;
+        font-weight: 600;
+        text-align: left;
+        color: white;
+        padding: 5px 15px;
+        display: inline-block;
+        transition: all 0.1s;
     }
 </style>

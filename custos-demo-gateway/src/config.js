@@ -11,12 +11,14 @@ export default class Configuration {
     }
 
     static value (name) {
+
         if (!(name in this.CONFIG)) {
             console.log(`Configuration: There is no key named "${name}"`)
             return
         }
 
         const value = this.CONFIG[name]
+
 
         if (!value) {
             console.log(`Configuration: Value for "${name}" is not defined`)

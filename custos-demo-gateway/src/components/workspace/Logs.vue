@@ -174,11 +174,20 @@
         async mounted() {
             this.custosId = config.value('clientId')
             this.custosSec = config.value('clientSec')
+            this.tenantModeactivated = await this.$store.dispatch('tenant/isTenantModeActivated')
+            if (this.tenantModeactivated) {
+                this.custosId = await this.$store.dispatch('tenant/getActivatedClientId')
+                this.custosSec = await  this.$store.dispatch('tenant/getActivatedClientSecret');
+            } else {
+                await this.$router.push({name:'tenants'})
+            }
+
             this.isAdminUser = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
             let data = {
                 client_id: this.custosId,
                 client_sec: this.custosSec
             }
+
 
             this.isLoggingEnabled = await this.$store.dispatch('log/isLoggingEnabled', data)
             this.activateLogEnabling = this.isAdminUser && !this.isLoggingEnabled

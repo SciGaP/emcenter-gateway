@@ -322,7 +322,7 @@
                     await this.loadUsers()
                 } else {
                     let data = {
-                        offset: 0, limit: 5, client_id: this.custosId, client_sec: this.custosSec,
+                        offset: 0, limit: 15, client_id: this.custosId, client_sec: this.custosSec,
                         username: this.searchUsername
                     }
                     await this.$store.dispatch('user/users', data)
@@ -484,24 +484,38 @@
             async addRoleOkPressed() {
                 this.operationCompleted = false
                 let accessToken = await this.$store.getters['identity/getAccessToken']
-                let bd = {
-                    user_token: accessToken,
-                    body: {
-                        roles: [this.selectedRole],
-                        usernames: [this.selectedUsername],
-                        client_level: (this.selectedScope === 'CLIENT')
-                    }
-                }
-                let userAtr = await this.$store.dispatch('user/addRoleToUser', bd)
-                if (userAtr) {
-                    if (this.selectedScope === 'CLIENT') {
-                        let role = {name: this.selectedRole, scope: "CLIENT"}
-                        this.selectedRoles.push(role)
-                    } else {
-                        let role = {name: this.selectedRole, scope: "TENANT"}
-                        this.selectedRoles.push(role)
+
+                if (this.selectedScope === 'TENANT' && this.selectedRole === 'admin'){
+                    let bd = {
+                        user_token: accessToken,
+                        body: {
+                            username: this.selectedUsername,
+                        }
                     }
 
+                    await this.$store.dispatch('user/grantAdminPrivilages', bd)
+                    let role = {name: this.selectedRole, scope: "TENANT"}
+                    this.selectedRoles.push(role)
+                } else {
+                    let bd = {
+                        user_token: accessToken,
+                        body: {
+                            roles: [this.selectedRole],
+                            usernames: [this.selectedUsername],
+                            client_level: (this.selectedScope === 'CLIENT')
+                        }
+                    }
+                    let userAtr = await this.$store.dispatch('user/addRoleToUser', bd)
+                    if (userAtr) {
+                        if (this.selectedScope === 'CLIENT') {
+                            let role = {name: this.selectedRole, scope: "CLIENT"}
+                            this.selectedRoles.push(role)
+                        } else {
+                            let role = {name: this.selectedRole, scope: "TENANT"}
+                            this.selectedRoles.push(role)
+                        }
+
+                    }
                 }
                 this.operationCompleted = true
                 this.selectedRole = null
@@ -512,25 +526,38 @@
                 this.operationCompleted = false
                 let accessToken = await this.$store.getters['identity/getAccessToken']
                 let bd = {};
-                if (this.rowSelectedScope === 'TENANT') {
-                    bd = {
+                let deleted = false
+                if (this.rowSelectedScope === 'TENANT' && this.rowSelectedRole === 'admin'){
+                    let bd = {
                         user_token: accessToken,
                         body: {
-                            roles: [this.rowSelectedRole],
-                            username: this.selectedUsername
+                            username: this.selectedUsername,
                         }
                     }
-                } else {
-                    bd = {
-                        user_token: accessToken,
-                        body: {
-                            client_roles: [this.rowSelectedRole],
-                            username: this.selectedUsername
-                        }
-                    }
-                }
 
-                let deleted = await this.$store.dispatch('user/deleteRoleFromUser', bd)
+                    deleted = await this.$store.dispatch('user/removeAdminPrivilages', bd)
+                } else {
+
+                    if (this.rowSelectedScope === 'TENANT') {
+                        bd = {
+                            user_token: accessToken,
+                            body: {
+                                roles: [this.rowSelectedRole],
+                                username: this.selectedUsername
+                            }
+                        }
+                    } else {
+                        bd = {
+                            user_token: accessToken,
+                            body: {
+                                client_roles: [this.rowSelectedRole],
+                                username: this.selectedUsername
+                            }
+                        }
+                    }
+
+                    deleted = await this.$store.dispatch('user/deleteRoleFromUser', bd)
+                }
                 if (deleted) {
 
                     let newRoles = []
@@ -539,8 +566,9 @@
                         if (atr.name != this.rowSelectedRole) {
                             newRoles.push(atr)
                         }
-                        this.selectedRoles = newRoles
+
                     })
+                    this.selectedRoles = newRoles
                 }
                 this.operationCompleted = true
                 this.loadUsers()
@@ -653,6 +681,14 @@
         async mounted() {
             this.custosId = config.value('clientId')
             this.custosSec = config.value('clientSec')
+            this.tenantModeactivated = await this.$store.dispatch('tenant/isTenantModeActivated')
+            if (this.tenantModeactivated) {
+                this.custosId = await this.$store.dispatch('tenant/getActivatedClientId')
+                this.custosSec = await  this.$store.dispatch('tenant/getActivatedClientSecret');
+            } else {
+                await this.$router.push({name:'tenants'})
+            }
+
             this.isAdminUser = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
             this.currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
             await this.loadUsers()
@@ -660,6 +696,7 @@
             let params = {client_id: this.custosId, client_sec: this.custosSec}
             this.tenantroles = await this.$store.dispatch('user/getTenantLevelRoles', params)
             this.clientroles = await this.$store.dispatch('user/getClientLevelRoles', params)
+
         }
         ,
         computed: {

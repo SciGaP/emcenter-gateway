@@ -110,7 +110,7 @@ const mutations = {
     SET_DEACTIVATED_AGENT(state, data) {
         state.agents.forEach((agent) => {
             if (agent.id == data) {
-                agent.status = "DISABLED"
+                agent.status = "DEACTIVE"
             }
         })
     },

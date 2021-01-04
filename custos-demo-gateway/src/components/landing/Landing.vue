@@ -5,11 +5,11 @@
                 <h2>Welcome to Custos</h2>
                 <p class="h2-sub">Sign up and start authenticating</p>
                 <div class="main-links">
-                    <b-link href="http://airavata.apache.org/custos/">Learn more</b-link>
-                    <b-link class="ml-5"
-                            href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial">
-                        Get started
-                    </b-link>
+                    <b-link href="http://airavata.apache.org/custos/" target="_blank">Custos Website</b-link>
+<!--                    <b-link class="ml-5"-->
+<!--                            href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial" target="_blank">-->
+<!--                        Tutorial Instructions-->
+<!--                    </b-link>-->
                 </div>
                 <img class="w-100" src="./../../assets/custos_home.png">
             </b-col>
@@ -25,7 +25,7 @@
                 </b-card>
                 <b-card class="w-100 mt-3 login-card">
                     <form v-on:submit.prevent="this.login" class="p-2">
-                        <h3 class="mb-3">Login with Custos Explorer</h3>
+                        <h3 class="mb-3">Login with a Custos Account</h3>
                         <div class="p-2">
                             <label class="form-input-label" for="form-input-username">Username</label>
                             <b-form-input id="form-input-username" v-model="username"
@@ -44,18 +44,18 @@
                         <div v-if="this.loginError" class="text-danger w-100 mt-4 text-left form-error-message">
                             Invalid Username or Password
                         </div>
-                        <p class="mt-3 w-100 additional-links text-center">
-                            Don't have an account?
-                            <router-link to="/register">Create an account</router-link>
-                        </p>
+<!--                        <p class="mt-3 w-100 additional-links text-center">-->
+<!--                            Don't have an account?-->
+<!--                            <router-link to="/register">Create an account</router-link>-->
+<!--                        </p>-->
                     </form>
                 </b-card>
                 <p class="mt-3 w-100 additional-links">
-                    How to user Custos?
-                    <b-link href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial">
-                        Tutorial
-                    </b-link>
-                    | All about
+<!--                    How to use Custos?-->
+<!--                    <b-link href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial">-->
+<!--                        Tutorial-->
+<!--                    </b-link>-->
+                    All about
                     <b-link href="http://airavata.apache.org/custos/">Custos</b-link>
                 </p>
             </b-col>
@@ -64,44 +64,71 @@
 </template>
 
 <script>
+
     import config from "@/config";
-    import {mapGetters} from "vuex";
     import store from "@/store";
 
     export default {
         name: 'Landing',
-        store: store,
         props: {
             msg: String,
             seen: Boolean,
-            todos: Array,
-            successRedirect: String
+            todos: Array
         },
         data: function () {
             return {
                 username: "",
                 password: "",
+                custosId: null,
+                custosSec: null,
                 loginDisabled: false,
+                redirectURI: null,
                 loginError: false
             }
-        },
-        computed: {
-            ...mapGetters({
-              authenticated: 'identity/isAuthenticated'
-            })
         },
         methods: {
             async login() {
                 this.loginDisabled = true
                 if (this.username != null && this.username != '' && this.password != null && this.password != '') {
                     let params = {
-                        client_id: config.value('clientId'),
-                        client_sec:  config.value('clientSec'),
-                        username: this.username,
-                        password: this.password,
-                        token_endpoint: "https://custos.scigap.org/apiserver/identity-management/v1.0.0/token"
+                        client_id: this.custosId, client_sec: this.custosSec, username: this.username,
+                        password: this.password, token_endpoint: this.tokenEndpoint
                     };
-                    await this.$store.dispatch('identity/authenticateLocally', params);
+                    let data = {
+                        client_id: this.custosId,
+                        client_sec: this.custosSec
+                    }
+                    await this.$store.dispatch('identity/authenticateLocally', params)
+                    let resp = await this.$store.dispatch('identity/isAuthenticated', data)
+                    if (resp) {
+
+                        let data = {
+                            offset: 0, limit: 1, client_id: this.custosId, client_sec: this.custosSec,
+                            username: this.username
+                        }
+                        let resp = await this.$store.dispatch('user/users', data)
+                        let accessToken = await this.$store.getters['identity/getAccessToken']
+                        if (Array.isArray(resp) && resp.length > 0) {
+                            resp.forEach(user => {
+                                let data = {
+                                    usertoken:accessToken,
+                                    body: {
+                                        username: user.username,
+                                        first_name: user.first_name,
+                                        last_name: user.last_name,
+                                        email: user.email,
+                                    }
+                                }
+                                this.$store.dispatch('user/updateUserProfile', data)
+
+                            })
+                        }
+
+                        await this.$router.push('tenants')
+
+                    } else {
+                        this.loginError = true
+                    }
                 } else {
                     this.loginError = true
                 }
@@ -111,30 +138,27 @@
                 this.loginError = false
             },
             async loadAuthURL() {
-                let params = {client_id: this.custosId, redirect_uri: config.value('redirectURI')};
+                let params = {client_id: this.custosId, redirect_uri: this.redirectURI};
                 await this.$store.dispatch('identity/fetchAuthorizationEndpoint', params)
                 window.location.href = this.$store.getters['identity/getAuthorizationEndpoint']
-            },
-            redirectIfAuthenticated() {
-              if (this.authenticated === true) {
-                 if (this.successRedirect) {
-                   this.$router.push(this.successRedirect);
-                 } else {
-                   this.$router.push('workspace');
-                 }
-              }
             }
         },
-        watch: {
-          authenticated() {
-            this.redirectIfAuthenticated();
-          }
-        },
-        mounted() {
-          this.redirectIfAuthenticated();
+        async mounted() {
+            this.custosId = config.value('clientId')
+            this.custosSec = config.value('clientSec')
+            this.redirectURI = config.value('redirectURI')
+            this.tokenEndpoint = "https://custos.scigap.org/apiserver/identity-management/v1.0.0/token"
+            let data = {
+                client_id: this.custosId,
+                client_sec: this.custosSec
+            }
+            if (await store.dispatch('identity/isAuthenticated', data) === true) {
+                await this.$router.push('tenants')
+            }
         }
     }
 </script>
+
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>

@@ -1,5 +1,5 @@
 <template>
-    <div v-if="authenticated">
+    <div v-if="showHeader()">
         <div class="header p-3">
             <div class="custos-logo">
                 <img src="../assets/custos-logo_custos-logo-color-v1.png" style="width: 140px;">
@@ -18,87 +18,115 @@
                 </template>
 
                 <template v-slot:default v-if="user">
-                    <b-dropdown-item href="#" v-on:click="$router.push('/workspace/profile')">Profile</b-dropdown-item>
+                    <b-dropdown-item href="#" v-on:click="loadProfilePage">Profile</b-dropdown-item>
                     <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
                 </template>
             </b-dropdown>
 
         </div>
-        <div class="navigation text-left">
-            <router-link to="/workspace">
-                <b-icon icon="house-door-fill"></b-icon>
-            </router-link>
-            <router-link to="/workspace/users" v-if="this.isAdmin">Users</router-link>
-            <router-link to="/workspace/groups">Groups</router-link>
-            <router-link to="/workspace/agents" v-if="this.isAdmin">Service Accounts</router-link>
-            <router-link to="/workspace/secrets">Secrets</router-link>
-            <router-link to="/workspace/sharings">Sharing</router-link>
-            <router-link to="/workspace/logs" v-if="this.isAdmin">logs</router-link>
+        <div class="navigation text-left" v-if="tenantModeactivated">
+            <div class="row">
+                <div class="column">
+                    <router-link v-bind:to="{name: 'workspace', params:{tenantId:this.activatedClientId}}">
+                        <b-icon icon="house-door-fill"></b-icon>
 
-            <!--            <b-button href="#" variant="link" v-on:click="$router.push('/workspace')">-->
-            <!--                <b-icon icon="house-door-fill"></b-icon>-->
-            <!--            </b-button>-->
-            <!--            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/users')">-->
-            <!--                Users-->
-            <!--            </b-button>-->
-            <!--            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/groups')">-->
-            <!--                Groups-->
-            <!--            </b-button>-->
-            <!--            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/agents')">-->
-            <!--                Service Accounts-->
-            <!--            </b-button>-->
-            <!--            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/secrets')">-->
-            <!--                Secrets-->
-            <!--            </b-button>-->
-            <!--            <b-button href="#" variant="link" v-on:click="$router.push('/workspace/sharings')">-->
-            <!--                Sharing-->
-            <!--            </b-button>-->
-            <!--            <b-button v-if="this.isAdmin" href="#" variant="link" v-on:click="$router.push('/workspace/logs')">-->
-            <!--                Logs-->
-            <!--            </b-button>-->
+                    </router-link>
+                    <router-link v-bind:to="{name: 'users', params:{tenantId:this.activatedClientId}}"
+                                 v-if="this.isAdmin">Users
+                    </router-link>
+                    <router-link v-bind:to="{name: 'groups', params:{tenantId:this.activatedClientId}}">Groups
+                    </router-link>
+                    <router-link v-bind:to="{name: 'agents', params:{tenantId:this.activatedClientId}}"
+                                 v-if="this.isAdmin">Service Accounts
+                    </router-link>
+                    <router-link v-bind:to="{name: 'secrets', params:{tenantId:this.activatedClientId}}">Secrets
+                    </router-link>
+                    <router-link v-bind:to="{name: 'sharings', params:{tenantId:this.activatedClientId}}">Sharing
+                    </router-link>
+                    <router-link v-bind:to="{name: 'logs', params:{tenantId:this.activatedClientId}}"
+                                 v-if="this.isAdmin">Logs
+                    </router-link>
+                </div>
+                <div class="column">
+                    <b-button pill variant="success" size="sm" v-on:click="exitTenantExplorer" class="tenant-manager">
+                        Tenant
+                        Manager
+                    </b-button>
+                </div>
+            </div>
+
         </div>
+
+
     </div>
 </template>
 
 <script>
     import config from "@/config";
-    import {mapGetters} from 'vuex';
-    import store from "../store"
+    import auth from "@/service/auth";
 
     export default {
         name: "Header",
-        store: store,
         data: function () {
             return {
                 isAdmin: false,
-                user: null
+                user: null,
+                authenticated: false,
+                tenantModeactivated: false,
+                activatedClientId: ''
+
             }
         },
-        computed: {
-          ...mapGetters({
-            authenticated: 'identity/isAuthenticated',
-            currentUserName: 'identity/getCurrentUserName',
-          })
-        },
         methods: {
+            showHeader() {
+                return this.authenticated
+            },
             async logout() {
-                await this.$store.dispatch('identity/logout', {
-                    client_id: config.value('clientId'),
-                    client_sec: config.value('clientSec'),
-                })
+                this.tenantModeactivated = await this.$store.dispatch('tenant/isTenantModeActivated')
+                if (!this.tenantModeactivated) {
+                    await this.$store.dispatch('identity/logout', {
+                        client_id: config.value('clientId'),
+                        client_sec: config.value('clientSec'),
+                    })
+                } else {
+                    await this.$store.dispatch('identity/logoutTenantAdmin', {})
+                }
+
+                await this.$router.push("/")
+                await this.$store.dispatch('agent/reset')
+                await this.$store.dispatch('group/reset')
+                await this.$store.dispatch('secret/reset')
+                await this.$store.dispatch('sharing/reset')
+                await this.$store.dispatch('user/reset')
             },
             async validateAuthentication() {
+                this.tenantModeactivated = await this.$store.dispatch('tenant/isTenantModeActivated')
+                if (!this.tenantModeactivated) {
+                    this.authenticated = await this.$store.dispatch('identity/isAuthenticated', {
+                        client_id: config.value('clientId'),
+                        client_sec: config.value('clientSec')
+                    }) === true
+                } else {
+                    this.authenticated = await this.$store.dispatch('identity/isAuthenticated', {
+                        client_id: auth.getClientId(),
+                        client_sec: auth.getClientSec()
+                    }) === true
+                }
+
                 return this.authenticated
             },
             async fetchAuthenticatedUser() {
                 this.isAdmin = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
-                if (await this.validateAuthentication() && (!this.user || this.user.username !== this.currentUserName)) {
+                let currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
+                this.tenantModeactivated = await this.$store.dispatch('tenant/isTenantModeActivated')
+
+                if (await this.validateAuthentication() && (!this.user || this.user.username !== currentUserName)) {
+                    let accessToken = await this.$store.getters['identity/getAccessToken']
                     let resp = await this.$store.dispatch('user/users', {
                         offset: 0,
                         limit: 1,
-                        client_id: config.value('clientId'),
-                        client_sec: config.value('clientSec'),
-                        username: this.currentUserName
+                        usertoken:accessToken,
+                        username: currentUserName
                     })
                     if (Array.isArray(resp) && resp.length > 0) {
                         resp.forEach(obj => {
@@ -114,22 +142,39 @@
                         })
                     }
                 }
+            },
+
+            async setOperationalMode() {
+                this.tenantModeactivated = await this.$store.dispatch('tenant/isTenantModeActivated')
+                if (this.tenantModeactivated) {
+                    this.activatedClientId = await this.$store.dispatch('tenant/getActivatedClientId')
+                }
+            },
+            async exitTenantExplorer() {
+                await this.$store.dispatch('identity/logoutTenantAdmin')
+                await this.$router.push({name: 'tenants'})
+                this.tenantModeactivated = await this.$store.dispatch('tenant/isTenantModeActivated')
+            },
+
+            async loadProfilePage() {
+                if (this.tenantModeactivated) {
+                    await this.$router.push({name: 'tenantUserProfile', params: {tenantId: this.activatedClientId}})
+                } else {
+                    await this.$router.push({name: 'profile'})
+                }
+
             }
         },
         watch: {
-          async authenticated() {
-            if (this.authenticated !== true) {
-               await this.$router.push('/')
+            $route() {
+                this.authenticated = false
+                this.fetchAuthenticatedUser()
+                this.setOperationalMode()
             }
-          },
-          currentUserName() {
-            if (this.currentUserName) {
-               this.fetchAuthenticatedUser()
-            }
-          }
         },
-        beforeMount() {
+        async beforeMount() {
             this.fetchAuthenticatedUser()
+            this.setOperationalMode()
         }
     }
 </script>
@@ -217,4 +262,49 @@
     .navigation a.router-link-exact-active {
         background-color: #00000047;
     }
+
+    .tenant-manager {
+        position: fixed;
+        margin-left: 30%;
+        background-color: #f83600;
+        border-color: #ebebeb;
+        font-size: medium;
+        margin-bottom: 0.25%;
+        margin-top: 0.08%;
+    }
+
+    .column {
+        float: left;
+        width: 50%;
+    }
+
+
+    .left-column {
+        float: left;
+        width: 3%;
+        padding: 0px;
+        height: 100vh;
+        background: #fe8c00;
+        background: -webkit-linear-gradient(to bottom, #afafae, #afafae);
+        background: linear-gradient(to bottom, #afafae, #afafae);
+    }
+
+    /*.right-column {*/
+    /*    float: left;*/
+    /*    width: 97%;*/
+    /*    padding: 0px;*/
+    /*    height: 100vh;*/
+    /*}*/
+
+    .upper-row {
+        float: left;
+        width: 100%;
+        padding: 0px;
+        background: #fe8c00;
+        background: -webkit-linear-gradient(to right, #f83600, #fe8c00);
+        background: linear-gradient(to right, #f83600, #fe8c00);
+        height: 3.5%;
+    }
+
+
 </style>

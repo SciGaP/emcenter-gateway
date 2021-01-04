@@ -1,8 +1,18 @@
 import decode from 'jwt-decode';
 
+
 const ID_TOKEN_KEY = 'id_token';
 const ACCESS_TOKEN_KEY = 'access_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
+
+const ACTIVE_CLIENT_ID = 'active_client_id';
+const ACTIVE_CLEINT_SEC = 'active_client_sec';
+
+
+const TENANT_ADMIN_CUSTOS_ID_TOKEN = 'tenant_admin_id_token';
+const TENANT_ADMIN_CUSTOS_ACCESS_TOKEN = 'tenant_admin_access_token';
+const TENANT_ADMIN_CUSTOS_REFRESH_TOKEN = 'tenant_admin_refresh_token';
+
 
 export default {
 
@@ -15,6 +25,7 @@ export default {
         const expirationDate = this.getTokenExpirationDate(token);
         return expirationDate < new Date();
     },
+
 
     getTokenExpirationDate(encodedToken) {
         const token = decode(encodedToken);
@@ -48,6 +59,26 @@ export default {
         localStorage.setItem(REFRESH_TOKEN_KEY, token)
     },
 
+
+    setClientId(client_id) {
+        this.clearActiveClientID()
+        localStorage.setItem(ACTIVE_CLIENT_ID, client_id);
+    },
+
+    setClientSec(client_sec) {
+        this.clearActiveClientSec()
+        localStorage.setItem(ACTIVE_CLEINT_SEC, client_sec);
+    },
+
+
+    getClientId() {
+       return  localStorage.getItem(ACTIVE_CLIENT_ID);
+    },
+
+    getClientSec() {
+       return  localStorage.getItem(ACTIVE_CLEINT_SEC);
+    },
+
     getIdToken() {
         return localStorage.getItem(ID_TOKEN_KEY);
     },
@@ -56,7 +87,7 @@ export default {
         return localStorage.getItem(ACCESS_TOKEN_KEY);
     },
 
-    getRefreshToken(){
+    getRefreshToken() {
         return localStorage.getItem(REFRESH_TOKEN_KEY)
     },
 
@@ -70,6 +101,53 @@ export default {
 
     clearRefreshToken() {
         localStorage.removeItem(REFRESH_TOKEN_KEY)
+    },
+
+    clearActiveClientID() {
+        localStorage.removeItem(ACTIVE_CLIENT_ID);
+    },
+
+    clearActiveClientSec() {
+        localStorage.removeItem(ACTIVE_CLEINT_SEC)
+    },
+
+    clearTenantAdminCachedIdToken() {
+        localStorage.removeItem(TENANT_ADMIN_CUSTOS_ID_TOKEN);
+    },
+
+    clearTenantAdminCachedAccessToken() {
+        localStorage.removeItem(TENANT_ADMIN_CUSTOS_ACCESS_TOKEN);
+    },
+
+    clearTenantAdminCachedRefreshToken() {
+        localStorage.removeItem(TENANT_ADMIN_CUSTOS_REFRESH_TOKEN)
+    },
+
+    getTenantAdminCachedIdToken() {
+        return localStorage.getItem(TENANT_ADMIN_CUSTOS_ID_TOKEN);
+    },
+
+    getTenantAdminCachedAccessToken() {
+        return localStorage.getItem(TENANT_ADMIN_CUSTOS_ACCESS_TOKEN);
+    },
+
+    getTenantAdminCachedRefreshToken() {
+        return localStorage.getItem(TENANT_ADMIN_CUSTOS_REFRESH_TOKEN)
+    },
+
+    setTenantAdminCachedIdToken(token) {
+        this.clearTenantAdminCachedIdToken()
+        localStorage.setItem(TENANT_ADMIN_CUSTOS_ID_TOKEN, token);
+    },
+
+    setTenantAdminCachedAccessToken(token) {
+        this.clearTenantAdminCachedAccessToken()
+        localStorage.setItem(TENANT_ADMIN_CUSTOS_ACCESS_TOKEN, token);
+    },
+
+    setTenantAdminCachedRefreshToken(token) {
+        this.clearTenantAdminCachedRefreshToken()
+        localStorage.setItem(TENANT_ADMIN_CUSTOS_REFRESH_TOKEN, token)
     },
 
     isUserHasAdminAccess() {
@@ -89,12 +167,14 @@ export default {
 
     getLoggedUsername() {
         let token = localStorage.getItem(ACCESS_TOKEN_KEY)
-        if (token) {
-            let decodedToken = decode(token)
-            return decodedToken.preferred_username
-        } else {
-            return null
-        }
-    }
+        let decodedToken = decode(token)
+        return decodedToken.preferred_username
+    },
+
+    isTenantModeActivated() {
+        const clientId = localStorage.getItem(ACTIVE_CLIENT_ID)
+        const clientSec = localStorage.getItem(ACTIVE_CLEINT_SEC)
+        return !!clientId && !!clientSec;
+    },
 
 }

@@ -8,7 +8,7 @@ export default {
     createGroup(params) {
 
         let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
-        let endpoint = groupMgtEndpoint + "/groups"
+        let endpoint = groupMgtEndpoint + "/group"
         return api().post(endpoint, params.body, {
             headers: authHeader
         })

@@ -9,7 +9,7 @@ const state = {
     idToken: localStorage.getItem('id_token') || '',
     accessToken: localStorage.getItem('access_token') || '',
     refreshToken: localStorage.getItem('refresh_token') || '',
-    currentUserName: auth.getLoggedUsername()
+    currentUserName: null
 }
 const actions = {
 
@@ -17,21 +17,21 @@ const actions = {
         let resp = await identity_management.getOpenIdConfig(data)
         let baseURL = resp.data.authorization_endpoint
         this.authorizartionURL = baseURL + "?response_type=code&client_id=" + data.client_id + "&" +
-            "redirect_uri="+data.redirect_uri+"&scope=openid&kc_idp_hint=oidc"
+            "redirect_uri=" + data.redirect_uri + "&scope=openid&kc_idp_hint=oidc"
         commit('SET_AUTH_ENDPOINT', this.authorizartionURL)
 
     },
 
     async authenticateUsingCode({commit}, data) {
-        let resp = await identity_management.getToken(data);
-        commit('SET_AUTH_TOKEN', resp.data);
+        let resp = await identity_management.getToken(data)
+        commit('SET_AUTH_TOKEN', resp.data)
     },
 
     async authenticateLocally({commit}, data) {
         try {
-            let resp = await identity_management.localLogin(data);
-            commit('SET_AUTH_TOKEN', resp.data);
-        }catch (e) {
+            let resp = await identity_management.localLogin(data)
+            commit('SET_AUTH_TOKEN', resp.data)
+        } catch (e) {
             return false
         }
     },
@@ -47,35 +47,62 @@ const actions = {
     },
 
     // eslint-disable-next-line no-unused-vars
-    async isAuthenticated({commit, getters, dispatch}, data) {
+    async isAuthenticated({commit}, data) {
         try {
-            if (!getters.isAuthenticated) {
-                let dat = {
-                    client_id: data.client_id,
-                    client_sec: data.client_sec,
-                    refresh_token: auth.getRefreshToken()
-                }
-                let response = await identity_management.getTokenUsingRefreshToken(dat).catch();
-                commit('SET_AUTH_TOKEN', response.data);
+            let resp = auth.isLoggedIn()
+            if (!resp) {
+                if (auth.getRefreshToken() != null && auth.getRefreshToken() != '') {
 
-                return getters.isAuthenticated;
+                    let dat = {
+                        client_id: data.client_id,
+                        client_sec: data.client_sec,
+                        refresh_token: auth.getRefreshToken()
+                    }
+                    let response = await identity_management.getTokenUsingRefreshToken(dat)
+                    commit('SET_AUTH_TOKEN', response.data)
+                    return auth.isLoggedIn()
+                }
+                return false
             }
             return true
         } catch (e) {
             commit('CLEAR_AUTH_TOKEN')
+            return false
         }
+
     },
 
 
+    async authenticateTenantAdmin({commit}, data) {
+        try {
+            let resp = await identity_management.localLogin(data)
+            commit('SET_TENANT_CACHED_TOKENS', data)
+            commit('SET_AUTH_TOKEN', resp.data)
+            return true
+        } catch (e) {
+            return false
+        }
+    },
+
+    async logoutTenantAdmin({commit}, data) {
+        let dat = {
+            client_id: auth.getClientId(),
+            client_sec: auth.getClientSec(),
+            refresh_token: auth.getRefreshToken()
+        }
+        await identity_management.logout(dat)
+        commit('RESET_TENANT_CACHED_TOKENS', data)
+    },
+
     // eslint-disable-next-line no-unused-vars
-    async isLoggedUserHasAdminAccess({commit, data}){
+    async isLoggedUserHasAdminAccess({commit, data}) {
         return auth.isUserHasAdminAccess()
     },
 
     // eslint-disable-next-line no-unused-vars
-      async getCurrentUserName({commit}, data){
-          return auth.getLoggedUsername()
-      }
+    async getCurrentUserName({commit}, data) {
+        return auth.getLoggedUsername()
+    }
 
 }
 
@@ -93,10 +120,37 @@ const mutations = {
         auth.setIdToken(data.id_token)
         auth.setAccessToken(data.access_token)
         auth.setRefreshToken(data.refresh_token)
-        state.idToken = data.id_token
+        state.token = data.id_token
         state.accessToken = data.access_token
         state.refreshToken = data.refresh_token
-        state.currentUserName = auth.getLoggedUsername()
+    },
+
+
+    // eslint-disable-next-line no-unused-vars
+    SET_TENANT_CACHED_TOKENS(state, data) {
+        auth.clearTenantAdminCachedAccessToken()
+        auth.clearTenantAdminCachedIdToken()
+        auth.clearTenantAdminCachedRefreshToken()
+        auth.setTenantAdminCachedIdToken(auth.getIdToken())
+        auth.setTenantAdminCachedAccessToken(auth.getAccessToken())
+        auth.setTenantAdminCachedRefreshToken(auth.getRefreshToken())
+        auth.setClientId(data.client_id)
+        auth.setClientSec(data.client_sec)
+    },
+
+    // eslint-disable-next-line no-unused-vars
+    RESET_TENANT_CACHED_TOKENS(state, data) {
+        auth.clearIdToken()
+        auth.clearAccessToken()
+        auth.clearRefreshToken()
+        auth.setIdToken(auth.getTenantAdminCachedIdToken())
+        auth.setAccessToken(auth.getTenantAdminCachedAccessToken())
+        auth.setRefreshToken(auth.getTenantAdminCachedRefreshToken())
+        auth.clearTenantAdminCachedAccessToken()
+        auth.clearTenantAdminCachedIdToken()
+        auth.clearTenantAdminCachedRefreshToken()
+        auth.clearActiveClientID()
+        auth.clearActiveClientSec()
     },
 
     // eslint-disable-next-line no-unused-vars
@@ -104,10 +158,14 @@ const mutations = {
         auth.clearIdToken()
         auth.clearAccessToken()
         auth.clearRefreshToken()
+        auth.clearTenantAdminCachedAccessToken()
+        auth.clearTenantAdminCachedIdToken()
+        auth.clearTenantAdminCachedRefreshToken()
+        auth.clearActiveClientID()
+        auth.clearActiveClientSec()
         state.idToken = ''
         state.accessToken = ''
         state.refreshToken = ''
-        state.currentUserName = null
     }
 }
 
@@ -115,17 +173,15 @@ const getters = {
     getAuthorizationEndpoint(state) {
         return state.authorizationEndpoint
     },
-
-    isAuthenticated(state) {
-        return state.idToken && state.idToken !== "" && !auth.isTokenExpired(state.idToken);
+    isAuthenticated() {
+        return auth.isLoggedIn()
     },
 
     getAccessToken(state) {
         return state.accessToken;
     },
-    getCurrentUserName(state){
-        return state.currentUserName;
-    }
+
+
 }
 
 export default {

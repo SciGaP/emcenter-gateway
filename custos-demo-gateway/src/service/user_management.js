@@ -58,15 +58,28 @@ export default {
     },
 
     findUsers(params) {
-        let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
-        let endpoint = usermgtEndpoint + "/users";
-        let id = params.username
-        let param = {offset: params.offset, limit: params.limit, client_id: params.client_id, 'user.id': id}
-        return api().get(endpoint,
-            {
-                params: param,
-                headers: authHeader
-            })
+        if (params.usertoken) {
+            let authHeader = {'Authorization': 'Bearer ' + params.usertoken, 'user-token': params.usertoken}
+            let endpoint = usermgtEndpoint + "/users";
+            let id = params.username
+            let param = {offset: params.offset, limit: params.limit, client_id: params.client_id, 'user.id': id}
+            return api().get(endpoint,
+                {
+                    params: param,
+                    headers: authHeader
+                })
+        } else {
+            let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
+            let endpoint = usermgtEndpoint + "/users";
+            let id = params.username
+            let param = {offset: params.offset, limit: params.limit, client_id: params.client_id, 'user.id': id}
+            return api().get(endpoint,
+                {
+                    params: param,
+                    headers: authHeader
+                })
+        }
+
     },
 
     addUserAttribute(params) {
@@ -125,13 +138,23 @@ export default {
     },
 
     updateProfile(params) {
-        let authHeader = {'Authorization': 'Bearer '  + btoa(params.client_id + ':' + params.client_sec)}
-        let endpoint = usermgtEndpoint + "/user/profile";
-        console.log(authHeader)
-        return api().put(endpoint, params.body
-            , {
-                headers: authHeader
-            })
+        if (params.usertoken) {
+            let authHeader = {'Authorization': 'Bearer ' + params.usertoken, 'user-token': params.usertoken}
+            let endpoint = usermgtEndpoint + "/user/profile";
+
+            return api().put(endpoint, params.body
+                , {
+                    headers: authHeader
+                })
+        } else {
+            let authHeader = {'Authorization': 'Bearer ' + btoa(params.client_id + ':' + params.client_sec)}
+            let endpoint = usermgtEndpoint + "/user/profile";
+
+            return api().put(endpoint, params.body
+                , {
+                    headers: authHeader
+                })
+        }
 
     },
 
@@ -155,6 +178,32 @@ export default {
                 headers: authHeader
             })
 
+    },
+
+    grantAdminPrivilages(params) {
+        let authHeader = {'Authorization': 'Bearer ' + params.user_token}
+        let endpoint = usermgtEndpoint + "/user/admin"
+        return api().post(endpoint, params.body
+            , {
+                headers: authHeader
+            })
+    },
+
+    removeAdminPrivilages(params) {
+        let authHeader = {'Authorization': 'Bearer ' + params.user_token}
+        let endpoint = usermgtEndpoint + "/user/admin"
+        return new Promise((resolve, reject) => {
+            axios({
+                method: 'delete',
+                url: endpoint,
+                data: params.body,
+                headers: authHeader
+            }).then((resp) => {
+                resolve(resp)
+            }).catch(errr => {
+                reject(errr)
+            })
+        })
     }
 
 

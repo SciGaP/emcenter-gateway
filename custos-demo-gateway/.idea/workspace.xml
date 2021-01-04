@@ -93,7 +93,8 @@
       <workItem from="1599486134588" duration="217546000" />
       <workItem from="1601038400517" duration="67420000" />
       <workItem from="1602211298031" duration="8699000" />
-      <workItem from="1602377149425" duration="3193000" />
+      <workItem from="1602377149425" duration="8790000" />
+      <workItem from="1602505747007" duration="10776000" />
     </task>
     <servers />
   </component>
@@ -113,10 +114,14 @@
       <screen x="1680" y="0" width="1920" height="1080" />
     </state>
     <state x="2378" y="294" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1680.0.1920.1080/0.0.1680.1050@1680.0.1920.1080" timestamp="1601162305471" />
-    <state x="2305" y="183" width="667" height="729" key="find.popup" timestamp="1601404607112">
+    <state x="2305" y="183" width="667" height="729" key="find.popup" timestamp="1602455803792">
       <screen x="1680" y="0" width="1920" height="1080" />
     </state>
-    <state x="2305" y="183" width="667" height="729" key="find.popup/1680.0.1920.1080/0.0.1680.1050@1680.0.1920.1080" timestamp="1601404607112" />
+    <state x="2305" y="183" width="667" height="729" key="find.popup/1680.0.1920.1080/0.0.1680.1050@1680.0.1920.1080" timestamp="1602455803792" />
+    <state x="2302" y="338" key="git4idea.merge.GitMergeDialog" timestamp="1602545752519">
+      <screen x="1680" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2302" y="338" key="git4idea.merge.GitMergeDialog/1680.0.1920.1080/0.0.1680.1050@1680.0.1920.1080" timestamp="1602545752519" />
     <state x="2305" y="241" width="670" height="676" key="search.everywhere.popup" timestamp="1600705258945">
       <screen x="1680" y="0" width="1920" height="1080" />
     </state>
@@ -127,7 +132,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/components/workspace/Users.vue</url>
-          <line>324</line>
+          <line>325</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

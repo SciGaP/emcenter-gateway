@@ -5,11 +5,11 @@
                 <h2>Welcome to Custos</h2>
                 <p class="h2-sub">Sign up and start authenticating</p>
                 <div class="main-links">
-                    <b-link href="http://airavata.apache.org/custos/">Learn more</b-link>
-                    <b-link class="ml-5"
-                            href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial">
-                        Get started
-                    </b-link>
+                    <b-link href="http://airavata.apache.org/custos/" target="_blank">Custos Website</b-link>
+<!--                    <b-link class="ml-5"-->
+<!--                            href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial" target="_blank">-->
+<!--                        Tutorial Instructions-->
+<!--                    </b-link>-->
                 </div>
                 <img class="w-100" src="./../../assets/custos_home.png">
             </b-col>
@@ -80,14 +80,6 @@
                         </p>
                     </form>
                 </b-card>
-                <p class="mt-3 w-100 additional-links">
-                    How to user Custos?
-                    <b-link href="https://cwiki.apache.org/confluence/display/CUSTOS/Gateways+2020%3ACustos+Tutorial">
-                        Tutorial
-                    </b-link>
-                    | All about
-                    <b-link href="http://airavata.apache.org/custos/">Custos</b-link>
-                </p>
             </b-col>
         </b-row>
     </b-container>

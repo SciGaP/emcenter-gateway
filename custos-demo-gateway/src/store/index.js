@@ -8,6 +8,7 @@ import group from './modules/group.store'
 import secret from './modules/secret.store'
 import log from './modules/log.store'
 import sharing from './modules/sharing.store'
+import tenant from './modules/tenant.store'
 
 
 Vue.use(Vuex);
@@ -22,7 +23,8 @@ export default new Vuex.Store({
         group,
         secret,
         log,
-        sharing
+        sharing,
+        tenant
     },
     strict: debug,
     plugins: debug ? [createLogger()] : [],

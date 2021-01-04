@@ -101,6 +101,17 @@ const actions = {
         return  await  user_management.updateProfile(data)
     },
 
+
+    // eslint-disable-next-line no-unused-vars
+    async grantAdminPrivilages({commit}, data) {
+        return  await  user_management.grantAdminPrivilages(data)
+    },
+
+    // eslint-disable-next-line no-unused-vars
+    async removeAdminPrivilages({commit}, data) {
+        return  await  user_management.removeAdminPrivilages(data)
+    },
+
     // eslint-disable-next-line no-unused-vars
     async reset({commit}, data){
         commit('RESET')

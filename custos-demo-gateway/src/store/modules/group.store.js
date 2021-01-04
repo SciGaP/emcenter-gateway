@@ -18,7 +18,7 @@ const actions = {
         try {
             let resp = await group_management.createGroup(data)
             if (resp.data != null) {
-                let group = resp.data.groups[0];
+                let group = resp.data;
                 commit('SET_GROUP', group)
                 return group
             }

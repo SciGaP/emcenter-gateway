@@ -444,7 +444,7 @@
             return {
                 isAdminUser: false,
                 fields: ['id', 'name', 'description'],
-                sharingFields: ['entity_id', 'permission_type_id', 'owner_id', 'type'],
+                sharingFields: ['entity_id', 'permission_type_id', 'type', 'id'],
                 entityFields: ['id', 'name', 'type', 'description'],
                 permissionTypes: [],
                 entityTypes: [],
@@ -707,9 +707,9 @@
                             this.sharings = await this.loadSharings()
                         }
                     } else {
-                        console.log(this.defaultGroupName)
+
                         data.body.owner_id = [this.defaultGroupName.id]
-                        console.log(data)
+
                         let response = await this.$store.dispatch('sharing/shareEntityWithGroups', data)
                         if (response) {
                             this.sharings = await this.loadSharings()
@@ -782,7 +782,9 @@
                     this.selectedEnName = this.selectedEn[0].name
                     this.selectedEnDesc = this.selectedEn[0].description
                     this.selectedEntityType = this.selectedEn[0].type
-                    this.$refs.selectedEnModel.show()
+                    if (this.selectedEn[0].owner_id === this.currentUserName) {
+                        this.$refs.selectedEnModel.show()
+                    }
                 }
             },
 
@@ -791,9 +793,18 @@
                     this.selectedSh = items
                     this.selectedShEnId = this.selectedSh[0].entity_id
                     this.selectedShPrId = this.selectedSh[0].permission_type_id
-                    this.selectedShOwId = this.selectedSh[0].owner_id
+                    this.selectedShOwId = this.selectedSh[0].id
                     this.selectedShOwType = this.selectedSh[0].type
-                    this.$refs.selectedShraingModel.show()
+                    let show = false;
+                    for (const entity of this.entities) {
+                        if (entity.id === this.selectedShEnId && entity.owner_id === this.currentUserName) {
+                            show = true;
+                            break;
+                        }
+                    }
+                    if (show) {
+                        this.$refs.selectedShraingModel.show()
+                    }
                 }
             },
             onNewPrTyAdd: function () {
@@ -886,7 +897,7 @@
                                 let shItem = {
                                     entity_id: en.id,
                                     permission_type_id: pr.id,
-                                    owner_id: uId,
+                                    id: uId,
                                     type: 'USER'
                                 }
                                 shars.push(shItem)
@@ -900,7 +911,7 @@
                                 let shItem = {
                                     entity_id: en.id,
                                     permission_type_id: pr.id,
-                                    owner_id: uId,
+                                    id: uId,
                                     type: 'GROUP'
                                 }
                                 shars.push(shItem)
@@ -936,6 +947,15 @@
         async mounted() {
             this.custosId = config.value('clientId')
             this.custosSec = config.value('clientSec')
+            this.tenantModeactivated = await this.$store.dispatch('tenant/isTenantModeActivated')
+            this.tenantModeactivated = await this.$store.dispatch('tenant/isTenantModeActivated')
+            if (this.tenantModeactivated) {
+                this.custosId = await this.$store.dispatch('tenant/getActivatedClientId')
+                this.custosSec = await  this.$store.dispatch('tenant/getActivatedClientSecret');
+            } else {
+                await this.$router.push({name:'tenants'})
+            }
+
             this.isAdminUser = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
             this.currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
 
@@ -967,26 +987,38 @@
                 this.permissionTypes = await this.$store.dispatch('sharing/createPermissionType', data)
             }
 
-
             this.entityTypes = await this.$store.dispatch('sharing/getEntityTypes', permTypesData)
 
-            let searchEntitiesData = {
-                client_id: this.custosId,
-                client_sec: this.custosSec,
-                body: {
-                    client_id: this.custosId,
-                    owner_id: this.currentUserName,
-                    search_criteria: [
-                        {
-                            search_field: "OWNER_ID",
-                            value: this.currentUserName,
-                            condition: "EQUAL"
+            if (this.entityTypes.length > 0)
+                for (const enTy of this.entityTypes) {
+                    let searchEntitiesData = {
+                        client_id: this.custosId,
+                        client_sec: this.custosSec,
+                        body: {
+                            client_id: this.custosId,
+                            owner_id: this.currentUserName,
+                            search_criteria: [
+                                {
+                                    search_field: "ENTITY_TYPE_ID",
+                                    value: enTy.id,
+                                    condition: "EQUAL"
+                                }
+                            ]
                         }
-                    ]
-                }
-            }
+                    }
 
-            this.entities = await this.$store.dispatch('sharing/getEntities', searchEntitiesData)
+
+                    let enties = await this.$store.dispatch('sharing/getEntities', searchEntitiesData)
+
+                    if (enties != null && enties.length > 0) {
+                        for (const en of enties) {
+                            this.entities.push(en)
+                        }
+
+                    }
+
+                }
+
 
             this.sharings = await this.loadSharings()
         }

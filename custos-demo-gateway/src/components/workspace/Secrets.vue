@@ -339,6 +339,15 @@
             this.secretsLoading = true
             this.custosId = config.value('clientId')
             this.custosSec = config.value('clientSec')
+            this.tenantModeactivated = await this.$store.dispatch('tenant/isTenantModeActivated')
+            this.tenantModeactivated = await this.$store.dispatch('tenant/isTenantModeActivated')
+            if (this.tenantModeactivated) {
+                this.custosId = await this.$store.dispatch('tenant/getActivatedClientId')
+                this.custosSec = await  this.$store.dispatch('tenant/getActivatedClientSecret');
+            } else {
+                await this.$router.push({name:'tenants'})
+            }
+
             this.currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
 
             this.secItems = await this.getAllCredentials()
