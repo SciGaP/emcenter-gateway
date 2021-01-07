@@ -11,11 +11,20 @@ const state = getDefaultState();
 
 const actions = {
     async createGroup({commit}, {name, description, ownerId, realm_roles, client_roles, attributes, sub_groups}) {
-        const {groupId} = await custosService.groups.createGroup({
+        const {id} = await custosService.groups.createGroup({
             name, description, ownerId, realm_roles, client_roles, attributes, sub_groups
         });
 
-        commit('SET_GROUP', {groupId, name, description, ownerId, realm_roles, client_roles, attributes, sub_groups});
+        commit('SET_GROUP', {
+            groupId: id,
+            name,
+            description,
+            ownerId,
+            realm_roles,
+            client_roles,
+            attributes,
+            sub_groups
+        });
     },
     async fetchGroups({commit}) {
 

@@ -27,9 +27,9 @@ export default class CustosGroups {
      */
     createGroup({name, description, ownerId, realm_roles, client_roles, attributes, sub_groups}) {
         return this.custosService.axiosInstanceWithClientAuthorization.post(
-            `${CustosService.ENDPOINTS.GROUPS}/groups`,
-            {groups: [{name, description, ownerId, realm_roles, client_roles, attributes, sub_groups}]}
-        ).then(({data: {groups: [group]}}) => group)
+            `${CustosService.ENDPOINTS.GROUPS}/group`,
+            {group: {name, description, ownerId, realm_roles, client_roles, attributes, sub_groups}}
+        ).then(({data}) => data);
     }
 
     /**
