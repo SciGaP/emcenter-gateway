@@ -3,7 +3,8 @@ import {custosService} from "../util/custos.util";
 const getDefaultState = () => {
     return {
         groupMap: {},
-        groupListMap: {}
+        groupListMap: {},
+        groupUserListMap: {}
     }
 };
 
@@ -67,9 +68,8 @@ const actions = {
         commit('SET_GROUP', {groupId, name, description, ownerId, realm_roles, client_roles, attributes, sub_groups});
     },
 
-    async addUserToGroup(obj, data) {
-        let response = await custosService.groups.addUserToGroup(data)
-        return response.data
+    async addUserToGroup(obj, {groupId, username, membershipType}) {
+        await custosService.groups.addUserToGroup({groupId, username, membershipType});
     },
 
     async removeUserFromGroup(obj, data) {
@@ -77,40 +77,40 @@ const actions = {
         return response.data
     },
 
-    async addChildGroup(obj, data) {
-        let response = await custosService.groups.addChildGroup(data)
-        return response.data
-    },
+    // async addChildGroup(obj, data) {
+    //     let response = await custosService.groups.addChildGroup(data)
+    //     return response.data
+    // },
+    //
+    // async removeChildGroup(obj, data) {
+    //     let response = await custosService.groups.removeChildGroup(data)
+    //     return response.data
+    // },
+    //
+    // async changeGroupMembership(obj, data) {
+    //     let response = await custosService.groups.changeGroupMembership(data)
+    //     return response.data
+    // },
+    //
+    // async getAllChildUsers(obj, {groupId}) {
+    //     let response = await custosService.groups.getAllChildUsers({groupId})
+    //     return response.data
+    // },
 
-    async removeChildGroup(obj, data) {
-        let response = await custosService.groups.removeChildGroup(data)
-        return response.data
-    },
+    // async getAllChildGroups(obj, data) {
+    //     let response = await custosService.groups.getAllChildGroups(data)
+    //     return response.data
+    // },
 
-    async changeGroupMembership(obj, data) {
-        let response = await custosService.groups.changeGroupMembership(data)
-        return response.data
-    },
-
-    async getAllChildUsers(obj, {groupId}) {
-        let response = await custosService.groups.getAllChildUsers({groupId})
-        return response.data
-    },
-
-    async getAllChildGroups(obj, data) {
-        let response = await custosService.groups.getAllChildGroups(data)
-        return response.data
-    },
-
-    async getAllGroupsOfUser(obj, data) {
-        let response = await custosService.groups.getAllGroupsOfUser(data)
-        return response.data.groups
-    },
-
-    async getAllParentGroups(obj, data) {
-        let response = await custosService.groups.getAllParentGroupsOfGroup(data)
-        return response.data.groups
-    },
+    // async getAllGroupsOfUser(obj, data) {
+    //     let response = await custosService.groups.getAllGroupsOfUser(data)
+    //     return response.data.groups
+    // },
+    //
+    // async getAllParentGroups(obj, data) {
+    //     let response = await custosService.groups.getAllParentGroupsOfGroup(data)
+    //     return response.data.groups
+    // },
 
     async hasAccess(obj, data) {
         let response = await custosService.groups.hasAccess(data)
@@ -154,6 +154,15 @@ const getters = {
         return ({groupId}) => {
             if (state.groupMap[groupId]) {
                 return state.groupMap[groupId];
+            } else {
+                return null;
+            }
+        }
+    },
+    getGroupUsers(state) {
+        return ({groupId}) => {
+            if (state.groupUserListMap[groupId]) {
+                return state.groupUserListMap[groupId];
             } else {
                 return null;
             }

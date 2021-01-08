@@ -32,18 +32,27 @@
         </b-modal>
       </b-col>
       <b-col class="pt-2" style="max-width: 200px;">
-        <strong>Users</strong>
-        <ul v-if="users" style="list-style: none; padding: 0px;">
-          <li v-for="user in users" :key="user.userId">
-            <b-form-checkbox
-                :id="`checkbox-group-user-${user.username}`"
-                :name="`checkbox-group-user-${user.username}`"
-                :checked="true"
-            >
-              {{ user.username }}
-            </b-form-checkbox>
-          </li>
-        </ul>
+        <GroupMembership :group-id="groupId"/>
+<!--        <strong>Users</strong>-->
+<!--        <ul v-if="users" style="list-style: none; padding: 0px;">-->
+<!--          <li v-for="user in users" :key="user.userId">-->
+<!--            <b-form-checkbox-->
+<!--                :id="`checkbox-group-user-${user.username}`"-->
+<!--                :name="`checkbox-group-user-${user.username}`"-->
+<!--                :checked="true"-->
+<!--            >-->
+<!--              {{ user.username }}-->
+<!--            </b-form-checkbox>-->
+<!--          </li>-->
+<!--        </ul>-->
+
+<!--        <div class="w-100 mt-3">-->
+<!--          <b-form-input list="my-list-id"></b-form-input>-->
+
+<!--          <datalist id="my-list-id">-->
+<!--            <option v-for="user in users" :key="user.userId">{{ user.username }}</option>-->
+<!--          </datalist>-->
+<!--        </div>-->
       </b-col>
       <b-col class="pt-2">
         <div class="w-100" style="display: flex;">
@@ -80,20 +89,21 @@
           </b-col>
         </b-row>
 
-
-        <div class="w-100" v-if="displayMode === 'list'">
-          <b-row style="border-bottom: 1px solid #dee2e6; margin-bottom: 5px;" v-for="folder in folders"
-                 :key="folder.folderId">
-            <b-col>
-              <b-icon icon="folder-fill" aria-hidden="true"></b-icon>
-              <div style="display: inline; padding-left: 5px;">{{ folder.name }}</div>
-            </b-col>
-            <b-col style="padding-top: 2px; padding-bottom: 2px;">
-              <b-progress style="height: 100%;" :value="30" :max="100" show-progress animated></b-progress>
-            </b-col>
-            <b-col>Dec 23, 2020</b-col>
-            <b-col>Thomas</b-col>
-          </b-row>
+        <div v-if="displayMode === 'list'" class="w-100">
+          <div class="w-100">
+            <b-row style="border-bottom: 1px solid #dee2e6; margin-bottom: 5px;" v-for="folder in folders"
+                   :key="folder.folderId">
+              <b-col>
+                <b-icon icon="folder-fill" aria-hidden="true"></b-icon>
+                <div style="display: inline; padding-left: 5px;">{{ folder.name }}</div>
+              </b-col>
+              <b-col style="padding-top: 2px; padding-bottom: 2px;">
+                <b-progress style="height: 100%;" :value="30" :max="100" show-progress animated></b-progress>
+              </b-col>
+              <b-col>Dec 23, 2020</b-col>
+              <b-col>Thomas</b-col>
+            </b-row>
+          </div>
           <div class="w-100 pt-5"></div>
           <b-row style="border-bottom: 1px solid #dee2e6; margin-bottom: 5px;" v-for="file in files" :key="file.fileId">
             <b-col>
@@ -117,12 +127,15 @@
 
 import {mapGetters, mapActions} from "vuex";
 import store from "../store";
+import GroupMembership from "../components/GroupMembership";
 
 export default {
   name: "SettingsPage",
+  components: {GroupMembership},
   store: store,
   data() {
     return {
+      memberTypes: ['ADMIN', 'MEMBER'],
       displayMode: "list",
       folders: [
         {folderId: 1, name: "Dinuka"},

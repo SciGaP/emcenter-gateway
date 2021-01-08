@@ -73,6 +73,7 @@ export default {
     }),
     selectSearchResult(user) {
       this.usernameSearch = user.username;
+      this.$emit("change", user);
       this.mouseoverAutocomplete = false;
       this.visible = false;
     }
