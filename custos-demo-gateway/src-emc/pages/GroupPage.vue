@@ -33,26 +33,6 @@
       </b-col>
       <b-col class="pt-2" style="max-width: 200px;">
         <GroupMembership :group-id="groupId"/>
-<!--        <strong>Users</strong>-->
-<!--        <ul v-if="users" style="list-style: none; padding: 0px;">-->
-<!--          <li v-for="user in users" :key="user.userId">-->
-<!--            <b-form-checkbox-->
-<!--                :id="`checkbox-group-user-${user.username}`"-->
-<!--                :name="`checkbox-group-user-${user.username}`"-->
-<!--                :checked="true"-->
-<!--            >-->
-<!--              {{ user.username }}-->
-<!--            </b-form-checkbox>-->
-<!--          </li>-->
-<!--        </ul>-->
-
-<!--        <div class="w-100 mt-3">-->
-<!--          <b-form-input list="my-list-id"></b-form-input>-->
-
-<!--          <datalist id="my-list-id">-->
-<!--            <option v-for="user in users" :key="user.userId">{{ user.username }}</option>-->
-<!--          </datalist>-->
-<!--        </div>-->
       </b-col>
       <b-col class="pt-2">
         <div class="w-100" style="display: flex;">
@@ -93,28 +73,43 @@
           <div class="w-100">
             <b-row style="border-bottom: 1px solid #dee2e6; margin-bottom: 5px;" v-for="folder in folders"
                    :key="folder.folderId">
-              <b-col>
-                <b-icon icon="folder-fill" aria-hidden="true"></b-icon>
-                <div style="display: inline; padding-left: 5px;">{{ folder.name }}</div>
+              <b-col style="max-width: 150px;display: flex;flex-direction: row;">
+                <b-icon style="height: 100%;" icon="folder-fill" aria-hidden="true"></b-icon>
+                <div style="flex: 1;display: inline; padding-left: 5px;">{{ folder.name }}</div>
               </b-col>
-              <b-col style="padding-top: 2px; padding-bottom: 2px;">
-                <b-progress style="height: 100%;" :value="30" :max="100" show-progress animated></b-progress>
+              <b-col style="padding-top: 5px; padding-bottom: 5px;font-size: 12px;display: flex;">
+                <div v-if="folder.status.uploading > 0" class="pr-4">
+                  Uploading (<a href="#">{{ folder.status.uploading }}</a>), {{ folder.status.uploadingPercentage }}%
+                </div>
+                <div v-if="folder.status.failed > 0">
+                  <a href="#" class="text-danger">
+                    <b-icon icon="exclamation-triangle-fill" aria-hidden="true"></b-icon>
+                    Failed ({{ folder.status.failed }})
+                  </a>
+                </div>
               </b-col>
-              <b-col>Dec 23, 2020</b-col>
-              <b-col>Thomas</b-col>
+              <b-col style="font-size: 10px; max-width: 150px;overflow: hidden;">Dec 23, 2020, Thomas</b-col>
             </b-row>
           </div>
           <div class="w-100 pt-5"></div>
           <b-row style="border-bottom: 1px solid #dee2e6; margin-bottom: 5px;" v-for="file in files" :key="file.fileId">
-            <b-col>
-              <b-icon icon="card-image" aria-hidden="true"></b-icon>
-              <div style="display: inline; padding-left: 5px;">{{ file.name }}</div>
+            <b-col style="max-width: 150px;display: flex;flex-direction: row;">
+              <b-icon style="height: 100%;" icon="card-image" aria-hidden="true"></b-icon>
+              <div style="flex:1;display: inline; padding-left: 5px;overflow: hidden;">{{ file.name }}</div>
             </b-col>
-            <b-col style="padding-top: 2px; padding-bottom: 2px;">
-              <b-progress style="height: 100%;" :value="30" :max="100" show-progress animated></b-progress>
+            <b-col style="padding-top: 5px; padding-bottom: 5px;font-size: 12px;">
+              <div v-if="file.status.uploading > 0" class="pr-4">
+                Uploading {{ file.status.uploadingPercentage }}%
+              </div>
+
+              <div v-else-if="file.status.failed > 0">
+                <a class="text-danger" href="#">
+                  <b-icon icon="exclamation-triangle-fill" aria-hidden="true"></b-icon>
+                  Failed
+                </a>
+              </div>
             </b-col>
-            <b-col>Dec 23, 2020</b-col>
-            <b-col>Thomas</b-col>
+            <b-col style="font-size: 10px; max-width: 150px;overflow: hidden;">Dec 23, 2020, Thomas</b-col>
           </b-row>
         </div>
 
@@ -138,29 +133,29 @@ export default {
       memberTypes: ['ADMIN', 'MEMBER'],
       displayMode: "list",
       folders: [
-        {folderId: 1, name: "Dinuka"},
-        {folderId: 2, name: "Isuru"},
-        {folderId: 3, name: "Eroma"},
-        {folderId: 4, name: "Jane"},
-        {folderId: 5, name: "Thomas"},
-        {folderId: 6, name: "Jack"},
-        {folderId: 7, name: "Mike"},
+        {folderId: 1, name: "Dinuka", status: {total: 2345, uploading: 10, failed: 3, uploadingPercentage: 20}},
+        {folderId: 2, name: "Isuru", status: {total: 234, uploading: 0, failed: 0, uploadingPercentage: 0}},
+        {folderId: 3, name: "Eroma", status: {total: 300, uploading: 105, failed: 1, uploadingPercentage: 70}},
+        {folderId: 4, name: "Jane", status: {total: 3000, uploading: 56, failed: 0, uploadingPercentage: 90}},
+        {folderId: 5, name: "Thomas", status: {total: 900, uploading: 0, failed: 0, uploadingPercentage: 0}},
+        {folderId: 6, name: "Jack", status: {total: 456, uploading: 0, failed: 0, uploadingPercentage: 0}},
+        {folderId: 7, name: "Mike", status: {total: 399, uploading: 13, failed: 45, uploadingPercentage: 0}},
       ],
       files: [
-        {fileId: 1, name: "file 1"},
-        {fileId: 2, name: "file 2"},
-        {fileId: 3, name: "file 3"},
-        {fileId: 4, name: "file 4"},
-        {fileId: 5, name: "file 5"},
-        {fileId: 6, name: "file 6"},
-        {fileId: 7, name: "file 7"},
-        {fileId: 8, name: "file 8"},
-        {fileId: 9, name: "file 9"},
-        {fileId: 10, name: "file 10"},
-        {fileId: 11, name: "file 11"},
-        {fileId: 12, name: "file 12"},
-        {fileId: 13, name: "file 13"},
-        {fileId: 14, name: "file 14"}
+        {fileId: 1, name: "file 1", status: {total: 1, uploading: 1, failed: 0, uploadingPercentage: 70}},
+        {fileId: 2, name: "file 2", status: {total: 1, uploading: 1, failed: 0, uploadingPercentage: 0}},
+        {fileId: 3, name: "file 3", status: {total: 1, uploading: 1, failed: 0, uploadingPercentage: 50}},
+        {fileId: 4, name: "file 4", status: {total: 1, uploading: 1, failed: 0, uploadingPercentage: 34}},
+        {fileId: 5, name: "file 5", status: {total: 1, uploading: 1, failed: 0, uploadingPercentage: 0}},
+        {fileId: 6, name: "file 6", status: {total: 1, uploading: 0, failed: 1, uploadingPercentage: 0}},
+        {fileId: 7, name: "file 7", status: {total: 1, uploading: 0, failed: 0, uploadingPercentage: 0}},
+        {fileId: 8, name: "file 8", status: {total: 1, uploading: 1, failed: 0, uploadingPercentage: 0}},
+        {fileId: 9, name: "file 9", status: {total: 1, uploading: 1, failed: 0, uploadingPercentage: 25}},
+        {fileId: 10, name: "file 10", status: {total: 1, uploading: 1, failed: 0, uploadingPercentage: 34}},
+        {fileId: 11, name: "file 11", status: {total: 1, uploading: 0, failed: 0, uploadingPercentage: 0}},
+        {fileId: 12, name: "file 12", status: {total: 1, uploading: 1, failed: 0, uploadingPercentage: 90}},
+        {fileId: 13, name: "file 13", status: {total: 1, uploading: 1, failed: 0, uploadingPercentage: 99}},
+        {fileId: 14, name: "file 14", status: {total: 1, uploading: 1, failed: 0, uploadingPercentage: 14}}
       ]
     }
   },
