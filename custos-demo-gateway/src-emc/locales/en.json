@@ -5,5 +5,7 @@
   "app.left-nav.menu.item.name.logout": "Logout",
   "app.left-nav.menu.item.name.profile": "Profile",
   "app.left-nav.menu.item.name.groups": "Groups",
-  "app.left-nav.menu.item.name.settings": "Settings"
+  "app.left-nav.menu.item.name.settings": "Settings",
+  "app.left-nav.menu.item.name.researchers": "Researchers",
+  "app.left-nav.menu.item.name.support": "support"
 }

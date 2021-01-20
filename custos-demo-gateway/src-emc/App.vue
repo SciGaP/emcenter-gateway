@@ -7,42 +7,64 @@
 
       <div class="p-3 left-menu" v-if="authenticated">
         <div class="p-3 left-menu-profile" v-if="user">
-          <b-icon icon="person" style="width: 100px; height: 100px;"></b-icon>
+          <img style="width: 100px; height: 100px;border-radius: 50px;" :src="exampleProfilePicture"/>
           <div class="left-menu-profile-name">{{ user.first_name }} {{ user.last_name }}</div>
           <div class="left-menu-profile-role">{{ user.realm_roles.join(" / ") }}</div>
         </div>
         <div class="p-3 left-menu-navigation">
           <ul>
             <li>
-              <router-link to="/dashboard">
-                <b-icon icon="bounding-box"></b-icon>
-                {{ $t('app.left-nav.menu.item.name.dashboard') }}
+              <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive}">
+                <a :active="isActive" :class="{active: isActive}" :href="href" @click="navigate">
+                  <b-icon icon="bounding-box"></b-icon>
+                  {{ $t('app.left-nav.menu.item.name.dashboard') }}
+                </a>
               </router-link>
             </li>
             <li>
-              <router-link to="/collections">
-                <b-icon icon="bar-chart-line-fill"></b-icon>
-                {{ $t('app.left-nav.menu.item.name.datasets') }}
+              <router-link to="/collections" v-slot="{ href, route, navigate, isActive}">
+                <a :active="isActive" :class="{active: isActive}" :href="href" @click="navigate">
+                  <b-icon icon="bar-chart-line-fill"></b-icon>
+                  {{ $t('app.left-nav.menu.item.name.datasets') }}
+                </a>
               </router-link>
             </li>
             <li>
-              <router-link to="/profile">
-                <b-icon icon="person-fill"></b-icon>
-                {{ $t('app.left-nav.menu.item.name.profile') }}
+              <router-link to="/researchers" v-slot="{ href, route, navigate, isActive}">
+                <a :active="isActive" :class="{active: isActive}" :href="href" @click="navigate">
+                  <b-icon icon="bar-chart-line-fill"></b-icon>
+                  {{ $t('app.left-nav.menu.item.name.researchers') }}
+                </a>
               </router-link>
             </li>
             <li>
-              <router-link to="/groups">
-                <b-icon icon="people-fill"></b-icon>
-                {{ $t('app.left-nav.menu.item.name.groups') }}
+              <router-link to="/profile" v-slot="{ href, route, navigate, isActive}">
+                <a :active="isActive" :class="{active: isActive}" :href="href" @click="navigate">
+                  <b-icon icon="person-fill"></b-icon>
+                  {{ $t('app.left-nav.menu.item.name.profile') }}
+                </a>
               </router-link>
             </li>
             <li>
-              <router-link to="/settings">
-                <b-icon icon="tools"></b-icon>
-                {{ $t('app.left-nav.menu.item.name.settings') }}
+              <router-link to="/support" v-slot="{ href, route, navigate, isActive}">
+                <a :active="isActive" :class="{active: isActive}" :href="href" @click="navigate">
+                  <b-icon icon="person-fill"></b-icon>
+                  {{ $t('app.left-nav.menu.item.name.support') }}
+                </a>
               </router-link>
             </li>
+            <!--            <li>-->
+            <!--              <router-link to="/groups">-->
+            <!--                <b-icon icon="people-fill"></b-icon>-->
+            <!--                {{ $t('app.left-nav.menu.item.name.groups') }}-->
+            <!--              </router-link>-->
+            <!--            </li>-->
+            <!--            <li>-->
+            <!--              <router-link to="/settings">-->
+            <!--                <b-icon icon="tools"></b-icon>-->
+            <!--                {{ $t('app.left-nav.menu.item.name.settings') }}-->
+            <!--              </router-link>-->
+            <!--            </li>-->
             <li style="margin-top: 100px;">
               <a v-on:click.prevent="logout" href="#">
                 <b-icon icon="box-arrow-left"></b-icon>
@@ -64,10 +86,14 @@
 <script>
 import store from "./store";
 import {mapGetters, mapActions} from "vuex";
+import exampleProfilePicture from "./assets/120493210_1443413932520618_6347067080170311282_n.jpg";
 
 export default {
   name: 'App',
   store: store,
+  data: () => {
+    return {exampleProfilePicture: exampleProfilePicture}
+  },
   computed: {
     ...mapGetters({
       authenticated: "auth/authenticated",
@@ -166,12 +192,18 @@ export default {
 
 .left-menu-navigation ul li a {
   color: #707070;
-  margin-bottom: 20px;
   display: block;
+  padding: 6px 23px;
+}
+
+.left-menu-navigation ul li a.active {
+  background-color: #fdf3f6;
+  color: #c64f59;
+  border-radius: 18px;
 }
 
 .left-menu-navigation ul li a:hover {
-  color: #990201;
+  color: #c64f59;
   text-decoration: none;
 }
 
