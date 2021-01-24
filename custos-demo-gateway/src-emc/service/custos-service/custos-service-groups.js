@@ -72,12 +72,10 @@ export default class CustosGroups {
             `${CustosService.ENDPOINTS.GROUPS}/group`,
             {
                 params: {
-                    group: {
-                        id: groupId
-                    }
+                    "group.id": groupId
                 }
             }
-        ).then(({data: {groups: [group]}}) => group);
+        ).then(({data}) => data);
     }
 
     /**
