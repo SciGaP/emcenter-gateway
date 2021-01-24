@@ -1,0 +1,19 @@
+.emc-primary-btn,
+.btn.emc-primary-btn,
+.btn.btn-secondary.emc-primary-btn {
+    background-color: #a9050f;
+    color: #ffffff;
+    padding: 5px 15px;
+    border-radius: 4px;
+    border: solid 1px #a9050f;
+}
+
+.emc-default-btn,
+.btn.emc-default-btn,
+.btn.btn-secondary.emc-default-btn {
+    background-color: #ffffff;
+    color: #373a3c;
+    padding: 5px 15px;
+    border-radius: 4px;
+    border: solid 1px #dddddd;
+}

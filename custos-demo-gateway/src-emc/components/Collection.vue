@@ -2,6 +2,8 @@
   <b-container class="p-2">
     <b-row class="mb-3">
       <b-col>
+        <Breadcrumb v-if="collection"
+                    :links="[{name: 'Datasets', to:'/collections'},{name: collection.collectionName, to:`/collections/${collectionId}`}]"/>
         <h2>Datasets</h2>
         <div v-if="collection">{{ collection.collectionName }}</div>
       </b-col>
@@ -49,9 +51,11 @@
 <script>
 import store from "../store";
 import {mapGetters, mapActions} from "vuex";
+import Breadcrumb from "./Breadcrumb";
 
 export default {
   name: "Collection",
+  components: {Breadcrumb},
   props: {
     collectionId: {
       type: [Number, String],

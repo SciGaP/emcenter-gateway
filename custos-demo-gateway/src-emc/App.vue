@@ -15,15 +15,15 @@
           <ul>
             <li>
               <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive}">
-                <a :active="isActive" :class="{active: isActive}" :href="href" @click="navigate">
+                <a :class="{active: isActive}" :href="href" @click="navigate">
                   <b-icon icon="bounding-box"></b-icon>
                   {{ $t('app.left-nav.menu.item.name.dashboard') }}
                 </a>
               </router-link>
             </li>
             <li>
-              <router-link to="/collections" v-slot="{ href, route, navigate, isActive}">
-                <a :active="isActive" :class="{active: isActive}" :href="href" @click="navigate">
+              <router-link to="/groups" v-slot="{ href, route, navigate, isActive}">
+                <a :class="{active: isActive}" :href="href" @click="navigate">
                   <b-icon icon="bar-chart-line-fill"></b-icon>
                   {{ $t('app.left-nav.menu.item.name.datasets') }}
                 </a>
@@ -31,7 +31,7 @@
             </li>
             <li>
               <router-link to="/researchers" v-slot="{ href, route, navigate, isActive}">
-                <a :active="isActive" :class="{active: isActive}" :href="href" @click="navigate">
+                <a :class="{active: isActive}" :href="href" @click="navigate">
                   <b-icon icon="bar-chart-line-fill"></b-icon>
                   {{ $t('app.left-nav.menu.item.name.researchers') }}
                 </a>
@@ -39,7 +39,7 @@
             </li>
             <li>
               <router-link to="/profile" v-slot="{ href, route, navigate, isActive}">
-                <a :active="isActive" :class="{active: isActive}" :href="href" @click="navigate">
+                <a :class="{active: isActive}" :href="href" @click="navigate">
                   <b-icon icon="person-fill"></b-icon>
                   {{ $t('app.left-nav.menu.item.name.profile') }}
                 </a>
@@ -47,7 +47,7 @@
             </li>
             <li>
               <router-link to="/support" v-slot="{ href, route, navigate, isActive}">
-                <a :active="isActive" :class="{active: isActive}" :href="href" @click="navigate">
+                <a :class="{active: isActive}" :href="href" @click="navigate">
                   <b-icon icon="person-fill"></b-icon>
                   {{ $t('app.left-nav.menu.item.name.support') }}
                 </a>
@@ -87,6 +87,7 @@
 import store from "./store";
 import {mapGetters, mapActions} from "vuex";
 import exampleProfilePicture from "./assets/120493210_1443413932520618_6347067080170311282_n.jpg";
+import "./styles.css";
 
 export default {
   name: 'App',
