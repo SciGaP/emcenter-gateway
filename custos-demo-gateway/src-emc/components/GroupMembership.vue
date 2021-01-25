@@ -1,6 +1,6 @@
 <template>
   <div>
-    <strong>Users</strong>
+    <strong>Group Members</strong>
     <ul v-if="users" style="list-style: none; padding: 0px;">
       <li v-for="user in users" :key="user.userId">
         <b-form-checkbox

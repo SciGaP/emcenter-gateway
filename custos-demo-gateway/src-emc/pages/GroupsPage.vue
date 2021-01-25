@@ -42,7 +42,7 @@
           </b-col>
           <b-col>
             <label>Date</label>
-            <b-form-input size="sm"></b-form-input>
+            <b-form-input size="sm" value="04/10/2020 - 14/10/2020"></b-form-input>
           </b-col>
         </b-row>
         <div style="text-align: right;">

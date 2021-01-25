@@ -1,5 +1,7 @@
 <template>
-  <Collection :collectionId="collectionId"/>
+  <div>
+    <Collection :collectionId="collectionId"/>
+  </div>
 </template>
 
 <script>
