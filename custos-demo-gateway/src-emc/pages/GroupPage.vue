@@ -1,7 +1,7 @@
 <template>
   <Page
       v-if="group" :title="group.name"
-      :breadcrumb-links="[{to: '/groups', name: 'Datasets'}, {to: groupLink, name: group.name}]"
+      :breadcrumb-links="breadcrumbLinks"
   >
     <div class="w-100">
       <b-input-group size="sm">
@@ -40,20 +40,15 @@
         </div>
       </b-col>
       <b-col class="pt-2">
-        <div class="w-100" style="display: flex;">
-          <div style="flex: 1;">
-            /{{ path }}
-          </div>
-          <div>
-            <b-button size="sm" :variant="displayMode === 'list' ? 'primary':'outline-primary'"
-                      v-on:click="switchDisplayMode('list')">
-              <b-icon icon="list" aria-hidden="true"></b-icon>
-            </b-button>
-            <b-button size="sm" :variant="displayMode === 'grid' ? 'primary':'outline-primary'" class="ml-2"
-                      v-on:click="switchDisplayMode('grid')">
-              <b-icon icon="grid" aria-hidden="true"></b-icon>
-            </b-button>
-          </div>
+        <div class="w-100 text-right">
+          <b-button size="sm" :variant="displayMode === 'list' ? 'primary':'outline-primary'"
+                    v-on:click="switchDisplayMode('list')">
+            <b-icon icon="list" aria-hidden="true"></b-icon>
+          </b-button>
+          <b-button size="sm" :variant="displayMode === 'grid' ? 'primary':'outline-primary'" class="ml-2"
+                    v-on:click="switchDisplayMode('grid')">
+            <b-icon icon="grid" aria-hidden="true"></b-icon>
+          </b-button>
         </div>
 
         <div class="w-100 pt-4"></div>
@@ -84,7 +79,7 @@
                 <router-link :to="getFolderLink(folder)" v-slot="{ href, route, navigate, isActive,isExactActive }">
                   <b-icon style="height: 100%;" icon="folder-fill" aria-hidden="true"></b-icon>
                   <a :class="{active: isExactActive}" :href="href" @click="navigate"
-                     style="flex: 1;display: inline; padding-left: 5px;">
+                     style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;">
                     {{ folder.name }}
                   </a>
                 </router-link>
@@ -180,6 +175,23 @@ export default {
       getGroup: "group/getGroup",
       getUsers: "user/getUsers",
     }),
+    breadcrumbLinks() {
+      const _breadcrumbLinks = [{to: '/groups', name: 'Datasets'}]
+      if (this.group && this.group.name) {
+        _breadcrumbLinks.push({to: this.groupLink, name: this.group.name});
+
+        console.log("#########")
+        if (this.path && this.path !== "") {
+          const pathSegments = this.path.split("/");
+          pathSegments.map((pathSegment, pathSegmentIndex) => {
+            const _fullPathToSegment = pathSegments.slice(0, pathSegmentIndex + 1).join("/");
+            _breadcrumbLinks.push({to: `${this.groupLink}?path=${_fullPathToSegment}`, name: pathSegment});
+          });
+        }
+      }
+
+      return _breadcrumbLinks;
+    },
     groupId() {
       return this.$route.params.groupId;
     },
@@ -243,7 +255,7 @@ export default {
           return []
         }
       } else if (this.mode === "user") {
-        return ["collection-1", "collection-2", "collection-3", "collection-4", "collection-5"].map((collectionName) => {
+        return ["session-1", "session-2", "session-3", "session-4", "session-5"].map((collectionName) => {
           return {
             folderId: 1,
             path: this.path + "/" + collectionName,
