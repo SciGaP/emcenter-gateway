@@ -1,7 +1,12 @@
 import axios from "axios";
+import http from "http";
+import https from "https";
 import CustosGroups from "./custos-service-groups";
 import CustosUsers from "./custos-service-users";
 import CustosIdentity from "./custos-service-identity";
+
+const httpAgent = new http.Agent({keepAlive: true});
+const httpsAgent = new https.Agent({keepAlive: true});
 
 export default class CustosService {
     static ENDPOINTS = {
@@ -94,6 +99,8 @@ export default class CustosService {
 
     get axiosInstance() {
         return axios.create({
+            httpAgent,
+            httpsAgent,
             baseURL: this.baseURL,
             withCredentials: false,
             headers: {
@@ -105,6 +112,8 @@ export default class CustosService {
 
     get axiosInstanceWithClientAuthorization() {
         return axios.create({
+            httpAgent,
+            httpsAgent,
             baseURL: this.baseURL,
             withCredentials: false,
             headers: {
@@ -117,6 +126,8 @@ export default class CustosService {
 
     get axiosInstanceWithTokenAuthorization() {
         return axios.create({
+            httpAgent,
+            httpsAgent,
             baseURL: this.baseURL,
             withCredentials: false,
             headers: {
