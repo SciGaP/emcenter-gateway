@@ -1,17 +1,33 @@
 <template>
   <div>
     <strong>Group Members</strong>
-    <ul v-if="users" style="list-style: none; padding: 0px;">
-      <li v-for="user in users" :key="user.userId">
-        <b-form-checkbox
-            :id="`checkbox-group-user-${user.username}`"
-            :name="`checkbox-group-user-${user.username}`"
-            :checked="true"
-        >
-          {{ user.username }}
-        </b-form-checkbox>
-      </li>
-    </ul>
+<!--    <ul v-if="users" style="list-style: none; padding: 0px;">-->
+<!--      <li v-for="user in users" :key="user.userId">-->
+<!--        <b-form-checkbox-->
+<!--            :id="`checkbox-group-user-${user.username}`"-->
+<!--            :name="`checkbox-group-user-${user.username}`"-->
+<!--            :checked="true"-->
+<!--        >-->
+<!--          {{ user.username }}-->
+<!--        </b-form-checkbox>-->
+<!--      </li>-->
+<!--    </ul>-->
+    <div class="mt-2">
+      <table class="w-100">
+        <thead>
+        <tr>
+          <th>Username</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="user in users" :key="user.username">
+          <td>
+            {{user.username}}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
     <div class="w-100 mt-3">
       <UserSearchAndSelect v-on:change="onUserSelect"/>
     </div>

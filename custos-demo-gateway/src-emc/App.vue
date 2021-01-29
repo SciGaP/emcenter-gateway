@@ -1,85 +1,16 @@
 <template>
   <div id="app">
-    <div class="h-100 page-header">
-      {{ $t('app.top-header.title') }}
-    </div>
+    <AppHeader/>
     <div class="h-100 p-3 page-body">
 
-      <div class="p-3 left-menu" v-if="authenticated">
-        <div class="p-3 left-menu-profile" v-if="user">
-          <img style="width: 100px; height: 100px;border-radius: 50px;" :src="exampleProfilePicture"/>
-          <div class="left-menu-profile-name">{{ user.first_name }} {{ user.last_name }}</div>
-          <div class="left-menu-profile-role">{{ user.realm_roles.join(" / ") }}</div>
-        </div>
-        <div class="p-3 left-menu-navigation">
-          <ul>
-            <li>
-              <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive}">
-                <a :class="{active: isActive}" :href="href" @click="navigate">
-                  <b-icon icon="bounding-box"></b-icon>
-                  {{ $t('app.left-nav.menu.item.name.dashboard') }}
-                </a>
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/groups" v-slot="{ href, route, navigate, isActive}">
-                <a :class="{active: isActive}" :href="href" @click="navigate">
-                  <b-icon icon="bar-chart-line-fill"></b-icon>
-                  {{ $t('app.left-nav.menu.item.name.datasets') }}
-                </a>
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/researchers" v-slot="{ href, route, navigate, isActive}">
-                <a :class="{active: isActive}" :href="href" @click="navigate">
-                  <b-icon icon="bar-chart-line-fill"></b-icon>
-                  {{ $t('app.left-nav.menu.item.name.researchers') }}
-                </a>
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/profile" v-slot="{ href, route, navigate, isActive}">
-                <a :class="{active: isActive}" :href="href" @click="navigate">
-                  <b-icon icon="person-fill"></b-icon>
-                  {{ $t('app.left-nav.menu.item.name.profile') }}
-                </a>
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/support" v-slot="{ href, route, navigate, isActive}">
-                <a :class="{active: isActive}" :href="href" @click="navigate">
-                  <b-icon icon="person-fill"></b-icon>
-                  {{ $t('app.left-nav.menu.item.name.support') }}
-                </a>
-              </router-link>
-            </li>
-            <!--            <li>-->
-            <!--              <router-link to="/groups">-->
-            <!--                <b-icon icon="people-fill"></b-icon>-->
-            <!--                {{ $t('app.left-nav.menu.item.name.groups') }}-->
-            <!--              </router-link>-->
-            <!--            </li>-->
-            <!--            <li>-->
-            <!--              <router-link to="/settings">-->
-            <!--                <b-icon icon="tools"></b-icon>-->
-            <!--                {{ $t('app.left-nav.menu.item.name.settings') }}-->
-            <!--              </router-link>-->
-            <!--            </li>-->
-            <li style="margin-top: 100px;">
-              <a v-on:click.prevent="logout" href="#">
-                <b-icon icon="box-arrow-left"></b-icon>
-                {{ $t('app.left-nav.menu.item.name.logout') }}
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <AppLeftNav/>
 
-      <div class="p-3" style="flex: 1;">
+      <div class="pl-3 pr-3" style="flex: 1;">
         <router-view/>
       </div>
 
     </div>
+    <AppFooter/>
   </div>
 </template>
 
@@ -88,9 +19,13 @@ import store from "./store";
 import {mapGetters, mapActions} from "vuex";
 import exampleProfilePicture from "./assets/120493210_1443413932520618_6347067080170311282_n.jpg";
 import "./styles.css";
+import AppHeader from "./components/AppHeader";
+import AppLeftNav from "./components/AppLeftNav";
+import AppFooter from "./components/AppFooter";
 
 export default {
   name: 'App',
+  components: {AppFooter, AppLeftNav, AppHeader},
   store: store,
   data: () => {
     return {exampleProfilePicture: exampleProfilePicture}
@@ -149,66 +84,9 @@ export default {
 </script>
 
 <style>
-.page-header {
-  padding: 10px 25px;
-  font-size: 25px;
-  color: #990201;
-}
-
 .page-body {
   display: flex;
   flex-direction: row;
   background: #f6f6f6;
-}
-
-.left-menu {
-  width: 250px;
-  background-color: white;
-  border-radius: 10px;
-}
-
-.left-menu-navigation {
-
-}
-
-.left-menu-profile {
-  text-align: center;
-  color: #707070;
-}
-
-.left-menu-profile .left-menu-profile-name {
-  font-weight: 600;
-  font-size: 21px;
-}
-
-.left-menu-profile .left-menu-profile-role {
-  font-size: 13px;
-}
-
-.left-menu-navigation ul {
-  list-style: none;
-  margin: 0px;
-  padding: 0px;
-}
-
-.left-menu-navigation ul li a {
-  color: #707070;
-  display: block;
-  padding: 6px 23px;
-}
-
-.left-menu-navigation ul li a.active {
-  background-color: #fdf3f6;
-  color: #c64f59;
-  border-radius: 18px;
-}
-
-.left-menu-navigation ul li a:hover {
-  color: #c64f59;
-  text-decoration: none;
-}
-
-.left-menu-navigation ul li a svg {
-  margin-right: 10px;
 }
 </style>

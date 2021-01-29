@@ -3,128 +3,7 @@
       v-if="group" :title="group.name"
       :breadcrumb-links="breadcrumbLinks"
   >
-    <div class="w-100">
-      <b-input-group size="sm">
-        <b-form-input placeholder="Search" size="sm"></b-form-input>
-        <b-input-group-append>
-          <b-button v-b-modal.modal-1>
-            <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon>
-          </b-button>
-        </b-input-group-append>
-      </b-input-group>
-      <b-modal id="modal-1" title="Search / Filter">
-        <p class="my-4">Advanced searching/ filtering criteria. </p>
-        <template slot="modal-footer">
-          <b-button>Search</b-button>
-        </template>
-      </b-modal>
-    </div>
-
-
-    <b-row class="pt-3">
-      <b-col class="pt-2" style="max-width: 200px;">
-        <GroupMembership :group-id="groupId"/>
-        <div>
-          <strong>Microscope</strong>
-          <ul style="list-style: none; padding: 0px;">
-            <li v-for="microscope in ['IU Cardiac-MS1', 'IU-med-MS1', 'IU-med-MS2']" :key="microscope">
-              <b-form-checkbox
-                  :id="`checkbox-group-user-${microscope}`"
-                  :name="`checkbox-group-user-${microscope}`"
-                  :checked="true"
-              >
-                {{ microscope }}
-              </b-form-checkbox>
-            </li>
-          </ul>
-        </div>
-      </b-col>
-      <b-col class="pt-2">
-        <div class="w-100 text-right">
-          <b-button size="sm" :variant="displayMode === 'list' ? 'primary':'outline-primary'"
-                    v-on:click="switchDisplayMode('list')">
-            <b-icon icon="list" aria-hidden="true"></b-icon>
-          </b-button>
-          <b-button size="sm" :variant="displayMode === 'grid' ? 'primary':'outline-primary'" class="ml-2"
-                    v-on:click="switchDisplayMode('grid')">
-            <b-icon icon="grid" aria-hidden="true"></b-icon>
-          </b-button>
-        </div>
-
-        <div class="w-100 pt-4"></div>
-
-        <b-row v-if="displayMode === 'grid'">
-          <b-col style="min-width: 120px;max-width: 120px;" v-for="folder in folders" :key="folder.folderId">
-            <a>
-              <b-icon icon="folder-fill" aria-hidden="true"></b-icon>
-              <div style="display: inline; padding-left: 5px;">{{ folder.name }}</div>
-            </a>
-          </b-col>
-          <div class="w-100 pt-5"></div>
-          <b-col style="min-width: 120px;max-width: 120px;" v-for="file in files" :key="file.fileId">
-            <a>
-              <b-icon icon="card-image" aria-hidden="true"></b-icon>
-              <div style="display: inline; padding-left: 5px;">{{ file.name }}</div>
-            </a>
-          </b-col>
-        </b-row>
-
-        <div v-if="displayMode === 'list'" class="w-100">
-          <div class="w-100">
-            <b-row style="border-bottom: 1px solid #dee2e6; margin-bottom: 5px;" v-for="folder in folders"
-                   :key="folder.folderId">
-              <b-col style="max-width: 150px;display: flex;flex-direction: row;">
-                <!--                <b-icon style="height: 100%;" icon="folder-fill" aria-hidden="true"></b-icon>-->
-                <!--                <div style="flex: 1;display: inline; padding-left: 5px;">{{ folder.name }}</div>-->
-                <router-link :to="getFolderLink(folder)" v-slot="{ href, route, navigate, isActive,isExactActive }">
-                  <b-icon style="height: 100%;" icon="folder-fill" aria-hidden="true"></b-icon>
-                  <a :class="{active: isExactActive}" :href="href" @click="navigate"
-                     style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;">
-                    {{ folder.name }}
-                  </a>
-                </router-link>
-              </b-col>
-              <!--              <b-col style="padding-top: 5px; padding-bottom: 5px;font-size: 12px;display: flex;">-->
-              <!--                <div v-if="folder.status.uploading > 0" class="pr-4">-->
-              <!--                  Uploading (<a href="#">{{ folder.status.uploading }}</a>), {{ folder.status.uploadingPercentage }}%-->
-              <!--                </div>-->
-              <!--                <div v-if="folder.status.failed > 0">-->
-              <!--                  <a href="#" class="text-danger">-->
-              <!--                    <b-icon icon="exclamation-triangle-fill" aria-hidden="true"></b-icon>-->
-              <!--                    Failed ({{ folder.status.failed }})-->
-              <!--                  </a>-->
-              <!--                </div>-->
-              <!--              </b-col>-->
-              <b-col style="font-size: 10px; max-width: 150px;overflow: hidden;line-height: 24px;">Dec 23, 2020,
-                Thomas
-              </b-col>
-            </b-row>
-          </div>
-          <div v-if="folders.length > 0" class="w-100 pt-5"></div>
-          <b-row style="border-bottom: 1px solid #dee2e6; margin-bottom: 5px;" v-for="file in files" :key="file.fileId">
-            <b-col style="max-width: 150px;display: flex;flex-direction: row;">
-              <b-icon style="height: 100%;" icon="card-image" aria-hidden="true"></b-icon>
-              <div style="flex:1;display: inline; padding-left: 5px;overflow: hidden;">{{ file.name }}</div>
-            </b-col>
-            <!--            <b-col style="padding-top: 5px; padding-bottom: 5px;font-size: 12px;">-->
-            <!--              <div v-if="file.status.uploading > 0" class="pr-4">-->
-            <!--                Uploading {{ file.status.uploadingPercentage }}%-->
-            <!--              </div>-->
-
-            <!--              <div v-else-if="file.status.failed > 0">-->
-            <!--                <a class="text-danger" href="#">-->
-            <!--                  <b-icon icon="exclamation-triangle-fill" aria-hidden="true"></b-icon>-->
-            <!--                  Failed-->
-            <!--                </a>-->
-            <!--              </div>-->
-            <!--            </b-col>-->
-            <b-col style="font-size: 10px; max-width: 150px;overflow: hidden;line-height: 24px;">Dec 23, 2020, Thomas
-            </b-col>
-          </b-row>
-        </div>
-
-      </b-col>
-    </b-row>
+    <GroupMembership :group-id="groupId"/>
   </Page>
 </template>
 
@@ -136,7 +15,7 @@ import GroupMembership from "../components/GroupMembership";
 import Page from "../components/Page";
 
 export default {
-  name: "SettingsPage",
+  name: "GroupPage",
   components: {Page, GroupMembership},
   store: store,
   data() {

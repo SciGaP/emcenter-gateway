@@ -5,9 +5,8 @@ import store from './store/index.js'
 import {BootstrapVue, IconsPlugin} from 'bootstrap-vue'
 import Vuelidate from 'vuelidate'
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
 import i18n from "./i18n";
+import "rivet-uits/js/rivet.min"
 
 Vue.use(BootstrapVue)
 Vue.use(Vuelidate)
