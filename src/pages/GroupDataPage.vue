@@ -37,6 +37,15 @@
 
     <div class="w-100">
       <div class="w-100 text-right mt-2">
+        <button type="button" class="rvt-button rvt-button--plain" v-if="hasAnythingSelected()">
+          Download
+        </button>
+        <button type="button" class="rvt-button rvt-button--plain" v-if="hasAnythingSelected()">
+          Share
+        </button>
+        <button type="button" class="rvt-button rvt-button--plain" v-if="hasAnythingSelected()">
+          History
+        </button>
         <button type="button" class="rvt-button" :class="{'rvt-button--secondary': displayMode !== 'list'}"
                 v-on:click="switchDisplayMode('list')">
           <b-icon icon="list" aria-hidden="true"></b-icon>
@@ -65,22 +74,67 @@
         </b-col>
       </b-row>
 
+
       <div v-if="displayMode === 'list'" class="w-100">
         <div class="w-100">
           <table class="w-100">
             <thead>
             <tr>
-              <th></th>
+              <td>
+                <input type="checkbox" name="all" id="all" :checked="isAllSelected()"
+                       v-on:click="toggleAllSelection()"/>
+                <label for="all" class="rvt-m-right-sm"></label>
+              </td>
+              <td>
+                <div class="rvt-dropdown">
+                  <button type="button" class="rvt-button rvt-button--small rvt-button--secondary"
+                          data-dropdown-toggle="dropdown-all"
+                          aria-haspopup="true" aria-expanded="false">
+                    <span>Actions</span>
+                    <svg aria-hidden="true" class="rvt-m-left-xs" xmlns="http://www.w3.org/2000/svg" width="16"
+                         height="16" viewBox="0 0 16 16">
+                      <path fill="currentColor"
+                            d="M8,12.46a2,2,0,0,1-1.52-.7L1.24,5.65a1,1,0,1,1,1.52-1.3L8,10.46l5.24-6.11a1,1,0,0,1,1.52,1.3L9.52,11.76A2,2,0,0,1,8,12.46Z"/>
+                    </svg>
+                  </button>
+                  <div class="rvt-dropdown__menu" id="dropdown-all" role="menu" aria-hidden="true">
+                    <button type="button" role="menuitemradio">Download</button>
+                    <button type="button" role="menuitemradio">Share</button>
+                    <button type="button" role="menuitemradio">View History</button>
+                  </div>
+                </div>
+              </td>
               <th>Name</th>
               <th>Last Updated</th>
-              <th></th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="folder in folders" :key="folder.folderId">
+            <tr v-for="folder in folders" :key="folder.folderId" :class="{selected: isFolderSelected(folder)}">
               <td>
-                <input type="checkbox" :name="folder.folderId" :id="folder.folderId"/>
-                <label :for="folder.folderId" class="rvt-m-right-sm"></label>
+                <input type="checkbox" :checked="isFolderSelected(folder)" v-on:click="toggleFolderSelection(folder)"
+                       :name="getFolderSelectionCheckboxId(folder)"
+                       :id="getFolderSelectionCheckboxId(folder)"/>
+                <label :for="getFolderSelectionCheckboxId(folder)" class="rvt-m-right-sm"></label>
+              </td>
+              <td>
+                <div class="rvt-dropdown">
+                  <button type="button" class="rvt-button rvt-button--small rvt-button--secondary"
+                          :data-dropdown-toggle="getFolderActionsDropdownId(folder)"
+                          aria-haspopup="true" aria-expanded="false">
+                    <span>Actions</span>
+                    <svg aria-hidden="true" class="rvt-m-left-xs" xmlns="http://www.w3.org/2000/svg" width="16"
+                         height="16" viewBox="0 0 16 16">
+                      <path fill="currentColor"
+                            d="M8,12.46a2,2,0,0,1-1.52-.7L1.24,5.65a1,1,0,1,1,1.52-1.3L8,10.46l5.24-6.11a1,1,0,0,1,1.52,1.3L9.52,11.76A2,2,0,0,1,8,12.46Z"/>
+                    </svg>
+                  </button>
+                  <div class="rvt-dropdown__menu" :id="getFolderActionsDropdownId(folder)" role="menu"
+                       aria-hidden="true">
+                    <button type="button" role="menuitemradio">Download</button>
+                    <button type="button" role="menuitemradio">Share</button>
+                    <button type="button" role="menuitemradio">View History</button>
+                  </div>
+                </div>
               </td>
               <td>
                 <router-link :to="getFolderLink(folder)" v-slot="{ href, route, navigate, isActive,isExactActive }">
@@ -92,10 +146,20 @@
                 </router-link>
               </td>
               <td>Dec 23d, 2020, Thomas</td>
+            </tr>
+
+            <tr v-if="folders.length > 0" class="w-100 pt-5"></tr>
+
+            <tr v-for="file in files" :key="file.fileId" :class="{selected: isFileSelected(file)}">
+              <td>
+                <input type="checkbox" :checked="isFileSelected(file)" v-on:click="toggleFileSelection(file)"
+                       :name="getFileSelectionCheckboxId(file)" :id="getFileSelectionCheckboxId(file)"/>
+                <label :for="getFileSelectionCheckboxId(file)" class="rvt-m-right-sm"></label>
+              </td>
               <td>
                 <div class="rvt-dropdown">
                   <button type="button" class="rvt-button rvt-button--small rvt-button--secondary"
-                          data-dropdown-toggle="dropdown-1"
+                          :data-dropdown-toggle="getFileActionsDropdownId(file)"
                           aria-haspopup="true" aria-expanded="false">
                     <span>Actions</span>
                     <svg aria-hidden="true" class="rvt-m-left-xs" xmlns="http://www.w3.org/2000/svg" width="16"
@@ -104,22 +168,13 @@
                             d="M8,12.46a2,2,0,0,1-1.52-.7L1.24,5.65a1,1,0,1,1,1.52-1.3L8,10.46l5.24-6.11a1,1,0,0,1,1.52,1.3L9.52,11.76A2,2,0,0,1,8,12.46Z"/>
                     </svg>
                   </button>
-                  <div class="rvt-dropdown__menu" id="dropdown-1" role="menu" aria-hidden="true">
+                  <div class="rvt-dropdown__menu" :id="getFileActionsDropdownId(file)" role="menu" aria-hidden="true">
                     <button type="button" role="menuitemradio">Download</button>
                     <button type="button" role="menuitemradio">Share</button>
+                    <button type="button" role="menuitemradio">Edit</button>
                     <button type="button" role="menuitemradio">View History</button>
                   </div>
                 </div>
-              </td>
-            </tr>
-
-
-            <tr v-if="folders.length > 0" class="w-100 pt-5"></tr>
-
-            <tr v-for="file in files" :key="file.fileId">
-              <td>
-                <input type="checkbox" :name="file.fileId" :id="file.fileId"/>
-                <label :for="file.fileId" class="rvt-m-right-sm"></label>
               </td>
               <td>
                 <b-icon style="height: 100%;" icon="card-image" aria-hidden="true"></b-icon>
@@ -128,26 +183,6 @@
                 </a>
               </td>
               <td>Dec 23d, 2020, Thomas</td>
-              <td>
-                <div class="rvt-dropdown">
-                  <button type="button" class="rvt-button rvt-button--small rvt-button--secondary"
-                          data-dropdown-toggle="dropdown-1"
-                          aria-haspopup="true" aria-expanded="false">
-                    <span>Actions</span>
-                    <svg aria-hidden="true" class="rvt-m-left-xs" xmlns="http://www.w3.org/2000/svg" width="16"
-                         height="16" viewBox="0 0 16 16">
-                      <path fill="currentColor"
-                            d="M8,12.46a2,2,0,0,1-1.52-.7L1.24,5.65a1,1,0,1,1,1.52-1.3L8,10.46l5.24-6.11a1,1,0,0,1,1.52,1.3L9.52,11.76A2,2,0,0,1,8,12.46Z"/>
-                    </svg>
-                  </button>
-                  <div class="rvt-dropdown__menu" id="dropdown-1" role="menu" aria-hidden="true">
-                    <button type="button" role="menuitemradio">Download</button>
-                    <button type="button" role="menuitemradio">Share</button>
-                    <button type="button" role="menuitemradio">Edit</button>
-                    <button type="button" role="menuitemradio">View History</button>
-                  </div>
-                </div>
-              </td>
             </tr>
             </tbody>
           </table>
@@ -171,7 +206,10 @@ export default {
   data() {
     return {
       memberTypes: ['ADMIN', 'MEMBER'],
-      displayMode: "list"
+      displayMode: "list",
+      selectedFileIdMap: {},
+      selectedFolderIdMap: {},
+      // allFilesAndFoldersSelected: false
     }
   },
   computed: {
@@ -287,6 +325,102 @@ export default {
     },
     getFolderLink(folder) {
       return this.groupLink + "?path=" + folder.path;
+    },
+    getFolderSelectionCheckboxId({folderId}) {
+      return `folder-select-checkbox-${folderId}`;
+    },
+    getFileSelectionCheckboxId({fileId}) {
+      return `file-select-checkbox-${fileId}`;
+    },
+    getFolderActionsDropdownId({folderId}) {
+      return `folder-actions-dropdown-${folderId}`;
+    },
+    getFileActionsDropdownId({fileId}) {
+      return `file-actions-dropdown-${fileId}`;
+    },
+    toggleAllSelection(selected = null) {
+      if (typeof selected !== "boolean") {
+        selected = !this.isAllSelected();
+      }
+
+      // this.allFilesAndFoldersSelected = selected;
+
+      this.folders.map(folder => {
+        this.toggleFolderSelection(folder, selected);
+      });
+
+      this.files.map(file => {
+        this.toggleFileSelection(file, selected);
+      });
+    },
+    toggleFolderSelection({folderId}, selected = null) {
+      if (typeof selected !== "boolean") {
+        selected = !this.selectedFolderIdMap[folderId];
+      }
+
+      // this.toggleAllSelection(false);
+      this.selectedFolderIdMap = {
+        ...this.selectedFolderIdMap,
+        [folderId]: selected
+      }
+    },
+    toggleFileSelection({fileId}, selected = null) {
+      if (typeof selected !== "boolean") {
+        selected = !this.selectedFileIdMap[fileId];
+      }
+
+      // this.toggleAllSelection(false);
+      this.selectedFileIdMap = {
+        ...this.selectedFileIdMap,
+        [fileId]: selected
+      }
+    },
+    isAllSelected() {
+      console.log("isAllSelected");
+      let _isAllSelected = false;
+
+      for (let i = 0; i < this.folders.length; i++) {
+        if (!this.isFolderSelected(this.folders[i])) {
+          return false;
+        } else {
+          _isAllSelected = true;
+        }
+      }
+
+      for (let i = 0; i < this.files.length; i++) {
+        if (!this.isFileSelected(this.files[i])) {
+          return false;
+        } else {
+          _isAllSelected = true;
+        }
+      }
+
+      console.log("isAllSelected TRUE");
+
+      return _isAllSelected;
+    },
+    isFolderSelected({folderId}) {
+      if (this.selectedFolderIdMap[folderId]) return true;
+      else return false;
+    },
+    isFileSelected({fileId}) {
+      if (this.selectedFileIdMap[fileId]) return true;
+      else return false;
+    },
+    hasAnythingSelected() {
+      for (let folderId in this.selectedFolderIdMap) {
+        if (this.isFolderSelected({folderId})) {
+          return true;
+        }
+      }
+
+      for (let fileId in this.selectedFileIdMap) {
+        if (this.isFileSelected({fileId})) {
+          return true;
+        }
+      }
+
+      return false;
     }
   },
   beforeMount() {
@@ -297,5 +431,8 @@ export default {
 </script>
 
 <style scoped>
+table tbody tr.selected {
+  background-color: #d6e2ed;
+}
 
 </style>
