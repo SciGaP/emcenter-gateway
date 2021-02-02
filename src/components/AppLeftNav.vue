@@ -1,3 +1,29 @@
+<!--<template>-->
+<!--  <div class="p-2 left-menu" v-if="authenticated">-->
+<!--    <div class="left-menu-navigation">-->
+<!--      <ul>-->
+<!--        <li class="pb-3" style="border-bottom: 1px solid red;">-->
+<!--          <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive}">-->
+<!--            <a :class="{active: isActive}" :href="href" @click="navigate">-->
+<!--               <b-icon icon="person-fill"></b-icon>-->
+<!--              My Folders / Files-->
+<!--            </a>-->
+<!--          </router-link>-->
+<!--        </li>-->
+<!--        <li v-for="group in groups" :key="group.groupId">-->
+<!--          <router-link :to="`/data/groups/${group.groupId}`" v-slot="{ href, route, navigate, isActive}">-->
+<!--            <a :class="{active: isActive}" :href="href" @click="navigate">-->
+<!--              <b-icon icon="people-fill"></b-icon>-->
+<!--              {{ group.name }}-->
+<!--            </a>-->
+<!--          </router-link>-->
+<!--        </li>-->
+<!--      </ul>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</template>-->
+
+
 <template>
   <div class="p-3 left-menu" v-if="authenticated">
     <div class="p-3 left-menu-profile" v-if="user">
@@ -94,14 +120,19 @@ export default {
       authenticated: "auth/authenticated",
       currentUsername: "auth/currentUsername",
       isAdmin: "auth/isAdmin",
-      getUser: "user/getUser"
+      getUser: "user/getUser",
+      getGroups: "group/getGroups",
     }),
     user() {
       return this.getUser({username: this.currentUsername});
+    },
+    groups() {
+      return this.getGroups()
     }
   },
   methods: {
     ...mapActions({
+      fetchGroups: "group/fetchGroups",
       fetchUsers: "user/fetchUsers",
       logoutAction: "auth/logout",
       refreshAuthentication: "auth/refreshAuthentication"
@@ -138,6 +169,7 @@ export default {
     this.refreshAuthentication();
     this.fetchAuthenticatedUser();
     this.redirectToLoginIfNotAuthenticated();
+    this.fetchGroups();
   }
 }
 </script>
