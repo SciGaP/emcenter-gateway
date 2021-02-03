@@ -36,27 +36,67 @@
     </div>
 
     <div class="w-100">
-      <div class="w-100 text-right mt-2">
-        <button type="button" class="rvt-button rvt-button--plain" v-if="hasAnythingSelected()">
-          Download
-        </button>
-        <button type="button" class="rvt-button rvt-button--plain" v-if="hasAnythingSelected()">
-          Share
-        </button>
-        <button type="button" class="rvt-button rvt-button--plain" v-if="hasAnythingSelected()">
-          History
-        </button>
-        <button type="button" class="rvt-button" :class="{'rvt-button--secondary': displayMode !== 'list'}"
-                v-on:click="switchDisplayMode('list')">
-          <b-icon icon="list" aria-hidden="true"></b-icon>
-        </button>
-        <button type="button" class="ml-2 rvt-button" :class="{'rvt-button--secondary': displayMode !== 'grid'}"
-                v-on:click="switchDisplayMode('grid')">
-          <b-icon icon="grid" aria-hidden="true"></b-icon>
-        </button>
+
+      <div class="w-100 mt-2" style="display: flex; flex-direction: row;display: inline-flex;align-items: center;">
+        <div style="flex: 1;">
+          <span v-if="numberOfFoldersSelected > 0">
+            {{ numberOfFoldersSelected }} folder(s)
+          </span>
+          <span v-if="numberOfFoldersSelected > 0 && numberOfFilesSelected > 0">
+            {{ numberOfFoldersSelected }} folder(s)
+          </span>
+          <span v-if="numberOfFilesSelected > 0">
+            {{ numberOfFilesSelected }} file(s)
+          </span>
+          <span v-if="numberOfFoldersSelected > 0 || numberOfFilesSelected > 0">
+            selected
+          </span>
+        </div>
+        <div class="text-right">
+          <button type="button" class="rvt-button rvt-button--plain" v-if="hasAnythingSelected()">
+            Download
+          </button>
+          <button type="button" class="rvt-button rvt-button--plain" v-if="hasAnythingSelected()">
+            Share
+          </button>
+          <button type="button" class="rvt-button rvt-button--plain" v-if="hasAnythingSelected()">
+            History
+          </button>
+          <button type="button" class="rvt-button" :class="{'rvt-button--secondary': displayMode !== 'list'}"
+                  v-on:click="switchDisplayMode('list')">
+            <b-icon icon="list" aria-hidden="true"></b-icon>
+          </button>
+          <button type="button" class="ml-2 rvt-button" :class="{'rvt-button--secondary': displayMode !== 'grid'}"
+                  v-on:click="switchDisplayMode('grid')">
+            <b-icon icon="grid" aria-hidden="true"></b-icon>
+          </button>
+        </div>
       </div>
 
+
       <div class="w-100 pt-4"></div>
+
+      <div class="w-100" style="display: flex;flex-direction: row;">
+        <div v-if="displayMode === 'grid'">
+          <input type="checkbox" name="all-grid" id="all-grid" :checked="isAllSelected()"
+                 v-on:click="toggleAllSelection()"/>
+          <label for="all-grid" class="rvt-m-right-sm">Select All</label>
+        </div>
+<!--        <div>-->
+<!--          <span v-if="numberOfFoldersSelected > 0">-->
+<!--            {{ numberOfFoldersSelected }} folder(s)-->
+<!--          </span>-->
+<!--          <span v-if="numberOfFoldersSelected > 0 && numberOfFilesSelected > 0">-->
+<!--            {{ numberOfFoldersSelected }} folder(s)-->
+<!--          </span>-->
+<!--          <span v-if="numberOfFilesSelected > 0">-->
+<!--            {{ numberOfFilesSelected }} file(s)-->
+<!--          </span>-->
+<!--          <span v-if="numberOfFoldersSelected > 0 || numberOfFilesSelected > 0">-->
+<!--            selected-->
+<!--          </span>-->
+<!--        </div>-->
+      </div>
 
       <b-row v-if="displayMode === 'grid'">
         <b-col style="min-width: 300px;max-width: 300px;padding: 5px;" v-for="folder in folders" :key="folder.folderId">
@@ -458,6 +498,26 @@ export default {
     },
     groupLink() {
       return `/data/groups/${this.groupId}`;
+    },
+    numberOfFilesSelected() {
+      let _numberOfFilesSelected = 0;
+      for (let i = 0; i < this.files.length; i++) {
+        if (this.isFileSelected(this.files[i])) {
+          _numberOfFilesSelected++;
+        }
+      }
+
+      return _numberOfFilesSelected;
+    },
+    numberOfFoldersSelected() {
+      let _numberOfFoldersSelected = 0;
+      for (let i = 0; i < this.folders.length; i++) {
+        if (this.isFolderSelected(this.folders[i])) {
+          _numberOfFoldersSelected++;
+        }
+      }
+
+      return _numberOfFoldersSelected;
     }
   },
   methods: {
