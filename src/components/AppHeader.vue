@@ -92,33 +92,43 @@
                 </svg>
               </button>
               <div class="rvt-dropdown__menu" id="dropdown-1" role="menu" aria-hidden="true">
-                <a href="#">Groups</a>
-                <a href="#">Users / Researchers</a>
+                <router-link to="/groups" v-slot="{ href, route, navigate, isActive}" tag="">
+                  <a :class="{active: isActive}" :href="href" @click="navigate">
+<!--                    <b-icon icon="bar-chart-line-fill"></b-icon>-->
+                    {{ $t('app.left-nav.menu.item.name.groups') }}
+                  </a>
+                </router-link>
+                <router-link to="/researchers" v-slot="{ href, route, navigate, isActive}" tag="">
+                  <a :class="{active: isActive}" :href="href" @click="navigate">
+<!--                    <b-icon icon="bar-chart-line-fill"></b-icon>-->
+                    {{ $t('app.left-nav.menu.item.name.researchers') }}
+                  </a>
+                </router-link>
                 <a href="#">-- TBA --</a>
               </div>
             </div>
           </li>
-<!--          <li>-->
-<!--            <a href="#" aria-current="page">Nav three</a>-->
-<!--          </li>-->
-<!--          <li>-->
-<!--            <div class="rvt-dropdown">-->
-<!--              <button type="button" class="rvt-dropdown__toggle" data-dropdown-toggle="dropdown-2" aria-haspopup="true"-->
-<!--                      aria-expanded="false">-->
-<!--                <span class="rvt-dropdown__toggle-text">Nav four</span>-->
-<!--                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">-->
-<!--                  <path fill="currentColor"-->
-<!--                        d="M8,12.46a2,2,0,0,1-1.52-.7L1.24,5.65a1,1,0,1,1,1.52-1.3L8,10.46l5.24-6.11a1,1,0,0,1,1.52,1.3L9.52,11.76A2,2,0,0,1,8,12.46Z"/>-->
-<!--                </svg>-->
-<!--              </button>-->
-<!--              <div class="rvt-dropdown__menu" id="dropdown-2" role="menu" aria-hidden="true">-->
-<!--                <a href="#">Item one</a>-->
-<!--                <a href="#">Item two</a>-->
-<!--                <a href="#">Item three</a>-->
-<!--                <a href="#">Item four</a>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </li>-->
+          <!--          <li>-->
+          <!--            <a href="#" aria-current="page">Nav three</a>-->
+          <!--          </li>-->
+          <!--          <li>-->
+          <!--            <div class="rvt-dropdown">-->
+          <!--              <button type="button" class="rvt-dropdown__toggle" data-dropdown-toggle="dropdown-2" aria-haspopup="true"-->
+          <!--                      aria-expanded="false">-->
+          <!--                <span class="rvt-dropdown__toggle-text">Nav four</span>-->
+          <!--                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">-->
+          <!--                  <path fill="currentColor"-->
+          <!--                        d="M8,12.46a2,2,0,0,1-1.52-.7L1.24,5.65a1,1,0,1,1,1.52-1.3L8,10.46l5.24-6.11a1,1,0,0,1,1.52,1.3L9.52,11.76A2,2,0,0,1,8,12.46Z"/>-->
+          <!--                </svg>-->
+          <!--              </button>-->
+          <!--              <div class="rvt-dropdown__menu" id="dropdown-2" role="menu" aria-hidden="true">-->
+          <!--                <a href="#">Item one</a>-->
+          <!--                <a href="#">Item two</a>-->
+          <!--                <a href="#">Item three</a>-->
+          <!--                <a href="#">Item four</a>-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--          </li>-->
         </ul>
       </nav>
       <!-- ID menu w/ dropdown -->
@@ -126,8 +136,8 @@
         <div class="rvt-dropdown">
           <button type="button" class="rvt-header-id__profile rvt-header-id__profile--has-dropdown rvt-dropdown__toggle"
                   data-dropdown-toggle="id-dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="rvt-header-id__avatar" aria-hidden="true">{{currentUsernameInTwoLetters}}</span>
-            <span class="rvt-header-id__user">{{currentUsername}}</span>
+            <span class="rvt-header-id__avatar" aria-hidden="true">{{ currentUsernameInTwoLetters }}</span>
+            <span class="rvt-header-id__user">{{ currentUsername }}</span>
             <svg aria-hidden="true" class="rvt-m-left-xs" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                  viewBox="0 0 16 16">
               <path fill="currentColor"
@@ -173,8 +183,8 @@
           <li class="has-children">
             <button type="button" class="rvt-header-id__profile rvt-header-id__profile--drawer"
                     data-subnav-toggle="subnav-id" aria-haspopup="true" aria-expanded="false">
-              <span class="rvt-header-id__avatar" aria-hidden="true">{{currentUsernameInTwoLetters}}</span>
-              <span class="rvt-header-id__user rvt-header-id__user--has-dropdown">{{currentUsername}}</span>
+              <span class="rvt-header-id__avatar" aria-hidden="true">{{ currentUsernameInTwoLetters }}</span>
+              <span class="rvt-header-id__user rvt-header-id__user--has-dropdown">{{ currentUsername }}</span>
             </button>
             <div id="subnav-id" role="menu" aria-hidden="true">
               <ul>
@@ -196,10 +206,20 @@
             <div id="subnav-1" role="menu" aria-hidden="true">
               <ul>
                 <li>
-                  <a href="#">Groups</a>
+                  <router-link to="/groups" v-slot="{ href, route, navigate, isActive}" tag="">
+                    <a :class="{active: isActive}" :href="href" @click="navigate">
+<!--                      <b-icon icon="bar-chart-line-fill"></b-icon>-->
+                      {{ $t('app.left-nav.menu.item.name.groups') }}
+                    </a>
+                  </router-link>
                 </li>
                 <li>
-                  <a href="#">Users / Researchers</a>
+                  <router-link to="/researchers" v-slot="{ href, route, navigate, isActive}" tag="">
+                    <a :class="{active: isActive}" :href="href" @click="navigate">
+<!--                      <b-icon icon="bar-chart-line-fill"></b-icon>-->
+                      {{ $t('app.left-nav.menu.item.name.researchers') }}
+                    </a>
+                  </router-link>
                 </li>
                 <li>
                   <a href="#">-- TBA --</a>
@@ -207,26 +227,26 @@
               </ul>
             </div>
           </li>
-<!--          <li>-->
-<!--            <a href="#" aria-current="page">Nav three</a>-->
-<!--          </li>-->
-<!--          <li class="has-children">-->
-<!--            <button type="button" data-subnav-toggle="subnav-2" aria-haspopup="true" aria-expanded="false">Nav four-->
-<!--            </button>-->
-<!--            <div id="subnav-2" role="menu" aria-hidden="true">-->
-<!--              <ul>-->
-<!--                <li>-->
-<!--                  <a href="#">Subnav one</a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                  <a href="#">Subnav two</a>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                  <a href="#">Subnav three</a>-->
-<!--                </li>-->
-<!--              </ul>-->
-<!--            </div>-->
-<!--          </li>-->
+          <!--          <li>-->
+          <!--            <a href="#" aria-current="page">Nav three</a>-->
+          <!--          </li>-->
+          <!--          <li class="has-children">-->
+          <!--            <button type="button" data-subnav-toggle="subnav-2" aria-haspopup="true" aria-expanded="false">Nav four-->
+          <!--            </button>-->
+          <!--            <div id="subnav-2" role="menu" aria-hidden="true">-->
+          <!--              <ul>-->
+          <!--                <li>-->
+          <!--                  <a href="#">Subnav one</a>-->
+          <!--                </li>-->
+          <!--                <li>-->
+          <!--                  <a href="#">Subnav two</a>-->
+          <!--                </li>-->
+          <!--                <li>-->
+          <!--                  <a href="#">Subnav three</a>-->
+          <!--                </li>-->
+          <!--              </ul>-->
+          <!--            </div>-->
+          <!--          </li>-->
         </ul>
         <button type="button" class="rvt-drawer__bottom-close">Close nav</button>
       </nav>
