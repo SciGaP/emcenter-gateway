@@ -4,35 +4,88 @@
       :breadcrumb-links="breadcrumbLinks"
   >
     <div class="w-100">
-      <b-input-group size="sm">
-        <b-form-input placeholder="Search" size="sm"></b-form-input>
-        <b-input-group-append>
-          <b-button v-b-modal.modal-1>
-            <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon>
-          </b-button>
-        </b-input-group-append>
-      </b-input-group>
+      <div class="w-100">
+        <label for="demo-1">Search</label>
+        <input type="text" id="demo-1" aria-describedby="demo-1-note">
+        <small id="demo-1-note" class="rvt-display-block">
+          <a href="#" data-modal-trigger="modal-example-basic">Advanced search</a>
+        </small>
+      </div>
 
-      <b-modal id="modal-1" title="Search / Filter">
-        <p class="my-4">Advanced searching/ filtering criteria. </p>
-        <div>
-          <strong>Microscope</strong>
-          <ul style="list-style: none; padding: 0px;">
-            <li v-for="microscope in ['IU Cardiac-MS1', 'IU-med-MS1', 'IU-med-MS2']" :key="microscope">
-              <b-form-checkbox
-                  :id="`checkbox-group-user-${microscope}`"
-                  :name="`checkbox-group-user-${microscope}`"
-                  :checked="true"
-              >
-                {{ microscope }}
-              </b-form-checkbox>
-            </li>
-          </ul>
+      <!--      <button type="button" class="rvt-button" data-modal-trigger="modal-example-basic">Open modal example</button>-->
+
+      <div class="rvt-modal"
+           id="modal-example-basic"
+           role="dialog"
+           aria-labelledby="modal-example-title"
+           aria-hidden="true"
+           tabindex=-1>
+        <div class="rvt-modal__inner">
+          <header class="rvt-modal__header">
+            <h1 class="rvt-modal__title" id="modal-example-title">Advanced search</h1>
+          </header>
+          <div class="rvt-modal__body">
+            <div>
+              <label for="select-demo">Microscope</label>
+              <select id="select-demo" multiple="true">
+                <option value="Microscope 1">Microscope 1</option>
+                <option value="Microscope 2">Microscope 2</option>
+                <option value="Microscope 3">Microscope 3</option>
+                <option value="Microscope 4">Microscope 4</option>
+              </select>
+            </div>
+            <div>
+              <label for="demo-1">Date</label>
+              <input type="text" id="demo-1" aria-describedby="demo-1-note">
+              <small id="demo-1-note" class="rvt-display-block rvt-m-bottom-md">Date range or a specific date</small>
+            </div>
+          </div>
+          <div class="rvt-modal__controls">
+            <button type="button" class="rvt-button">Search</button>
+            <button type="button" class="rvt-button rvt-button--secondary" data-modal-close="modal-example-basic">
+              Cancel
+            </button>
+          </div>
+          <button type="button" class="rvt-button rvt-modal__close" data-modal-close="modal-example-basic">
+            <span class="rvt-sr-only">Close</span>
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+              <path fill="currentColor"
+                    d="M9.41,8l5.29-5.29a1,1,0,0,0-1.41-1.41L8,6.59,2.71,1.29A1,1,0,0,0,1.29,2.71L6.59,8,1.29,13.29a1,1,0,1,0,1.41,1.41L8,9.41l5.29,5.29a1,1,0,0,0,1.41-1.41Z"/>
+            </svg>
+          </button>
         </div>
-        <template slot="modal-footer">
-          <b-button>Search</b-button>
-        </template>
-      </b-modal>
+      </div>
+
+
+      <!--      <b-input-group size="sm">-->
+      <!--        <b-form-input placeholder="Search" size="sm"></b-form-input>-->
+      <!--        <b-input-group-append>-->
+      <!--          <b-button v-b-modal.modal-1>-->
+      <!--            <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon>-->
+      <!--          </b-button>-->
+      <!--        </b-input-group-append>-->
+      <!--      </b-input-group>-->
+
+      <!--      <b-modal id="modal-1" title="Search / Filter">-->
+      <!--        <p class="my-4">Advanced searching/ filtering criteria. </p>-->
+      <!--        <div>-->
+      <!--          <strong>Microscope</strong>-->
+      <!--          <ul style="list-style: none; padding: 0px;">-->
+      <!--            <li v-for="microscope in ['IU Cardiac-MS1', 'IU-med-MS1', 'IU-med-MS2']" :key="microscope">-->
+      <!--              <b-form-checkbox-->
+      <!--                  :id="`checkbox-group-user-${microscope}`"-->
+      <!--                  :name="`checkbox-group-user-${microscope}`"-->
+      <!--                  :checked="true"-->
+      <!--              >-->
+      <!--                {{ microscope }}-->
+      <!--              </b-form-checkbox>-->
+      <!--            </li>-->
+      <!--          </ul>-->
+      <!--        </div>-->
+      <!--        <template slot="modal-footer">-->
+      <!--          <b-button>Search</b-button>-->
+      <!--        </template>-->
+      <!--      </b-modal>-->
     </div>
 
     <div class="w-100">
@@ -82,20 +135,20 @@
                  v-on:click="toggleAllSelection()"/>
           <label for="all-grid" class="rvt-m-right-sm">Select All</label>
         </div>
-<!--        <div>-->
-<!--          <span v-if="numberOfFoldersSelected > 0">-->
-<!--            {{ numberOfFoldersSelected }} folder(s)-->
-<!--          </span>-->
-<!--          <span v-if="numberOfFoldersSelected > 0 && numberOfFilesSelected > 0">-->
-<!--            {{ numberOfFoldersSelected }} folder(s)-->
-<!--          </span>-->
-<!--          <span v-if="numberOfFilesSelected > 0">-->
-<!--            {{ numberOfFilesSelected }} file(s)-->
-<!--          </span>-->
-<!--          <span v-if="numberOfFoldersSelected > 0 || numberOfFilesSelected > 0">-->
-<!--            selected-->
-<!--          </span>-->
-<!--        </div>-->
+        <!--        <div>-->
+        <!--          <span v-if="numberOfFoldersSelected > 0">-->
+        <!--            {{ numberOfFoldersSelected }} folder(s)-->
+        <!--          </span>-->
+        <!--          <span v-if="numberOfFoldersSelected > 0 && numberOfFilesSelected > 0">-->
+        <!--            {{ numberOfFoldersSelected }} folder(s)-->
+        <!--          </span>-->
+        <!--          <span v-if="numberOfFilesSelected > 0">-->
+        <!--            {{ numberOfFilesSelected }} file(s)-->
+        <!--          </span>-->
+        <!--          <span v-if="numberOfFoldersSelected > 0 || numberOfFilesSelected > 0">-->
+        <!--            selected-->
+        <!--          </span>-->
+        <!--        </div>-->
       </div>
 
       <b-row v-if="displayMode === 'grid'">
@@ -626,6 +679,12 @@ export default {
       }
 
       return false;
+    }
+  },
+  watch: {
+    groupId() {
+      this.fetchGroup({groupId: this.groupId});
+      this.fetchUsers({groupId: this.groupId});
     }
   },
   beforeMount() {
