@@ -109,7 +109,8 @@
           <button type="button" class="rvt-button rvt-button--plain" v-if="hasAnythingSelected()">
             Download
           </button>
-          <button type="button" class="rvt-button rvt-button--plain" v-if="hasAnythingSelected()">
+          <button type="button" class="rvt-button rvt-button--plain" data-modal-trigger="modal-share"
+                  v-if="hasAnythingSelected()">
             Share
           </button>
           <button type="button" class="rvt-button rvt-button--plain" v-if="hasAnythingSelected()">
@@ -123,6 +124,97 @@
                   v-on:click="switchDisplayMode('grid')">
             <b-icon icon="grid" aria-hidden="true"></b-icon>
           </button>
+        </div>
+
+        <div class="rvt-modal"
+             id="modal-share"
+             role="dialog"
+             aria-labelledby="modal-share-title"
+             aria-hidden="true"
+             tabindex=-1>
+          <div class="rvt-modal__inner">
+            <header class="rvt-modal__header">
+              <h1 class="rvt-modal__title" id="modal-share-title">Share</h1>
+            </header>
+            <div>
+              <div style="padding: 10px;">
+                <div>
+                  <input type="text" id="demo-2" aria-describedby="demo-2-note" placeholder="Add users/ groups">
+                </div>
+              </div>
+              <table>
+                <tbody>
+                <tr>
+                  <td>
+                    Dinuka De Silva
+                  </td>
+                  <td>
+                    <div class="rvt-dropdown">
+                      <button type="button" class="rvt-button rvt-button--plain rvt-button--small"
+                              data-dropdown-toggle="share-permission-dropdown-1"
+                              aria-haspopup="true" aria-expanded="false">
+                        Editor
+                        <b-icon icon="caret-down-fill"></b-icon>
+                      </button>
+                      <div class="rvt-dropdown__menu" id="share-permission-dropdown-1" role="menu"
+                           aria-hidden="true" style="position: fixed">
+                        <button type="button" role="menuitemradio">Download</button>
+                        <button type="button" role="menuitemradio">Share</button>
+                        <button type="button" role="menuitemradio">View History</button>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <button type="button" class="rvt-button rvt-button--plain rvt-button--small"
+                            aria-haspopup="true" aria-expanded="false">
+                      <b-icon icon="trash"></b-icon>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Isuru Ranawaka
+                  </td>
+                  <td>
+                    <div class="rvt-dropdown">
+                      <button type="button" class="rvt-button rvt-button--plain rvt-button--small"
+                              data-dropdown-toggle="share-permission-dropdown-2"
+                              aria-haspopup="true" aria-expanded="false">
+                        Viewer
+                        <b-icon icon="caret-down-fill"></b-icon>
+                      </button>
+                      <div class="rvt-dropdown__menu" id="share-permission-dropdown-2" role="menu"
+                           aria-hidden="true" style="position: fixed">
+                        <button type="button" role="menuitemradio">Download</button>
+                        <button type="button" role="menuitemradio">Share</button>
+                        <button type="button" role="menuitemradio">View History</button>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <button type="button" class="rvt-button rvt-button--plain rvt-button--small"
+                            aria-haspopup="true" aria-expanded="false">
+                      <b-icon icon="trash"></b-icon>
+                    </button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="rvt-modal__controls">
+              <button type="button" class="rvt-button">Save</button>
+              <button type="button" class="rvt-button rvt-button--secondary" data-modal-close="modal-share">
+                Cancel
+              </button>
+            </div>
+            <button type="button" class="rvt-button rvt-modal__close" data-modal-close="modal-share">
+              <span class="rvt-sr-only">Close</span>
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                <path fill="currentColor"
+                      d="M9.41,8l5.29-5.29a1,1,0,0,0-1.41-1.41L8,6.59,2.71,1.29A1,1,0,0,0,1.29,2.71L6.59,8,1.29,13.29a1,1,0,1,0,1.41,1.41L8,9.41l5.29,5.29a1,1,0,0,0,1.41-1.41Z"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -170,7 +262,7 @@
               <!--                <button  :for="getFileSelectionCheckboxId(file)" type="button" class="btn btn-link p-1">{{ file.name }}</button>-->
             </div>
             <div>
-              <button class="rvt-button rvt-button--plain rvt-button--small">
+              <button class="rvt-button rvt-button--plain rvt-button--small" data-modal-trigger="modal-share">
                 <b-icon icon="share-fill"></b-icon>
               </button>
               <button class="rvt-button rvt-button--plain rvt-button--small">
@@ -247,7 +339,7 @@
                 <!--                <button  :for="getFileSelectionCheckboxId(file)" type="button" class="btn btn-link p-1">{{ file.name }}</button>-->
               </div>
               <div>
-                <button class="rvt-button rvt-button--plain rvt-button--small">
+                <button class="rvt-button rvt-button--plain rvt-button--small" data-modal-trigger="modal-share">
                   <b-icon icon="share-fill"></b-icon>
                 </button>
                 <button class="rvt-button rvt-button--plain rvt-button--small">
@@ -328,7 +420,7 @@
               <td>
                 <div style="display: flex;">
                   <div style="flex: 1;">
-                    <button class="rvt-button rvt-button--plain rvt-button--small">
+                    <button class="rvt-button rvt-button--plain rvt-button--small" data-modal-trigger="modal-share">
                       <b-icon icon="share-fill"></b-icon>
                     </button>
                     <button class="rvt-button rvt-button--plain rvt-button--small">
@@ -393,7 +485,7 @@
               <td>
                 <div style="display: flex;">
                   <div style="flex: 1;">
-                    <button class="rvt-button rvt-button--plain rvt-button--small">
+                    <button class="rvt-button rvt-button--plain rvt-button--small" data-modal-trigger="modal-share">
                       <b-icon icon="share-fill"></b-icon>
                     </button>
                     <button class="rvt-button rvt-button--plain rvt-button--small">
