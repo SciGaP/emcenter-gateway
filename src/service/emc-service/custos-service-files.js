@@ -12,16 +12,19 @@ export default class EmcFiles {
         return this._emcService;
     }
 
-    get({path}) {
+    get({parentFolderId}) {
 
         // TODO
-        console.log(`[FETCH] /emc/files?path=${path}`);
+        console.log(`[FETCH] /emc/files?parentFolderId=${parentFolderId}`);
 
         return new Promise((resolve) => {
 
+            if (!parentFolderId) {
+                resolve([]);
+            }
+
             // {
             //     fileId: 0,
-            //     path: "",
             //     name: "",
             //     createdAt: "",
             //     createdBy: "",
@@ -32,7 +35,6 @@ export default class EmcFiles {
             resolve([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map((i) => {
                 return {
                     fileId: `file-${i}`,
-                    path: path,
                     name: `dataset-${i}`,
                     createdAt: new Date(),
                     createdBy: "Dinuka De Silva",

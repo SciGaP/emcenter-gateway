@@ -5,8 +5,8 @@ const state = {
     folderListMap: {}
 };
 
-function _getFoldersQueryString({offset = 0, limit = 20, path = ""}) {
-    const params = {offset, limit, path};
+function _getFoldersQueryString({offset = 0, limit = 20, parentFolderId = ""}) {
+    const params = {offset, limit, parentFolderId};
 
     const queryString = Object.keys(params).map(paramKey => `${paramKey}=${params[paramKey]}`).join("&");
 
@@ -15,32 +15,32 @@ function _getFoldersQueryString({offset = 0, limit = 20, path = ""}) {
 
 const actions = {
 
-    async fetchFolders({commit}, {offset, limit, path}) {
-        const queryString = _getFoldersQueryString({offset, limit, path});
+    async fetchFolders({commit}, {offset = 0, limit = 20, parentFolderId = null} = {}) {
+        const queryString = _getFoldersQueryString({offset, limit, parentFolderId});
 
-        const folders = await emcService.folders.get({path});
-        const folderIds = folders.map(({folderId, path, name, createdAt, createdBy}) => {
-            commit("SET_FILE", {folderId, path, name, createdAt, createdBy});
+        const folders = await emcService.folders.get({parentFolderId});
+        const folderIds = folders.map(({folderId, name, createdAt, createdBy, own}) => {
+            commit("SET_FOLDER", {folderId, name, createdAt, createdBy, own});
 
             return folderId;
         });
 
-        commit("SET_FILE_LIST", {queryString, folderIds});
+        commit("SET_FOLDER_LIST", {queryString, folderIds});
     }
 }
 
 
 const mutations = {
-    SET_FILE(state, {folderId, path, name, createdAt, createdBy}) {
+    SET_FOLDER(state, {folderId, name, createdAt, createdBy, own}) {
         state.folderMap = {
             ...state.folderMap,
             [folderId]: {
                 ...state.folderMap[folderId],
-                folderId, path, name, createdAt, createdBy
+                folderId, name, createdAt, createdBy, own
             }
         };
     },
-    SET_FILE_LIST(state, {queryString, folderIds}) {
+    SET_FOLDER_LIST(state, {queryString, folderIds}) {
         state.folderListMap = {
             ...state.folderListMap,
             [queryString]: folderIds
@@ -52,8 +52,8 @@ const mutations = {
 const getters = {
 
     getFolders: (state, getters) => {
-        return ({offset, limit, path}) => {
-            const queryString = _getFoldersQueryString({offset, limit, path});
+        return ({offset = 0, limit = 20, parentFolderId} = {}) => {
+            const queryString = _getFoldersQueryString({offset, limit, parentFolderId});
             const folderIds = state.folderListMap[queryString];
             if (folderIds) {
                 return folderIds.map(folderId => getters.getFolder({folderId}));
@@ -66,7 +66,9 @@ const getters = {
     getFolder: (state) => {
         return ({folderId}) => {
             if (state.folderMap[folderId]) {
-                return state.folderMap[folderId];
+                const {name, createdAt, createdBy, own} = state.folderMap[folderId];
+
+                return {folderId, name, createdAt, createdBy, own};
             } else {
                 return null;
             }

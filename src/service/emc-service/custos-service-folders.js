@@ -12,26 +12,51 @@ export default class EmcFolders {
         return this._emcService;
     }
 
-    get({path}) {
+    get({parentFolderId, own = true, shared = true}) {
+
+        // TODO
+        console.log(`[FETCH] /emc/folders?parentFolderId=${parentFolderId}`);
+
         return new Promise((resolve) => {
+
+            if (parentFolderId) {
+                resolve([]);
+            }
 
             // {
             //     folderId: 0,
-            //     path: "",
             //     name: "",
             //     createdAt: "",
-            //     createdBy: ""
+            //     createdBy: "",
+            //     own: false
             // }
 
-            resolve([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map((i) => {
+            const ownFolders = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map((i) => {
                 return {
                     folderId: `folder-${i}`,
-                    path: path,
                     name: `session-${i}`,
                     createdAt: new Date(),
-                    createdBy: "Dinuka De Silva"
+                    createdBy: "Dinuka De Silva",
+                    own: true
                 }
-            }));
+            });
+
+            const sharedFolders = [0, 1, 2, 3].map((i) => {
+                return {
+                    folderId: `shared-folder-${i}`,
+                    name: `session-${i}`,
+                    createdAt: new Date(),
+                    createdBy: "Dinuka De Silva",
+                    own: false
+                }
+            });
+
+            let folders = [];
+
+            if (own) folders = folders.concat(ownFolders);
+            if (shared) folders = folders.concat(sharedFolders);
+
+            resolve(folders);
         });
     }
 }

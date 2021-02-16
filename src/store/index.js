@@ -22,11 +22,8 @@ export default new Vuex.Store({
         auth,
         user,
         group,
-        emc: {
-            namespaced: true,
-            file: emcFile,
-            folder: emcFolder
-        }
+        "emcFile": emcFile,
+        "emcFolder": emcFolder
     },
     strict: debug,
     plugins: debug ? [createLogger()] : [],

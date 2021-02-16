@@ -7,8 +7,8 @@ const state = {
     fileListMap: {}
 };
 
-function _getFilesQueryString({offset = 0, limit = 20, path = ""}) {
-    const params = {offset, limit, path};
+function _getFilesQueryString({offset = 0, limit = 20, parentFolderId = ""}) {
+    const params = {offset, limit, parentFolderId};
 
     const queryString = Object.keys(params).map(paramKey => `${paramKey}=${params[paramKey]}`).join("&");
 
@@ -17,12 +17,12 @@ function _getFilesQueryString({offset = 0, limit = 20, path = ""}) {
 
 const actions = {
 
-    async fetchFiles({commit}, {offset, limit, path}) {
-        const queryString = _getFilesQueryString({offset, limit, path});
+    async fetchFiles({commit}, {offset = 0, limit = 20, parentFolderId} = {}) {
+        const queryString = _getFilesQueryString({offset, limit, parentFolderId});
 
-        const files = await emcService.files.get({path});
-        const fileIds = files.map(({fileId, path, name, createdAt, createdBy, status, mimeType}) => {
-            commit("SET_FILE", {fileId, path, name, createdAt, createdBy, status, mimeType});
+        const files = await emcService.files.get({parentFolderId});
+        const fileIds = files.map(({fileId, name, createdAt, createdBy, status, mimeType}) => {
+            commit("SET_FILE", {fileId, name, createdAt, createdBy, status, mimeType});
 
             return fileId;
         });
@@ -48,12 +48,12 @@ const actions = {
 
 
 const mutations = {
-    SET_FILE(state, {fileId, path, name, createdAt, createdBy, status, mimeType}) {
+    SET_FILE(state, {fileId, name, createdAt, createdBy, status, mimeType}) {
         state.fileMap = {
             ...state.fileMap,
             [fileId]: {
                 ...state.fileMap[fileId],
-                fileId, path, name, createdAt, createdBy, status, mimeType
+                fileId, name, createdAt, createdBy, status, mimeType
             }
         };
     },
@@ -75,8 +75,8 @@ const mutations = {
 const getters = {
 
     getFiles: (state, getters) => {
-        return ({offset, limit, path}) => {
-            const queryString = _getFilesQueryString({offset, limit, path});
+        return ({offset = 0, limit = 20, parentFolderId = null} = {}) => {
+            const queryString = _getFilesQueryString({offset, limit, parentFolderId});
             const fileIds = state.fileListMap[queryString];
             if (fileIds) {
                 return fileIds.map(fileId => getters.getFile({fileId}));
@@ -89,12 +89,12 @@ const getters = {
     getFile: (state) => {
         return ({fileId}) => {
             if (state.fileMap[fileId]) {
-                const {path, name, createdAt, createdBy, status, mimeType} = state.fileMap[fileId];
+                const {name, createdAt, createdBy, status, mimeType} = state.fileMap[fileId];
                 let fileThumbnailDataUrl = null;
                 if (state.fileThumbnailMap[fileId]) {
                     fileThumbnailDataUrl = state.fileThumbnailMap[fileId];
                 }
-                return {fileId, path, name, createdAt, createdBy, status, mimeType, fileThumbnailDataUrl};
+                return {fileId, name, createdAt, createdBy, status, mimeType, fileThumbnailDataUrl};
             } else {
                 return null;
             }
