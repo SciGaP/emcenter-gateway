@@ -118,9 +118,31 @@ const actions = {
     }
 }
 
-
 const mutations = {
     SET_GROUP(state, {groupId, name, description, ownerId, realm_roles, client_roles, attributes, sub_groups}) {
+
+        //TODO remove
+        if (["89dc135b-9ee0-4d5f-8ef1-dc8277f86721", "a3e2d7a0-3f33-41c6-ab92-f37e16a6bd26"].indexOf(groupId) >= 0) {
+            return;
+        } else {
+            const mockNamesMap = {
+                "abcd1_0d65f49e-ee2b-41da-91db-a99926434025": "Thomas Lab",
+                "abcd1_e7cedaaf-b540-49da-ad62-0faa315a79b9": "Donald's Lab",
+                "abcd2_17d4370f-8f31-4527-a7ce-d03b64ae1ef1": "Sanjiva Lab",
+                "abcd3_e2a24715-ec77-48eb-8d7d-cdaac4d3cbe2": "Sherazad Lab",
+                "abcd4_3320aa06-fc47-444a-aad9-f4387560373e": "Geoffry Lab",
+                "abcd4_53426d3c-fe05-45e5-a3e4-ef5c91f089d7": "Rex Lab",
+                "abcd5_3e5e087e-5e8f-4d34-835a-26b9d6815716": "Maxx Lab",
+                "abcd6_6312b2eb-b936-4b8b-9996-8a406c1475a6": "Judy Lab",
+                "abcd_0bc7aa2e-5320-4b55-a224-62a0c08f6716": "Lara Lab",
+                "abcd_7_5829d11a-d925-4556-afd3-b15b2a35f099": "Fredric Lab",
+                "c9f6ca4c-f62a-435e-af4e-aacc13d17e87": "Bach Lab"
+            }
+            if (mockNamesMap[groupId]) {
+                name = mockNamesMap[groupId]
+            }
+        }
+
         state.groupMap = {
             ...state.groupMap,
             [groupId]: {groupId, name, description, ownerId, realm_roles, client_roles, attributes, sub_groups}
@@ -133,6 +155,11 @@ const mutations = {
         };
     },
     SET_GROUP_LIST(state, {queryString, groupIds}) {
+        // TODO remove
+        groupIds = groupIds.filter(groupId => {
+            return ["89dc135b-9ee0-4d5f-8ef1-dc8277f86721", "a3e2d7a0-3f33-41c6-ab92-f37e16a6bd26"].indexOf(groupId) < 0;
+        })
+
         state.groupListMap = {
             [queryString]: groupIds
         }
