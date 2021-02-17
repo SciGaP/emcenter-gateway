@@ -11,7 +11,7 @@ function _getFilesQueryString({offset = 0, limit = 20, groupId = null, parentFol
     const params = {offset, limit, groupId, parentFolderId};
 
     const queryString = Object.keys(params).map(paramKey => {
-        if (params[paramKey]) {
+        if (params[paramKey] !== null) {
             return `${paramKey}=${params[paramKey]}`;
         } else {
             return "";

@@ -10,7 +10,7 @@ function _getFoldersQueryString({offset = 0, limit = 20, groupId = null, parentF
     const params = {offset, limit, groupId, parentFolderId};
 
     const queryString = Object.keys(params).map(paramKey => {
-        if (params[paramKey]) {
+        if (params[paramKey] !== null) {
             return `${paramKey}=${params[paramKey]}`;
         } else {
             return "";

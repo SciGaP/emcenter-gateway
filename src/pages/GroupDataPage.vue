@@ -576,44 +576,29 @@ export default {
     // },
 
     files() {
-      return this.getFiles({groupId: this.groupId, parentFolderId: this.parentFolderId}).map(file => {
-        if (this.group) {
+      const _files = this.getFiles({groupId: this.groupId, parentFolderId: this.parentFolderId});
+
+      // TODO remove
+      if (_files && this.group) {
+        return _files.map(file => {
           return {...file, name: `${this.group.name.replace(/ /ig, "-").toLowerCase()}-${file.name}`}
-        }
-      });
+
+        });
+      } else {
+        return _files;
+      }
     },
     folders() {
+      const _folders = this.getFolders({groupId: this.groupId, parentFolderId: this.parentFolderId});
 
-      return this.getFolders({groupId: this.groupId, parentFolderId: this.parentFolderId}).map(folder => {
-        if (this.group) {
+      // TODO remove
+      if (_folders && this.group) {
+        return _folders.map(folder => {
           return {...folder, name: `${this.group.name.replace(/ /ig, "-").toLowerCase()}-${folder.name}`}
-        }
-      });
-      // if (this.mode === "group") {
-      //   if (this.users) {
-      //     return this.users.map((user) => {
-      //       return {
-      //         folderId: user.username,
-      //         path: user.username,
-      //         name: user.username,
-      //         status: {total: 2345, uploading: 10, failed: 3, uploadingPercentage: 20}
-      //       }
-      //     });
-      //   } else {
-      //     return []
-      //   }
-      // } else if (this.mode === "user") {
-      //   return ["session-1", "session-2", "session-3", "session-4", "session-5"].map((collectionName) => {
-      //     return {
-      //       folderId: collectionName,
-      //       path: this.path + "/" + collectionName,
-      //       name: collectionName,
-      //       status: {total: 2345, uploading: 10, failed: 3, uploadingPercentage: 20}
-      //     }
-      //   });
-      // } else {
-      //   return []
-      // }
+        })
+      } else {
+        return _folders
+      }
     },
     users() {
       return this.getUsers({groupId: this.groupId});
@@ -663,7 +648,7 @@ export default {
       }
 
       if (folderId) {
-        _dataLink += `folderId=${folderId}&`
+        _dataLink += `parentFolderId=${folderId}&`
       }
 
       return _dataLink;
@@ -782,6 +767,7 @@ export default {
       this.fetchFolderPath({folderId: this.parentFolderId});
     },
     parentFolderId() {
+      this.reset();
       this.fetchFolders({groupId: this.groupId, parentFolderId: this.parentFolderId});
       this.fetchFiles({groupId: this.groupId, parentFolderId: this.parentFolderId});
       this.fetchFolderPath({folderId: this.parentFolderId});
