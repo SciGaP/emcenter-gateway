@@ -1,8 +1,5 @@
 <template>
-  <Page
-      v-if="group" :title="group.name"
-      :breadcrumb-links="breadcrumbLinks"
-  >
+  <Page :title="title" :breadcrumb-links="breadcrumbLinks">
     <div class="w-100">
       <div class="w-100">
         <label for="demo-1">Search</label>
@@ -256,12 +253,13 @@
                        style="margin: 0px !important;"></label>
               </div>
               <div style="flex: 1;">
-                <b-icon icon="folder-fill" aria-hidden="true"></b-icon>
-                <button :for="getFolderSelectionCheckboxId(folder)"
-                        class="rvt-button rvt-button--plain rvt-button--small">
-                  {{ folder.name }}
-                </button>
-                <!--                <button  :for="getFileSelectionCheckboxId(file)" type="button" class="btn btn-link p-1">{{ file.name }}</button>-->
+                <router-link :to="getFolderLink(folder)" v-slot="{ href, route, navigate}">
+                  <b-icon icon="folder-fill" aria-hidden="true"></b-icon>
+                  <button :for="getFolderSelectionCheckboxId(folder)" @click="navigate"
+                          class="rvt-button rvt-button--plain rvt-button--small">
+                    {{ folder.name }}
+                  </button>
+                </router-link>
               </div>
               <div>
                 <button class="rvt-button rvt-button--plain rvt-button--small" data-modal-trigger="modal-share">
@@ -275,56 +273,10 @@
                 </button>
               </div>
             </div>
-            <!--          <a>-->
-            <!--            <b-icon icon="folder-fill" aria-hidden="true"></b-icon>-->
-            <!--            <div style="display: inline; padding-left: 5px;">{{ folder.name }}</div>-->
-            <!--          </a>-->
-            <!--          <div class="w-100" style="border-radius: 10px;border: 1px solid #aaa;padding: 15px"-->
-            <!--               :class="{selected: isFolderSelected(folder)}">-->
-            <!--            <div class="w-100" style="display: flex; flex-direction: row">-->
-            <!--              <div>-->
-            <!--                <input type="checkbox" :checked="isFolderSelected(folder)" v-on:click="toggleFolderSelection(folder)"-->
-            <!--                       :name="getFolderSelectionCheckboxId(folder)" :id="getFolderSelectionCheckboxId(folder)"/>-->
-            <!--                <label :for="getFolderSelectionCheckboxId(folder)" class="rvt-m-right-sm"-->
-            <!--                       style="margin: 0px !important;"></label>-->
-            <!--              </div>-->
-            <!--              <div style="flex: 1;">-->
-            <!--                <button :for="getFolderSelectionCheckboxId(folder)" class="rvt-button rvt-button&#45;&#45;plain rvt-button&#45;&#45;small">-->
-            <!--                  {{ file.name }}-->
-            <!--                </button>-->
-            <!--                &lt;!&ndash;                <button  :for="getFileSelectionCheckboxId(file)" type="button" class="btn btn-link p-1">{{ file.name }}</button>&ndash;&gt;-->
-            <!--              </div>-->
-            <!--              <div>-->
-            <!--                <button class="rvt-button rvt-button&#45;&#45;plain rvt-button&#45;&#45;small">-->
-            <!--                  <b-icon icon="share-fill"></b-icon>-->
-            <!--                </button>-->
-            <!--&lt;!&ndash;                <button class="rvt-button rvt-button&#45;&#45;plain rvt-button&#45;&#45;small">&ndash;&gt;-->
-            <!--&lt;!&ndash;                  <b-icon icon="pencil"></b-icon>&ndash;&gt;-->
-            <!--&lt;!&ndash;                </button>&ndash;&gt;-->
-            <!--                <button class="rvt-button rvt-button&#45;&#45;plain rvt-button&#45;&#45;small">-->
-            <!--                  <b-icon icon="download"></b-icon>-->
-            <!--                </button>-->
-            <!--              </div>-->
-            <!--            </div>-->
-            <!--            <div class="w-100 text-center"-->
-            <!--                 style="font-size: 10px;height: 180px;overflow: hidden; display: flex; flex-direction: column;">-->
-            <!--              &lt;!&ndash;              <div style="flex: 1;"></div>&ndash;&gt;-->
-            <!--              &lt;!&ndash;            <img width="100%" :src="thumbnailDataUrl"/>&ndash;&gt;-->
-            <!--              <b-icon icon="folder-fill" style="width: 100%; height: 100%;"></b-icon>-->
-            <!--            </div>-->
-            <!--            &lt;!&ndash;            <div class="w-100" style="display: flex;">&ndash;&gt;-->
-            <!--            &lt;!&ndash;              <div style="flex: 1;">Microscope 1</div>&ndash;&gt;-->
-            <!--            &lt;!&ndash;              <div>2MB</div>&ndash;&gt;-->
-            <!--            &lt;!&ndash;            </div>&ndash;&gt;-->
-            <!--          </div>-->
           </b-col>
           <div class="w-100 pt-5"></div>
           <b-col style="min-width: 300px;max-width: 300px;padding: 5px;"
                  v-for="file in files" :key="file.fileId">
-            <!--          <a>-->
-            <!--            <b-icon icon="card-image" aria-hidden="true"></b-icon>-->
-            <!--            <div style="display: inline; padding-left: 5px;">{{ file.name }}</div>-->
-            <!--          </a>-->
             <div class="w-100" style="border-radius: 10px;border: 1px solid #aaa;padding: 15px"
                  :class="{selected: isFileSelected(file)}">
               <div class="w-100" style="display: flex; flex-direction: row">
@@ -339,7 +291,6 @@
                           class="rvt-button rvt-button--plain rvt-button--small">
                     {{ file.name }}
                   </button>
-                  <!--                <button  :for="getFileSelectionCheckboxId(file)" type="button" class="btn btn-link p-1">{{ file.name }}</button>-->
                 </div>
                 <div>
                   <button class="rvt-button rvt-button--plain rvt-button--small" data-modal-trigger="modal-share">
@@ -355,8 +306,6 @@
               </div>
               <div class="w-100 text-center"
                    style="font-size: 10px;height: 180px;overflow: hidden; display: flex; flex-direction: column;">
-                <!--              <div style="flex: 1;"></div>-->
-                <!--            <img width="100%" :src="thumbnailDataUrl"/>-->
                 <b-icon icon="image" style="width: 100%; height: 100%;"></b-icon>
               </div>
               <div class="w-100" style="display: flex;">
@@ -398,6 +347,7 @@
                 <!--                </div>-->
                 <!--              </td>-->
                 <th>Name</th>
+                <th>Created By</th>
                 <th>Last Updated</th>
                 <th></th>
               </tr>
@@ -412,7 +362,8 @@
                 </td>
                 <td>
                   <router-link :to="getFolderLink(folder)" v-slot="{ href, route, navigate, isActive,isExactActive }">
-                    <b-icon v-if="folder.own === false" style="height: 100%;" icon="people-fill" aria-hidden="true"></b-icon>
+                    <b-icon v-if="folder.own === false" style="height: 100%;" icon="people-fill"
+                            aria-hidden="true"></b-icon>
                     <b-icon style="height: 100%;" icon="folder-fill" aria-hidden="true"></b-icon>
 
                     <a :class="{active: isExactActive}" :href="href" @click="navigate"
@@ -421,6 +372,7 @@
                     </a>
                   </router-link>
                 </td>
+                <td>{{ folder.createdBy }}</td>
                 <td>Dec 23d, 2020, Thomas</td>
                 <td>
                   <div style="display: flex;">
@@ -486,6 +438,7 @@
                     {{ file.name }}
                   </a>
                 </td>
+                <td>{{ file.createdBy }}</td>
                 <td>Dec 23d, 2020, Thomas</td>
                 <td>
                   <div style="display: flex;">
@@ -554,25 +507,40 @@ export default {
       getUsers: "user/getUsers",
       getFiles: "emcFile/getFiles",
       getFolders: "emcFolder/getFolders",
+      getFolderPath: "emcFolder/getFolderPath",
     }),
+    title() {
+      if (this.group) {
+        return this.group.name;
+      } else {
+        return "My Folders & Files"
+      }
+    },
     breadcrumbLinks() {
-      const _breadcrumbLinks = [{to: '/data', name: 'Datasets'}]
-      // if (this.group && this.group.name) {
-      //   _breadcrumbLinks.push({to: this.groupLink, name: this.group.name});
-      //
-      //   if (this.path && this.path !== "") {
-      //     const pathSegments = this.path.split("/");
-      //     pathSegments.map((pathSegment, pathSegmentIndex) => {
-      //       const _fullPathToSegment = pathSegments.slice(0, pathSegmentIndex + 1).join("/");
-      //       _breadcrumbLinks.push({to: `${this.groupLink}?path=${_fullPathToSegment}`, name: pathSegment});
-      //     });
-      //   }
-      // }
+      let _breadcrumbLinks = [{to: '/data', name: 'Datasets'}]
+
+      if (this.group && this.group.name) {
+        _breadcrumbLinks.push({to: this.groupLink, name: this.group.name});
+      }
+
+      const folderPath = this.getFolderPath({folderId: this.parentFolderId});
+      if (folderPath) {
+        for (let i = 0; i < folderPath.length; i++) {
+          const folder = folderPath[i];
+          if (folder) {
+            const {folderId, name} = folder;
+            _breadcrumbLinks.push({
+              to: this.getFolderLink({folderId}),
+              name: name
+            });
+          }
+        }
+      }
 
       return _breadcrumbLinks;
     },
     groupId() {
-      return this.$route.params.groupId;
+      return this.$route.query.groupId;
     },
     group() {
       return this.getGroup({groupId: this.groupId});
@@ -608,7 +576,7 @@ export default {
     // },
 
     files() {
-      return this.getFiles({parentFolderId: this.parentFolderId});
+      return this.getFiles({groupId: this.groupId, parentFolderId: this.parentFolderId});
       // if (this.mode === "collection") {
       //   return ["dataset-1", "dataset-2", "dataset-3", "dataset-4", "dataset-5", "dataset-6", "dataset-7", "dataset-8"].map((datasetName) => {
       //     return {
@@ -622,7 +590,7 @@ export default {
     },
     folders() {
 
-      return this.getFolders({parentFolderId: this.parentFolderId});
+      return this.getFolders({groupId: this.groupId, parentFolderId: this.parentFolderId});
       // if (this.mode === "group") {
       //   if (this.users) {
       //     return this.users.map((user) => {
@@ -653,7 +621,7 @@ export default {
       return this.getUsers({groupId: this.groupId});
     },
     groupLink() {
-      return `/data/groups/${this.groupId}`;
+      return this.getDataLink({groupId: this.groupId});
     },
     numberOfFilesSelected() {
       let _numberOfFilesSelected = 0;
@@ -682,17 +650,31 @@ export default {
       fetchUsers: "user/fetchUsers",
       fetchFiles: "emcFile/fetchFiles",
       fetchFolders: "emcFolder/fetchFolders",
+      fetchFolderPath: "emcFolder/fetchFolderPath"
     }),
     reset() {
       this.displayMode = "list";
       this.selectedFileIdMap = {};
       this.selectedFolderIdMap = {};
     },
+    getDataLink({groupId} = {}, {folderId} = {}) {
+      let _dataLink = "/data?";
+
+      if (groupId) {
+        _dataLink += `groupId=${groupId}&`
+      }
+
+      if (folderId) {
+        _dataLink += `folderId=${folderId}&`
+      }
+
+      return _dataLink;
+    },
     switchDisplayMode(displayMode) {
       this.displayMode = displayMode;
     },
-    getFolderLink(folder) {
-      return this.groupLink + "?parentFolderId=" + folder.folderId;
+    getFolderLink({folderId}) {
+      return this.getDataLink({groupId: this.groupId}, {folderId});
     },
     getFolderSelectionCheckboxId({folderId}) {
       return `folder-select-checkbox-${folderId}`;
@@ -794,19 +776,26 @@ export default {
   watch: {
     groupId() {
       this.reset();
-      this.fetchGroup({groupId: this.groupId});
-      this.fetchUsers({groupId: this.groupId});
+      if (this.groupId) this.fetchGroup({groupId: this.groupId});
+      // this.fetchUsers({groupId: this.groupId});
+
+      this.fetchFolders({groupId: this.groupId, parentFolderId: this.parentFolderId});
+      this.fetchFiles({groupId: this.groupId, parentFolderId: this.parentFolderId});
+      this.fetchFolderPath({folderId: this.parentFolderId});
     },
     parentFolderId() {
-      this.fetchFolders({parentFolderId: this.parentFolderId});
-      this.fetchFiles({parentFolderId: this.parentFolderId});
+      this.fetchFolders({groupId: this.groupId, parentFolderId: this.parentFolderId});
+      this.fetchFiles({groupId: this.groupId, parentFolderId: this.parentFolderId});
+      this.fetchFolderPath({folderId: this.parentFolderId});
     }
   },
   beforeMount() {
-    this.fetchGroup({groupId: this.groupId});
-    this.fetchUsers({groupId: this.groupId});
-    this.fetchFolders({parentFolderId: this.parentFolderId});
-    this.fetchFiles({parentFolderId: this.parentFolderId});
+    alert("Heyyy")
+    if (this.groupId) this.fetchGroup({groupId: this.groupId});
+    // this.fetchUsers({groupId: this.groupId});
+    this.fetchFolders({groupId: this.groupId, parentFolderId: this.parentFolderId});
+    this.fetchFiles({groupId: this.groupId, parentFolderId: this.parentFolderId});
+    this.fetchFolderPath({folderId: this.parentFolderId});
   }
 }
 </script>

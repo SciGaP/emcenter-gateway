@@ -12,6 +12,22 @@ export default class EmcFolders {
         return this._emcService;
     }
 
+    fetchPath({folderId}) {
+
+        // TODO
+        console.log(`[FETCH] /emc/path?folderId=${folderId}`);
+
+        return new Promise((resolve) => {
+            let folderPath = [];
+
+            if (folderId) {
+                folderPath = [{folderId, name: ""}];
+            }
+
+            resolve(folderPath);
+        });
+    }
+
     get({parentFolderId, own = true, shared = true}) {
 
         // TODO

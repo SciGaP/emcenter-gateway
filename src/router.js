@@ -70,13 +70,6 @@ export default new Router({
             name: "data",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
-                import("./pages/DataPage")
-        },
-        {
-            path: "/data/groups/:groupId",
-            name: "settings",
-            beforeEnter: _validateAuthenticationBeforeEnter,
-            component: () =>
                 import("./pages/GroupDataPage")
         },
         {

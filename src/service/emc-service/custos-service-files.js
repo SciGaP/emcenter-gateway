@@ -12,6 +12,16 @@ export default class EmcFiles {
         return this._emcService;
     }
 
+    fetchPath({fileId}) {
+
+        // TODO
+        console.log(`[FETCH] /emc/path?fileId=${fileId}`);
+
+        return [
+            {folderId: "", name: ""}
+        ]
+    }
+
     get({parentFolderId}) {
 
         // TODO

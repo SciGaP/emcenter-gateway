@@ -2,7 +2,7 @@
   <nav role="navigation" aria-label="Breadcrumbs">
     <ol class="rvt-breadcrumbs">
       <router-link v-for="(link, index) in links" :key="index"
-                   :to="link.to" v-slot="{ href, route, navigate, isActive,isExactActive }" >
+                   :to="link.to" v-slot="{ href, route, navigate, isActive,isExactActive }">
         <li v-if="isExactActive" aria-current="page">
           {{ link.name }}
         </li>

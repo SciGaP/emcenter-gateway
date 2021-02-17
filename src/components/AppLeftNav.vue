@@ -3,16 +3,16 @@
     <div class="left-menu-navigation">
       <ul>
         <li class="pb-3" style="border-bottom: 1px solid #eee;">
-          <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive}">
-            <a :class="{active: isActive}" :href="href" @click="navigate">
+          <router-link to="/data" v-slot="{ href, route, navigate, isActive, isExactActive}">
+            <a :class="{active: isExactActive}" :href="href" @click="navigate">
               <b-icon icon="person-fill"></b-icon>
               My Folders / Files
             </a>
           </router-link>
         </li>
         <li v-for="group in groups" :key="group.groupId">
-          <router-link :to="`/data/groups/${group.groupId}`" v-slot="{ href, route, navigate, isActive}">
-            <a :class="{active: isActive}" :href="href" @click="navigate">
+          <router-link :to="`/data?groupId=${group.groupId}`" v-slot="{ href, route, navigate, isActive, isExactActive}">
+            <a :class="{active: isExactActive}" :href="href" @click="navigate">
               <b-icon icon="people-fill"></b-icon>
               {{ group.name }}
             </a>

@@ -7,20 +7,26 @@ const state = {
     fileListMap: {}
 };
 
-function _getFilesQueryString({offset = 0, limit = 20, parentFolderId = ""}) {
-    const params = {offset, limit, parentFolderId};
+function _getFilesQueryString({offset = 0, limit = 20, groupId = null, parentFolderId = null}) {
+    const params = {offset, limit, groupId, parentFolderId};
 
-    const queryString = Object.keys(params).map(paramKey => `${paramKey}=${params[paramKey]}`).join("&");
+    const queryString = Object.keys(params).map(paramKey => {
+        if (params[paramKey]) {
+            return `${paramKey}=${params[paramKey]}`;
+        } else {
+            return "";
+        }
+    }).join("&");
 
     return queryString;
 }
 
 const actions = {
 
-    async fetchFiles({commit}, {offset = 0, limit = 20, parentFolderId} = {}) {
-        const queryString = _getFilesQueryString({offset, limit, parentFolderId});
+    async fetchFiles({commit}, {offset = 0, limit = 20, groupId = null, parentFolderId} = {}) {
+        const queryString = _getFilesQueryString({offset, limit, groupId, parentFolderId});
 
-        const files = await emcService.files.get({parentFolderId});
+        const files = await emcService.files.get({groupId, parentFolderId});
         const fileIds = files.map(({fileId, name, createdAt, createdBy, status, mimeType}) => {
             commit("SET_FILE", {fileId, name, createdAt, createdBy, status, mimeType});
 
@@ -75,8 +81,8 @@ const mutations = {
 const getters = {
 
     getFiles: (state, getters) => {
-        return ({offset = 0, limit = 20, parentFolderId = null} = {}) => {
-            const queryString = _getFilesQueryString({offset, limit, parentFolderId});
+        return ({offset = 0, limit = 20, groupId = null, parentFolderId = null} = {}) => {
+            const queryString = _getFilesQueryString({offset, limit, groupId, parentFolderId});
             const fileIds = state.fileListMap[queryString];
             if (fileIds) {
                 return fileIds.map(fileId => getters.getFile({fileId}));
