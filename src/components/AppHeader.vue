@@ -94,13 +94,13 @@
               <div class="rvt-dropdown__menu" id="dropdown-1" role="menu" aria-hidden="true">
                 <router-link to="/groups" v-slot="{ href, route, navigate, isActive}" tag="">
                   <a :class="{active: isActive}" :href="href" @click="navigate">
-<!--                    <b-icon icon="bar-chart-line-fill"></b-icon>-->
+                    <!--                    <b-icon icon="bar-chart-line-fill"></b-icon>-->
                     {{ $t('app.left-nav.menu.item.name.groups') }}
                   </a>
                 </router-link>
                 <router-link to="/researchers" v-slot="{ href, route, navigate, isActive}" tag="">
                   <a :class="{active: isActive}" :href="href" @click="navigate">
-<!--                    <b-icon icon="bar-chart-line-fill"></b-icon>-->
+                    <!--                    <b-icon icon="bar-chart-line-fill"></b-icon>-->
                     {{ $t('app.left-nav.menu.item.name.researchers') }}
                   </a>
                 </router-link>
@@ -147,7 +147,7 @@
           <div class="rvt-dropdown__menu rvt-header-id__menu" id="id-dropdown" aria-hidden="true">
             <a href="#">Profile</a>
             <div role="group" aria-label="User actions">
-              <a href="">Log out</a>
+              <a href="" v-on:click.prevent="logout">Log out</a>
             </div>
           </div>
         </div>
@@ -192,7 +192,7 @@
                   <a href="#">Profile</a>
                 </li>
                 <li>
-                  <a href="">Log out</a>
+                  <a href="" v-on:click.prevent="logout">Log out</a>
                 </li>
               </ul>
             </div>
@@ -208,7 +208,7 @@
                 <li>
                   <router-link to="/groups" v-slot="{ href, route, navigate, isActive}" tag="">
                     <a :class="{active: isActive}" :href="href" @click="navigate">
-<!--                      <b-icon icon="bar-chart-line-fill"></b-icon>-->
+                      <!--                      <b-icon icon="bar-chart-line-fill"></b-icon>-->
                       {{ $t('app.left-nav.menu.item.name.groups') }}
                     </a>
                   </router-link>
@@ -216,7 +216,7 @@
                 <li>
                   <router-link to="/researchers" v-slot="{ href, route, navigate, isActive}" tag="">
                     <a :class="{active: isActive}" :href="href" @click="navigate">
-<!--                      <b-icon icon="bar-chart-line-fill"></b-icon>-->
+                      <!--                      <b-icon icon="bar-chart-line-fill"></b-icon>-->
                       {{ $t('app.left-nav.menu.item.name.researchers') }}
                     </a>
                   </router-link>
