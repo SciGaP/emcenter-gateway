@@ -368,7 +368,7 @@
 
                     <a :class="{active: isExactActive}" :href="href" @click="navigate"
                        style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;">
-                      {{ folder.name }} {{ folder.own }}
+                      {{ folder.name }}
                     </a>
                   </router-link>
                 </td>
@@ -576,21 +576,19 @@ export default {
     // },
 
     files() {
-      return this.getFiles({groupId: this.groupId, parentFolderId: this.parentFolderId});
-      // if (this.mode === "collection") {
-      //   return ["dataset-1", "dataset-2", "dataset-3", "dataset-4", "dataset-5", "dataset-6", "dataset-7", "dataset-8"].map((datasetName) => {
-      //     return {
-      //       fileId: datasetName, name: datasetName,
-      //       status: {total: 1, uploading: 1, failed: 0, uploadingPercentage: 70}
-      //     }
-      //   });
-      // } else {
-      //   return []
-      // }
+      return this.getFiles({groupId: this.groupId, parentFolderId: this.parentFolderId}).map(file => {
+        if (this.group) {
+          return {...file, name: `${this.group.name.replace(/ /ig, "-").toLowerCase()}-${file.name}`}
+        }
+      });
     },
     folders() {
 
-      return this.getFolders({groupId: this.groupId, parentFolderId: this.parentFolderId});
+      return this.getFolders({groupId: this.groupId, parentFolderId: this.parentFolderId}).map(folder => {
+        if (this.group) {
+          return {...folder, name: `${this.group.name.replace(/ /ig, "-").toLowerCase()}-${folder.name}`}
+        }
+      });
       // if (this.mode === "group") {
       //   if (this.users) {
       //     return this.users.map((user) => {
@@ -790,7 +788,6 @@ export default {
     }
   },
   beforeMount() {
-    alert("Heyyy")
     if (this.groupId) this.fetchGroup({groupId: this.groupId});
     // this.fetchUsers({groupId: this.groupId});
     this.fetchFolders({groupId: this.groupId, parentFolderId: this.parentFolderId});
