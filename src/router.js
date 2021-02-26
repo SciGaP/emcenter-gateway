@@ -38,20 +38,6 @@ export default new Router({
                 import("./pages/DashboardPage")
         },
         {
-            path: "/collections",
-            name: "collections",
-            beforeEnter: _validateAuthenticationBeforeEnter,
-            component: () =>
-                import("./pages/CollectionsPage")
-        },
-        {
-            path: "/collections/:collectionId",
-            name: "collection",
-            beforeEnter: _validateAuthenticationBeforeEnter,
-            component: () =>
-                import("./pages/CollectionPage")
-        },
-        {
             path: "/profile",
             name: "profile",
             beforeEnter: _validateAuthenticationBeforeEnter,

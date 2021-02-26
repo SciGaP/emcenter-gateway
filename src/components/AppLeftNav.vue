@@ -11,7 +11,8 @@
           </router-link>
         </li>
         <li v-for="group in groups" :key="group.groupId">
-          <router-link :to="`/data?groupId=${group.groupId}`" v-slot="{ href, route, navigate, isActive, isExactActive}">
+          <router-link :to="`/data?groupId=${group.groupId}`"
+                       v-slot="{ href, route, navigate, isActive, isExactActive}">
             <a :class="{active: isExactActive}" :href="href" @click="navigate">
               <b-icon icon="people-fill"></b-icon>
               {{ group.name }}
@@ -22,87 +23,6 @@
     </div>
   </div>
 </template>
-
-
-<!--<template>-->
-<!--  <div class="p-3 left-menu" v-if="authenticated">-->
-<!--    <div class="p-3 left-menu-profile" v-if="user">-->
-<!--      <img style="width: 100px; height: 100px;border-radius: 50px;" :src="exampleProfilePicture"/>-->
-<!--      <div class="left-menu-profile-name">{{ user.first_name }} {{ user.last_name }}</div>-->
-<!--      <div class="left-menu-profile-role">{{ user.realm_roles.join(" / ") }}</div>-->
-<!--    </div>-->
-<!--    <div class="p-3 left-menu-navigation">-->
-<!--      <ul>-->
-<!--        <li>-->
-<!--          <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive}">-->
-<!--            <a :class="{active: isActive}" :href="href" @click="navigate">-->
-<!--              <b-icon icon="bounding-box"></b-icon>-->
-<!--              {{ $t('app.left-nav.menu.item.name.dashboard') }}-->
-<!--            </a>-->
-<!--          </router-link>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <router-link to="/data" v-slot="{ href, route, navigate, isActive}">-->
-<!--            <a :class="{active: isActive}" :href="href" @click="navigate">-->
-<!--              <b-icon icon="bar-chart-line-fill"></b-icon>-->
-<!--              {{ $t('app.left-nav.menu.item.name.datasets') }}-->
-<!--            </a>-->
-<!--          </router-link>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <router-link to="/groups" v-slot="{ href, route, navigate, isActive}">-->
-<!--            <a :class="{active: isActive}" :href="href" @click="navigate">-->
-<!--              <b-icon icon="bar-chart-line-fill"></b-icon>-->
-<!--              {{ $t('app.left-nav.menu.item.name.groups') }}-->
-<!--            </a>-->
-<!--          </router-link>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <router-link to="/researchers" v-slot="{ href, route, navigate, isActive}">-->
-<!--            <a :class="{active: isActive}" :href="href" @click="navigate">-->
-<!--              <b-icon icon="bar-chart-line-fill"></b-icon>-->
-<!--              {{ $t('app.left-nav.menu.item.name.researchers') }}-->
-<!--            </a>-->
-<!--          </router-link>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <router-link to="/profile" v-slot="{ href, route, navigate, isActive}">-->
-<!--            <a :class="{active: isActive}" :href="href" @click="navigate">-->
-<!--              <b-icon icon="person-fill"></b-icon>-->
-<!--              {{ $t('app.left-nav.menu.item.name.profile') }}-->
-<!--            </a>-->
-<!--          </router-link>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <router-link to="/support" v-slot="{ href, route, navigate, isActive}">-->
-<!--            <a :class="{active: isActive}" :href="href" @click="navigate">-->
-<!--              <b-icon icon="person-fill"></b-icon>-->
-<!--              {{ $t('app.left-nav.menu.item.name.support') }}-->
-<!--            </a>-->
-<!--          </router-link>-->
-<!--        </li>-->
-<!--        &lt;!&ndash;            <li>&ndash;&gt;-->
-<!--        &lt;!&ndash;              <router-link to="/groups">&ndash;&gt;-->
-<!--        &lt;!&ndash;                <b-icon icon="people-fill"></b-icon>&ndash;&gt;-->
-<!--        &lt;!&ndash;                {{ $t('app.left-nav.menu.item.name.groups') }}&ndash;&gt;-->
-<!--        &lt;!&ndash;              </router-link>&ndash;&gt;-->
-<!--        &lt;!&ndash;            </li>&ndash;&gt;-->
-<!--        &lt;!&ndash;            <li>&ndash;&gt;-->
-<!--        &lt;!&ndash;              <router-link to="/settings">&ndash;&gt;-->
-<!--        &lt;!&ndash;                <b-icon icon="tools"></b-icon>&ndash;&gt;-->
-<!--        &lt;!&ndash;                {{ $t('app.left-nav.menu.item.name.settings') }}&ndash;&gt;-->
-<!--        &lt;!&ndash;              </router-link>&ndash;&gt;-->
-<!--        &lt;!&ndash;            </li>&ndash;&gt;-->
-<!--        <li style="margin-top: 100px;">-->
-<!--          <a v-on:click.prevent="logout" href="#">-->
-<!--            <b-icon icon="box-arrow-left"></b-icon>-->
-<!--            {{ $t('app.left-nav.menu.item.name.logout') }}-->
-<!--          </a>-->
-<!--        </li>-->
-<!--      </ul>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</template>-->
 
 <script>
 import store from "../store";

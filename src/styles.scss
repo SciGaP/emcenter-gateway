@@ -1,0 +1,15 @@
+
+$primary: #9a0002;
+//$secondary: $gray-600 !default;
+//$success: $green !default;
+//$info: $cyan !default;
+//$warning: $yellow !default;
+//$danger: $red !default;
+//$light: $gray-100 !default;
+//$dark: $gray-800 !default;
+
+
+// Bootstrap and its default variables
+@import '~bootstrap/scss/bootstrap';
+// BootstrapVue and its default variables
+@import '~bootstrap-vue/src/index.scss';
