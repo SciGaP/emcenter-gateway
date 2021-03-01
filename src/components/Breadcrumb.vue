@@ -1,8 +1,8 @@
 <template>
-  <b-breadcrumb>
+  <b-breadcrumb style="background: none;padding: 0px 0px;">
     <router-link v-for="(link, index) in links" :key="index" :to="link.to"
                  v-slot="{ href, route, navigate, isActive,isExactActive }" tag="">
-      <b-breadcrumb-item :href="href" :active="isExactActive">{{ link.name }}</b-breadcrumb-item>
+      <b-breadcrumb-item :href="href" :active="isExactActive" @click="navigate">{{ link.name }}</b-breadcrumb-item>
     </router-link>
   </b-breadcrumb>
 </template>
