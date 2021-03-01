@@ -6,7 +6,10 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item href="#">Settings</b-nav-item>
+        <router-link to="/settings" v-slot="{ href, route, navigate, isActive, isExactActive}">
+          <b-nav-item :active="isExactActive" :href="href" @click="navigate">Settings</b-nav-item>
+        </router-link>
+
         <b-nav-item href="#" disabled>Data</b-nav-item>
       </b-navbar-nav>
 

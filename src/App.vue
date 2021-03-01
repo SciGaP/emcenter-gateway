@@ -1,15 +1,16 @@
 <template>
   <div id="app">
     <AppHeader/>
-    <div class="h-100 p-3 page-body">
+    <router-view/>
+    <!--    <div class="h-100 p-3 page-body">-->
 
-      <AppLeftNav/>
+    <!--      <AppLeftNav/>-->
 
-      <div class="pl-3 pr-3" style="flex: 1;">
-        <router-view/>
-      </div>
+    <!--      <div class="pl-3 pr-3" style="flex: 1;">-->
+    <!--        <router-view/>-->
+    <!--      </div>-->
 
-    </div>
+    <!--    </div>-->
     <AppFooter/>
   </div>
 </template>
@@ -20,12 +21,12 @@ import {mapGetters, mapActions} from "vuex";
 import exampleProfilePicture from "./assets/120493210_1443413932520618_6347067080170311282_n.jpg";
 import "./styles.scss";
 import AppHeader from "./components/AppHeader";
-import AppLeftNav from "./components/AppLeftNav";
+// import AppLeftNav from "./components/AppLeftNav";
 import AppFooter from "./components/AppFooter";
 
 export default {
   name: 'App',
-  components: {AppFooter, AppLeftNav, AppHeader},
+  components: {AppFooter, AppHeader},
   store: store,
   data: () => {
     return {exampleProfilePicture: exampleProfilePicture}

@@ -1,10 +1,10 @@
 <template>
   <div class="pl-2 pr-2">
     <div class="mb-3 w-100">
-      <Breadcrumb class="mb-2" :links="breadcrumbLinks"/>
-      <h1 class="rvt-ts-36">{{ title }}</h1>
+      <Breadcrumb v-if="breadcrumbLinks && breadcrumbLinks.length > 0" class="mb-2" :links="breadcrumbLinks"/>
+      <h1 v-if="title">{{ title }}</h1>
     </div>
-    <div class="m-1 w-100" style="background-color: white; padding: 35px; border-radius: 10px;">
+    <div class=" pr-2 w-100">
       <slot></slot>
     </div>
   </div>
