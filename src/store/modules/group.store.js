@@ -34,11 +34,11 @@ const actions = {
 
         let {data: {groups}} = await custosService.groups.getAllGroups();
         const groupIds = groups.map((
-            {id, name, description, ownerId, realm_roles, client_roles, attributes, sub_groups}
+            {id, name, description, owner_id, realm_roles, client_roles, attributes, sub_groups}
         ) => {
             const groupId = id
             commit('SET_GROUP', {
-                groupId, name, description, ownerId, realm_roles, client_roles, attributes, sub_groups
+                groupId, name, description, ownerId: owner_id, realm_roles, client_roles, attributes, sub_groups
             });
 
             return groupId;
@@ -149,6 +149,13 @@ const mutations = {
         };
     },
     SET_GROUP_DELETED(state, {groupId}) {
+        for (let queryString in state.groupListMap) {
+            state.groupListMap = {
+                ...state.groupListMap,
+                [queryString]: state.groupListMap[queryString].filter(_groupId => _groupId !== groupId)
+            }
+        }
+
         state.groupMap = {
             ...state.groupMap,
             [groupId]: null

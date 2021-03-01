@@ -4,55 +4,10 @@
       <div class="w-100">
         <label for="demo-1">Search</label>
         <input type="text" id="demo-1" aria-describedby="demo-1-note">
-        <small id="demo-1-note" class="rvt-display-block">
-          <a href="#" data-modal-trigger="modal-example-basic">Advanced search</a>
+        <small>
+          <a href="#" data-modal-trigger="modal-1">Advanced search</a>
         </small>
       </div>
-
-      <!--      <button type="button" class="rvt-button" data-modal-trigger="modal-example-basic">Open modal example</button>-->
-
-      <div class="rvt-modal"
-           id="modal-example-basic"
-           role="dialog"
-           aria-labelledby="modal-example-title"
-           aria-hidden="true"
-           tabindex=-1>
-        <div class="rvt-modal__inner">
-          <header class="rvt-modal__header">
-            <h1 class="rvt-modal__title" id="modal-example-title">Advanced search</h1>
-          </header>
-          <div class="rvt-modal__body">
-            <div>
-              <label for="select-demo">Microscope</label>
-              <select id="select-demo" multiple="true">
-                <option value="Microscope 1">Microscope 1</option>
-                <option value="Microscope 2">Microscope 2</option>
-                <option value="Microscope 3">Microscope 3</option>
-                <option value="Microscope 4">Microscope 4</option>
-              </select>
-            </div>
-            <div>
-              <label for="demo-1">Date</label>
-              <input type="text" id="demo-1" aria-describedby="demo-1-note">
-              <small id="demo-1-note" class="rvt-display-block rvt-m-bottom-md">Date range or a specific date</small>
-            </div>
-          </div>
-          <div class="rvt-modal__controls">
-            <button type="button" class="rvt-button">Search</button>
-            <button type="button" class="rvt-button rvt-button--secondary" data-modal-close="modal-example-basic">
-              Cancel
-            </button>
-          </div>
-          <button type="button" class="rvt-button rvt-modal__close" data-modal-close="modal-example-basic">
-            <span class="rvt-sr-only">Close</span>
-            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-              <path fill="currentColor"
-                    d="M9.41,8l5.29-5.29a1,1,0,0,0-1.41-1.41L8,6.59,2.71,1.29A1,1,0,0,0,1.29,2.71L6.59,8,1.29,13.29a1,1,0,1,0,1.41,1.41L8,9.41l5.29,5.29a1,1,0,0,0,1.41-1.41Z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
 
       <!--      <b-input-group size="sm">-->
       <!--        <b-form-input placeholder="Search" size="sm"></b-form-input>-->
@@ -63,26 +18,26 @@
       <!--        </b-input-group-append>-->
       <!--      </b-input-group>-->
 
-      <!--      <b-modal id="modal-1" title="Search / Filter">-->
-      <!--        <p class="my-4">Advanced searching/ filtering criteria. </p>-->
-      <!--        <div>-->
-      <!--          <strong>Microscope</strong>-->
-      <!--          <ul style="list-style: none; padding: 0px;">-->
-      <!--            <li v-for="microscope in ['IU Cardiac-MS1', 'IU-med-MS1', 'IU-med-MS2']" :key="microscope">-->
-      <!--              <b-form-checkbox-->
-      <!--                  :id="`checkbox-group-user-${microscope}`"-->
-      <!--                  :name="`checkbox-group-user-${microscope}`"-->
-      <!--                  :checked="true"-->
-      <!--              >-->
-      <!--                {{ microscope }}-->
-      <!--              </b-form-checkbox>-->
-      <!--            </li>-->
-      <!--          </ul>-->
-      <!--        </div>-->
-      <!--        <template slot="modal-footer">-->
-      <!--          <b-button>Search</b-button>-->
-      <!--        </template>-->
-      <!--      </b-modal>-->
+      <b-modal id="modal-1" title="Search / Filter">
+        <p class="my-4">Advanced searching/ filtering criteria. </p>
+        <div>
+          <strong>Microscope</strong>
+          <ul style="list-style: none; padding: 0px;">
+            <li v-for="microscope in ['IU Cardiac-MS1', 'IU-med-MS1', 'IU-med-MS2']" :key="microscope">
+              <b-form-checkbox
+                  :id="`checkbox-group-user-${microscope}`"
+                  :name="`checkbox-group-user-${microscope}`"
+                  :checked="true"
+              >
+                {{ microscope }}
+              </b-form-checkbox>
+            </li>
+          </ul>
+        </div>
+        <template slot="modal-footer">
+          <b-button>Search</b-button>
+        </template>
+      </b-modal>
     </div>
 
     <div class="w-100">
@@ -103,115 +58,24 @@
           </span>
         </div>
         <div class="text-right">
-          <button type="button" class="rvt-button rvt-button--plain" v-if="hasAnythingSelected()">
+          <button type="button" v-if="hasAnythingSelected()">
             Download
           </button>
-          <button type="button" class="rvt-button rvt-button--plain" data-modal-trigger="modal-share"
+          <button type="button" data-modal-trigger="modal-share"
                   v-if="hasAnythingSelected()">
             Share
           </button>
-          <button type="button" class="rvt-button rvt-button--plain" v-if="hasAnythingSelected()">
+          <button type="button" v-if="hasAnythingSelected()">
             History
           </button>
-          <button type="button" class="rvt-button" :class="{'rvt-button--secondary': displayMode !== 'list'}"
+          <button type="button" :class="{'': displayMode !== 'list'}"
                   v-on:click="switchDisplayMode('list')">
             <b-icon icon="list" aria-hidden="true"></b-icon>
           </button>
-          <button type="button" class="ml-2 rvt-button" :class="{'rvt-button--secondary': displayMode !== 'grid'}"
+          <button type="button" class="ml-2" :class="{'': displayMode !== 'grid'}"
                   v-on:click="switchDisplayMode('grid')">
             <b-icon icon="grid" aria-hidden="true"></b-icon>
           </button>
-        </div>
-
-        <div class="rvt-modal"
-             id="modal-share"
-             role="dialog"
-             aria-labelledby="modal-share-title"
-             aria-hidden="true"
-             tabindex=-1>
-          <div class="rvt-modal__inner">
-            <header class="rvt-modal__header">
-              <h1 class="rvt-modal__title" id="modal-share-title">Share</h1>
-            </header>
-            <div>
-              <div style="padding: 10px;">
-                <div>
-                  <input type="text" id="demo-2" aria-describedby="demo-2-note" placeholder="Add users/ groups">
-                </div>
-              </div>
-              <table>
-                <tbody>
-                <tr>
-                  <td>
-                    Dinuka De Silva
-                  </td>
-                  <td>
-                    <div class="rvt-dropdown">
-                      <button type="button" class="rvt-button rvt-button--plain rvt-button--small"
-                              data-dropdown-toggle="share-permission-dropdown-1"
-                              aria-haspopup="true" aria-expanded="false">
-                        Editor
-                        <b-icon icon="caret-down-fill"></b-icon>
-                      </button>
-                      <div class="rvt-dropdown__menu" id="share-permission-dropdown-1" role="menu"
-                           aria-hidden="true" style="position: fixed">
-                        <button type="button" role="menuitemradio">Download</button>
-                        <button type="button" role="menuitemradio">Share</button>
-                        <button type="button" role="menuitemradio">View History</button>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <button type="button" class="rvt-button rvt-button--plain rvt-button--small"
-                            aria-haspopup="true" aria-expanded="false">
-                      <b-icon icon="trash"></b-icon>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    Isuru Ranawaka
-                  </td>
-                  <td>
-                    <div class="rvt-dropdown">
-                      <button type="button" class="rvt-button rvt-button--plain rvt-button--small"
-                              data-dropdown-toggle="share-permission-dropdown-2"
-                              aria-haspopup="true" aria-expanded="false">
-                        Viewer
-                        <b-icon icon="caret-down-fill"></b-icon>
-                      </button>
-                      <div class="rvt-dropdown__menu" id="share-permission-dropdown-2" role="menu"
-                           aria-hidden="true" style="position: fixed">
-                        <button type="button" role="menuitemradio">Download</button>
-                        <button type="button" role="menuitemradio">Share</button>
-                        <button type="button" role="menuitemradio">View History</button>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <button type="button" class="rvt-button rvt-button--plain rvt-button--small"
-                            aria-haspopup="true" aria-expanded="false">
-                      <b-icon icon="trash"></b-icon>
-                    </button>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="rvt-modal__controls">
-              <button type="button" class="rvt-button">Save</button>
-              <button type="button" class="rvt-button rvt-button--secondary" data-modal-close="modal-share">
-                Cancel
-              </button>
-            </div>
-            <button type="button" class="rvt-button rvt-modal__close" data-modal-close="modal-share">
-              <span class="rvt-sr-only">Close</span>
-              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-                <path fill="currentColor"
-                      d="M9.41,8l5.29-5.29a1,1,0,0,0-1.41-1.41L8,6.59,2.71,1.29A1,1,0,0,0,1.29,2.71L6.59,8,1.29,13.29a1,1,0,1,0,1.41,1.41L8,9.41l5.29,5.29a1,1,0,0,0,1.41-1.41Z"/>
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
 
@@ -222,7 +86,7 @@
         <div v-if="displayMode === 'grid'">
           <input type="checkbox" name="all-grid" id="all-grid" :checked="isAllSelected()"
                  v-on:click="toggleAllSelection()"/>
-          <label for="all-grid" class="rvt-m-right-sm">Select All</label>
+          <label for="all-grid">Select All</label>
         </div>
         <!--        <div>-->
         <!--          <span v-if="numberOfFoldersSelected > 0">-->
@@ -249,26 +113,24 @@
               <div>
                 <input type="checkbox" :checked="isFolderSelected(folder)" v-on:click="toggleFolderSelection(folder)"
                        :name="getFolderSelectionCheckboxId(folder)" :id="getFolderSelectionCheckboxId(folder)"/>
-                <label :for="getFolderSelectionCheckboxId(folder)" class="rvt-m-right-sm"
-                       style="margin: 0px !important;"></label>
+                <label :for="getFolderSelectionCheckboxId(folder)" style="margin: 0px !important;"></label>
               </div>
               <div style="flex: 1;">
                 <router-link :to="getFolderLink(folder)" v-slot="{ href, route, navigate}">
                   <b-icon icon="folder-fill" aria-hidden="true"></b-icon>
-                  <button :for="getFolderSelectionCheckboxId(folder)" @click="navigate"
-                          class="rvt-button rvt-button--plain rvt-button--small">
+                  <button :for="getFolderSelectionCheckboxId(folder)" @click="navigate">
                     {{ folder.name }}
                   </button>
                 </router-link>
               </div>
               <div>
-                <button class="rvt-button rvt-button--plain rvt-button--small" data-modal-trigger="modal-share">
+                <button data-modal-trigger="modal-share">
                   <b-icon icon="share-fill"></b-icon>
                 </button>
-                <button class="rvt-button rvt-button--plain rvt-button--small">
+                <button>
                   <b-icon icon="pencil"></b-icon>
                 </button>
-                <button class="rvt-button rvt-button--plain rvt-button--small">
+                <button>
                   <b-icon icon="download"></b-icon>
                 </button>
               </div>
@@ -283,23 +145,23 @@
                 <div>
                   <input type="checkbox" :checked="isFileSelected(file)" v-on:click="toggleFileSelection(file)"
                          :name="getFileSelectionCheckboxId(file)" :id="getFileSelectionCheckboxId(file)"/>
-                  <label :for="getFileSelectionCheckboxId(file)" class="rvt-m-right-sm"
+                  <label :for="getFileSelectionCheckboxId(file)"
                          style="margin: 0px !important;"></label>
                 </div>
                 <div style="flex: 1;">
                   <button :for="getFileSelectionCheckboxId(file)"
-                          class="rvt-button rvt-button--plain rvt-button--small">
+                  >
                     {{ file.name }}
                   </button>
                 </div>
                 <div>
-                  <button class="rvt-button rvt-button--plain rvt-button--small" data-modal-trigger="modal-share">
+                  <button data-modal-trigger="modal-share">
                     <b-icon icon="share-fill"></b-icon>
                   </button>
-                  <button class="rvt-button rvt-button--plain rvt-button--small">
+                  <button>
                     <b-icon icon="pencil"></b-icon>
                   </button>
-                  <button class="rvt-button rvt-button--plain rvt-button--small">
+                  <button>
                     <b-icon icon="download"></b-icon>
                   </button>
                 </div>
@@ -325,27 +187,8 @@
                 <td>
                   <input type="checkbox" name="all" id="all" :checked="isAllSelected()"
                          v-on:click="toggleAllSelection()"/>
-                  <label for="all" class="rvt-m-right-sm"></label>
+                  <label for="all"></label>
                 </td>
-                <!--              <td>-->
-                <!--                <div class="rvt-dropdown">-->
-                <!--                  <button type="button" class="rvt-button rvt-button&#45;&#45;small rvt-button&#45;&#45;secondary"-->
-                <!--                          data-dropdown-toggle="dropdown-all"-->
-                <!--                          aria-haspopup="true" aria-expanded="false">-->
-                <!--                    <span>Actions</span>-->
-                <!--                    <svg aria-hidden="true" class="rvt-m-left-xs" xmlns="http://www.w3.org/2000/svg" width="16"-->
-                <!--                         height="16" viewBox="0 0 16 16">-->
-                <!--                      <path fill="currentColor"-->
-                <!--                            d="M8,12.46a2,2,0,0,1-1.52-.7L1.24,5.65a1,1,0,1,1,1.52-1.3L8,10.46l5.24-6.11a1,1,0,0,1,1.52,1.3L9.52,11.76A2,2,0,0,1,8,12.46Z"/>-->
-                <!--                    </svg>-->
-                <!--                  </button>-->
-                <!--                  <div class="rvt-dropdown__menu" id="dropdown-all" role="menu" aria-hidden="true">-->
-                <!--                    <button type="button" role="menuitemradio">Download</button>-->
-                <!--                    <button type="button" role="menuitemradio">Share</button>-->
-                <!--                    <button type="button" role="menuitemradio">View History</button>-->
-                <!--                  </div>-->
-                <!--                </div>-->
-                <!--              </td>-->
                 <th>Name</th>
                 <th>Created By</th>
                 <th>Last Updated</th>
@@ -358,7 +201,7 @@
                   <input type="checkbox" :checked="isFolderSelected(folder)" v-on:click="toggleFolderSelection(folder)"
                          :name="getFolderSelectionCheckboxId(folder)"
                          :id="getFolderSelectionCheckboxId(folder)"/>
-                  <label :for="getFolderSelectionCheckboxId(folder)" class="rvt-m-right-sm"></label>
+                  <label :for="getFolderSelectionCheckboxId(folder)"></label>
                 </td>
                 <td>
                   <router-link :to="getFolderLink(folder)" v-slot="{ href, route, navigate, isActive,isExactActive }">
@@ -377,28 +220,15 @@
                 <td>
                   <div style="display: flex;">
                     <div style="flex: 1;">
-                      <button class="rvt-button rvt-button--plain rvt-button--small" data-modal-trigger="modal-share">
+                      <button data-modal-trigger="modal-share">
                         <b-icon icon="share-fill"></b-icon>
                       </button>
-                      <button class="rvt-button rvt-button--plain rvt-button--small">
+                      <button>
                         <b-icon icon="download"></b-icon>
                       </button>
-                      <button class="rvt-button rvt-button--plain rvt-button--small">
+                      <button>
                         <b-icon icon="info-circle-fill"></b-icon>
                       </button>
-                    </div>
-                    <div class="rvt-dropdown">
-                      <button type="button" class="rvt-button rvt-button--plain rvt-button--small"
-                              :data-dropdown-toggle="getFolderActionsDropdownId(folder)"
-                              aria-haspopup="true" aria-expanded="false">
-                        <b-icon icon="three-dots-vertical"></b-icon>
-                      </button>
-                      <div class="rvt-dropdown__menu" :id="getFolderActionsDropdownId(folder)" role="menu"
-                           aria-hidden="true">
-                        <button type="button" role="menuitemradio">Download</button>
-                        <button type="button" role="menuitemradio">Share</button>
-                        <button type="button" role="menuitemradio">View History</button>
-                      </div>
                     </div>
                   </div>
                 </td>
@@ -410,28 +240,8 @@
                 <td>
                   <input type="checkbox" :checked="isFileSelected(file)" v-on:click="toggleFileSelection(file)"
                          :name="getFileSelectionCheckboxId(file)" :id="getFileSelectionCheckboxId(file)"/>
-                  <label :for="getFileSelectionCheckboxId(file)" class="rvt-m-right-sm"></label>
+                  <label :for="getFileSelectionCheckboxId(file)"></label>
                 </td>
-                <!--              <td>-->
-                <!--                <div class="rvt-dropdown">-->
-                <!--                  <button type="button" class="rvt-button rvt-button&#45;&#45;small rvt-button&#45;&#45;secondary"-->
-                <!--                          :data-dropdown-toggle="getFileActionsDropdownId(file)"-->
-                <!--                          aria-haspopup="true" aria-expanded="false">-->
-                <!--                    <span>Actions</span>-->
-                <!--                    <svg aria-hidden="true" class="rvt-m-left-xs" xmlns="http://www.w3.org/2000/svg" width="16"-->
-                <!--                         height="16" viewBox="0 0 16 16">-->
-                <!--                      <path fill="currentColor"-->
-                <!--                            d="M8,12.46a2,2,0,0,1-1.52-.7L1.24,5.65a1,1,0,1,1,1.52-1.3L8,10.46l5.24-6.11a1,1,0,0,1,1.52,1.3L9.52,11.76A2,2,0,0,1,8,12.46Z"/>-->
-                <!--                    </svg>-->
-                <!--                  </button>-->
-                <!--                  <div class="rvt-dropdown__menu" :id="getFileActionsDropdownId(file)" role="menu" aria-hidden="true">-->
-                <!--                    <button type="button" role="menuitemradio">Download</button>-->
-                <!--                    <button type="button" role="menuitemradio">Share</button>-->
-                <!--                    <button type="button" role="menuitemradio">Edit</button>-->
-                <!--                    <button type="button" role="menuitemradio">View History</button>-->
-                <!--                  </div>-->
-                <!--                </div>-->
-                <!--              </td>-->
                 <td>
                   <b-icon style="height: 100%;" icon="card-image" aria-hidden="true"></b-icon>
                   <a href="#" style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;">
@@ -443,31 +253,18 @@
                 <td>
                   <div style="display: flex;">
                     <div style="flex: 1;">
-                      <button class="rvt-button rvt-button--plain rvt-button--small" data-modal-trigger="modal-share">
+                      <button data-modal-trigger="modal-share">
                         <b-icon icon="share-fill"></b-icon>
                       </button>
-                      <button class="rvt-button rvt-button--plain rvt-button--small">
+                      <button>
                         <b-icon icon="pencil"></b-icon>
                       </button>
-                      <button class="rvt-button rvt-button--plain rvt-button--small">
+                      <button>
                         <b-icon icon="download"></b-icon>
                       </button>
-                      <button class="rvt-button rvt-button--plain rvt-button--small">
+                      <button>
                         <b-icon icon="info-circle-fill"></b-icon>
                       </button>
-                    </div>
-                    <div class="rvt-dropdown">
-                      <button type="button" class="rvt-button rvt-button--plain rvt-button--small"
-                              :data-dropdown-toggle="getFileActionsDropdownId(file)"
-                              aria-haspopup="true" aria-expanded="false">
-                        <b-icon icon="three-dots-vertical"></b-icon>
-                      </button>
-                      <div class="rvt-dropdown__menu" :id="getFileActionsDropdownId(file)" role="menu"
-                           aria-hidden="true">
-                        <button type="button" role="menuitemradio">Download</button>
-                        <button type="button" role="menuitemradio">Share</button>
-                        <button type="button" role="menuitemradio">View History</button>
-                      </div>
                     </div>
                   </div>
                 </td>

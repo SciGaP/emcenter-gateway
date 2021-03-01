@@ -30,7 +30,7 @@ export default {
       getUsers: "user/getUsers",
     }),
     breadcrumbLinks() {
-      const _breadcrumbLinks = [{to: '/groups', name: 'Datasets'}]
+      const _breadcrumbLinks = [{to: '/groups', name: 'Groups'}]
       if (this.group && this.group.name) {
         _breadcrumbLinks.push({to: this.groupLink, name: this.group.name});
 

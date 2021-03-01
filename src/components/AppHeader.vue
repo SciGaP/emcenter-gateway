@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" variant="primary">
+  <b-navbar toggleable="lg" type="dark" variant="primary" v-if="authenticated">
     <b-navbar-brand href="#">{{ $t('app.top-header.title') }}</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>

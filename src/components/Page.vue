@@ -1,8 +1,8 @@
 <template>
-  <div class="pl-2 pr-2">
+  <div class="pl-2 pr-2 vh-100">
     <div class="mb-3 w-100">
       <Breadcrumb v-if="breadcrumbLinks && breadcrumbLinks.length > 0" class="mb-2" :links="breadcrumbLinks"/>
-      <h1 v-if="title">{{ title }}</h1>
+      <h1 class="text-primary" v-if="title">{{ title }}</h1>
     </div>
     <div class=" pr-2 w-100">
       <slot></slot>

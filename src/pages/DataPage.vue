@@ -150,26 +150,4 @@ export default {
 </script>
 
 <style scoped>
-.pagination {
-  display: block;
-}
-
-.pagination button {
-  border: solid 1px #dddddd;
-  background-color: #ffffff;
-  color: #a9050f;
-  font-size: 14px;
-  padding: 3px 15px;
-  border-radius: 0px;
-}
-
-.pagination button:first-child {
-  border-bottom-left-radius: 4px;
-  border-top-left-radius: 4px;
-}
-
-.pagination button:last-child {
-  border-bottom-right-radius: 4px;
-  border-top-right-radius: 4px;
-}
 </style>
