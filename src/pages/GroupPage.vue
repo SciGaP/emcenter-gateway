@@ -3,7 +3,35 @@
       v-if="group" :title="group.name"
       :breadcrumb-links="breadcrumbLinks"
   >
-    <GroupMembership :group-id="groupId"/>
+    <div class="mt-2">
+      <table class="w-100">
+        <thead>
+        <tr>
+          <th>Username</th>
+          <th v-for="tenantRole in tenantRoles" :key="tenantRole.tenantRoleId">
+            {{ tenantRole.name }}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="user in users" :key="user.username">
+          <td>
+            {{ user.username }}
+          </td>
+          <td v-for="tenantRole in tenantRoles" :key="tenantRole.tenantRoleId" class="text-center">
+            <b-form-checkbox
+                :id="`user-${user.username}-tenant_role_${tenantRole.tenantRoleId}`"
+                :name="`user-${user.username}-tenant_role_${tenantRole.tenantRoleId}`"
+            >
+            </b-form-checkbox>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="w-100 mt-3">
+      <UserSearchAndSelect v-on:change="onUserSelect"/>
+    </div>
   </Page>
 </template>
 
@@ -11,12 +39,12 @@
 
 import {mapGetters, mapActions} from "vuex";
 import store from "../store";
-import GroupMembership from "../components/GroupMembership";
 import Page from "../components/Page";
+import UserSearchAndSelect from "@/components/UserSearchAndSelect";
 
 export default {
   name: "GroupPage",
-  components: {Page, GroupMembership},
+  components: {UserSearchAndSelect, Page},
   store: store,
   data() {
     return {
@@ -28,6 +56,7 @@ export default {
     ...mapGetters({
       getGroup: "group/getGroup",
       getUsers: "user/getUsers",
+      getTenantRoles: "tenant/getTenantRoles"
     }),
     breadcrumbLinks() {
       const _breadcrumbLinks = [{to: '/groups', name: 'Groups'}]
@@ -51,7 +80,9 @@ export default {
     group() {
       return this.getGroup({groupId: this.groupId});
     },
-
+    tenantRoles() {
+      return this.getTenantRoles();
+    },
     path() {
       if (this.$route.query.path) {
         return window.decodeURIComponent(this.$route.query.path);
@@ -70,11 +101,18 @@ export default {
     ...mapActions({
       fetchGroup: "group/fetchGroup",
       fetchUsers: "user/fetchUsers",
-    })
+      fetchTenantRoles: "tenant/fetchTenantRoles",
+      addUserToGroup: "group/addUserToGroup"
+    }),
+    async onUserSelect({username}) {
+      await this.addUserToGroup({groupId: this.groupId, username, membershipType: "MEMBER"});
+      await this.fetchUsers({groupId: this.groupId});
+    }
   },
   beforeMount() {
     this.fetchGroup({groupId: this.groupId});
     this.fetchUsers({groupId: this.groupId});
+    this.fetchTenantRoles()
   }
 }
 </script>

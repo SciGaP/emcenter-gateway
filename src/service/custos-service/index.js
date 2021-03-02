@@ -4,6 +4,7 @@ import https from "https";
 import CustosGroups from "./custos-service-groups";
 import CustosUsers from "./custos-service-users";
 import CustosIdentity from "./custos-service-identity";
+import CustosTenants from "@/service/custos-service/custos-service-tenants";
 
 const httpAgent = new http.Agent({keepAlive: true});
 const httpsAgent = new https.Agent({keepAlive: true});
@@ -12,7 +13,8 @@ export default class CustosService {
     static ENDPOINTS = {
         IDENTITY: "/identity-management/v1.0.0",
         USERS: "user-management/v1.0.0",
-        GROUPS: "group-management/v1.0.0"
+        GROUPS: "group-management/v1.0.0",
+        TENANTS: "tenant-management/v1.0.0"
     };
 
     /**
@@ -49,6 +51,14 @@ export default class CustosService {
      */
     _groups = null;
 
+
+    /**
+     * @type {CustosTenants}
+     */
+    _tenants = null;
+    b
+
+
     /**
      * @type {CustosUsers}
      */
@@ -64,6 +74,7 @@ export default class CustosService {
         this._clientSecret = clientSecret;
         this._redirectURI = redirectURI;
         this._baseURL = baseURL;
+        this._tenants = new CustosTenants(this);
         this._groups = new CustosGroups(this);
         this._users = new CustosUsers(this);
         this._identity = new CustosIdentity(this);
@@ -83,6 +94,10 @@ export default class CustosService {
 
     get baseURL() {
         return this._baseURL;
+    }
+
+    get tenants() {
+        return this._tenants;
     }
 
     get groups() {

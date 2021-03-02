@@ -23,40 +23,42 @@
       </b-modal>
     </div>
 
-    <div class="mt-2">
-      <table class="w-100">
-        <thead>
-        <tr>
-          <th>Group Name</th>
-          <th>Owner</th>
-          <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="group in groups" :key="group.groupId">
-          <td>
-            {{ group.name }}
-          </td>
-          <td>
-            {{ group.ownerId }}
-          </td>
-          <td>
-            <router-link :to="`/groups/${group.groupId}`" v-slot="{ href, route, navigate}">
-              <a :href="href" @click="navigate">
-                Edit
+    <b-overlay :show="!groups" rounded="sm">
+      <div class="mt-2">
+        <table class="w-100">
+          <thead>
+          <tr>
+            <th>Group Name</th>
+            <th>Owner</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="group in groups" :key="group.groupId">
+            <td>
+              {{ group.name }}
+            </td>
+            <td>
+              {{ group.ownerId }}
+            </td>
+            <td>
+              <router-link :to="`/groups/${group.groupId}`" v-slot="{ href, route, navigate}">
+                <a :href="href" @click="navigate">
+                  Edit
+                </a>
+              </router-link>
+              <a href="#" v-on:click.prevent="deleteGroup({groupId:group.groupId})">
+                Delete
               </a>
-            </router-link>
-            <a href="#" v-on:click.prevent="deleteGroup({groupId:group.groupId})">
-              Delete
-            </a>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-    <div style="padding: 10px;text-align: right;">
-      <Pagination/>
-    </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="padding: 10px;text-align: right;">
+        <Pagination/>
+      </div>
+    </b-overlay>
 
   </Page>
 </template>
@@ -81,7 +83,7 @@ export default {
   computed: {
     ...mapGetters({
       currentUsername: "auth/currentUsername",
-      getGroups: "group/getGroups",
+      getGroups: "group/getGroups"
     }),
     groups() {
       return this.getGroups()

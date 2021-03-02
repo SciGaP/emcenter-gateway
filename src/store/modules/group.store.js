@@ -29,6 +29,8 @@ const actions = {
     },
     async fetchGroups({commit}) {
 
+        // await new Promise(resolve => setTimeout(resolve, 1000));
+
         // TODO enable api filtering, pagination, etc.
         let queryString = "";
 

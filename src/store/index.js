@@ -5,6 +5,7 @@ import collection from "./modules/collection.store";
 import dataset from "./modules/dataset.store";
 import user from "./modules/user.store";
 import group from "./modules/group.store";
+import tenant from "./modules/tenant.store";
 import auth from "./modules/auth.store";
 
 import emcFile from "./modules/emc/emc-file.store";
@@ -22,6 +23,7 @@ export default new Vuex.Store({
         auth,
         user,
         group,
+        tenant,
         "emcFile": emcFile,
         "emcFolder": emcFolder
     },
