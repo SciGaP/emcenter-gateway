@@ -21,10 +21,15 @@ const actions = {
         });
     },
     async fetchTenantRoles({commit}) {
+        const DEFAULT_CUSTOS_ROLES = ["admin-read-only", "admin", "gateway-provider", "gateway-user", "offline_access",
+            "uma_authorization", "user-pending"];
+
         let queryString = "";
 
         let {data: {roles}} = await custosService.tenants.fetchTenantRoles();
-        const tenantRoleIds = roles.map(({id, name, description, composite}) => {
+        const tenantRoleIds = roles.filter(({name}) => {
+            return DEFAULT_CUSTOS_ROLES.indexOf(name) < 0
+        }).map(({id, name, description, composite}) => {
             const tenantRoleId = id
             commit('SET_TENANT_ROLE', {tenantRoleId, name, description, composite});
 

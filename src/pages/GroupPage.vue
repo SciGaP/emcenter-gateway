@@ -8,7 +8,7 @@
         <thead>
         <tr>
           <th>Username</th>
-          <th v-for="tenantRole in tenantRoles" :key="tenantRole.tenantRoleId">
+          <th v-for="tenantRole in tenantRoles" :key="tenantRole.tenantRoleId" class="text-right">
             {{ tenantRole.name }}
           </th>
         </tr>
@@ -18,10 +18,11 @@
           <td>
             {{ user.username }}
           </td>
-          <td v-for="tenantRole in tenantRoles" :key="tenantRole.tenantRoleId" class="text-center">
+          <td v-for="tenantRole in tenantRoles" :key="tenantRole.tenantRoleId" class="text-right">
             <b-form-checkbox
                 :id="`user-${user.username}-tenant_role_${tenantRole.tenantRoleId}`"
                 :name="`user-${user.username}-tenant_role_${tenantRole.tenantRoleId}`"
+                :checked="hasTenantRole(user, tenantRole)"
             >
             </b-form-checkbox>
           </td>
@@ -107,6 +108,9 @@ export default {
     async onUserSelect({username}) {
       await this.addUserToGroup({groupId: this.groupId, username, membershipType: "MEMBER"});
       await this.fetchUsers({groupId: this.groupId});
+    },
+    hasTenantRole(user, tenantRole) {
+      return user.realm_roles.indexOf(tenantRole.name) >= 0;
     }
   },
   beforeMount() {
