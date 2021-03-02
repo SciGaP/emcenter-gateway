@@ -1,29 +1,10 @@
 <template>
-  <div class="w-100 autocomplete-input">
-    <b-form-input size="sm" v-model="usernameSearch"
-                  @keydown.down="selectedIndex = selectedIndex < users.length - 1 ? selectedIndex + 1 : selectedIndex;"
-                  @keydown.up="selectedIndex = selectedIndex > - 1 ? selectedIndex - 1 : selectedIndex;"
-                  @keydown.enter="selectSearchResult(users[selectedIndex])"
-                  @focusin="visible=true"
-                  @focusout="visible=false; selectedIndex = 0;"
-    ></b-form-input>
-    <div class="autocomplete-results-list"
-         :class="{ hide: !mouseoverAutocomplete && !visible}" v-if="usernameSearch && usernameSearch.length > 0">
-      <div class="autocomplete-results-list-item info" v-if="!users">Searching...</div>
-      <div class="autocomplete-results-list-item info" v-else-if="users.length === 0">Not found</div>
-      <div class="autocomplete-results-list-item" v-else v-for="(user, index) in users" :key="user.userId"
-           :class="{active:selectedIndex == index}"
-           @click="selectSearchResult(users[selectedIndex]);"
-           @mouseover="selectedIndex = index; mouseoverAutocomplete=true;"
-           @mouseleave="mouseoverAutocomplete=false;"
-      >
-        <div class="w-100" style="display: flex;line-height: 40px;">
-          <b-icon icon="person-circle" style="width: 20px; height: 20px;margin: 10px;"></b-icon>
-          <div class="pl-3" style="flex: 1">{{ user.username }}</div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <vue-typeahead-bootstrap
+      v-model="usernameSearch"
+      :data="users"
+      :serializer="user => user.username"
+      @hit="selectSearchResult"
+  />
 </template>
 
 <script>
@@ -36,9 +17,6 @@ export default {
   store: store,
   data() {
     return {
-      mouseoverAutocomplete: false,
-      selectedIndex: 0,
-      visible: false,
       usernameSearch: ""
     }
   },
@@ -48,11 +26,17 @@ export default {
       getUsers: "user/getUsers",
     }),
     users() {
-      return this.getUsers({
+      const _users = this.getUsers({
         limit: 5,
         offset: 0,
         username: this.usernameSearch
       });
+
+      if (_users) {
+        return _users
+      } else {
+        return []
+      }
     }
   },
   watch: {
@@ -74,8 +58,7 @@ export default {
     selectSearchResult(user) {
       this.usernameSearch = user.username;
       this.$emit("change", user);
-      this.mouseoverAutocomplete = false;
-      this.visible = false;
+      this.usernameSearch = ""
     }
   }
 }
