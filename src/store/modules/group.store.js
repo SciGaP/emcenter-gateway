@@ -74,8 +74,8 @@ const actions = {
         await custosService.groups.addUserToGroup({groupId, username, membershipType});
     },
 
-    async removeUserFromGroup(obj, data) {
-        let response = await custosService.groups.removeUserFromGroup(data)
+    async removeUserFromGroup(obj, {groupId, username}) {
+        let response = await custosService.groups.removeUserFromGroup({groupId, username})
         return response.data
     },
 
@@ -89,10 +89,10 @@ const actions = {
     //     return response.data
     // },
     //
-    // async changeGroupMembership(obj, data) {
-    //     let response = await custosService.groups.changeGroupMembership(data)
-    //     return response.data
-    // },
+    async changeGroupMembership(obj, {groupId, username, membershipType}) {
+        let response = await custosService.groups.changeGroupMembership({groupId, username, membershipType})
+        return response.data
+    },
     //
     // async getAllChildUsers(obj, {groupId}) {
     //     let response = await custosService.groups.getAllChildUsers({groupId})

@@ -16,10 +16,10 @@ const actions = {
         const users = await custosService.users.findUsers(params);
 
         const usernames = users.map((
-            {id, username, first_name, last_name, email, realm_roles, client_roles, attributes}
+            {id, username, first_name, last_name, email, realm_roles, client_roles, attributes, membership_type}
         ) => {
             commit("SET_USER", {
-                id, username, first_name, last_name, email, realm_roles, client_roles, attributes
+                id, username, first_name, last_name, email, realm_roles, client_roles, attributes, membership_type
             });
 
             return username;
@@ -31,10 +31,20 @@ const actions = {
 
 
 const mutations = {
-    SET_USER(state, {id, username, first_name, last_name, email, realm_roles, client_roles, attributes}) {
+    SET_USER(state, {id, username, first_name, last_name, email, realm_roles, client_roles, attributes, membership_type}) {
         state.userMap = {
             ...state.userMap,
-            [username]: {id, username, first_name, last_name, email, realm_roles, client_roles, attributes}
+            [username]: {
+                id,
+                username,
+                first_name,
+                last_name,
+                email,
+                realm_roles,
+                client_roles,
+                attributes,
+                membership_type
+            }
         }
     },
     SET_USER_LIST(state, {queryString, usernames}) {

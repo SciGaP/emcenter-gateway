@@ -7,10 +7,11 @@
       <table class="w-100">
         <thead>
         <tr>
-          <th>Username</th>
-          <th v-for="tenantRole in tenantRoles" :key="tenantRole.tenantRoleId" class="text-right">
-            {{ tenantRole.name }}
+          <th style="width: 200px;">Username</th>
+          <th v-for="memberType in memberTypes" :key="memberType" class="text-right" style="width: 100px;">
+            {{ memberType }}
           </th>
+          <th></th>
         </tr>
         </thead>
         <tbody>
@@ -18,13 +19,17 @@
           <td>
             {{ user.username }}
           </td>
-          <td v-for="tenantRole in tenantRoles" :key="tenantRole.tenantRoleId" class="text-right">
+          <td v-for="memberType in memberTypes" :key="memberType" class="text-right">
             <b-form-checkbox
-                :id="`user-${user.username}-tenant_role_${tenantRole.tenantRoleId}`"
-                :name="`user-${user.username}-tenant_role_${tenantRole.tenantRoleId}`"
-                :checked="hasTenantRole(user, tenantRole)"
+                :id="`user-${user.username}-member_type_${memberType}`"
+                :name="`user-${user.username}-member_type_${memberType}`"
+                :checked="hasTenantRole(user, memberType)"
+                v-on:change="changeMembership({username:user.username, membershipType:memberType})"
             >
             </b-form-checkbox>
+          </td>
+          <td class="text-center">
+            <a href="#" v-on:click.prevent="removeUser({username: user.username})">Delete</a>
           </td>
         </tr>
         </tbody>
@@ -49,7 +54,7 @@ export default {
   store: store,
   data() {
     return {
-      memberTypes: ['ADMIN', 'MEMBER'],
+      memberTypes: ['OWNER', 'MEMBER'],
       displayMode: "list",
     }
   },
@@ -103,14 +108,26 @@ export default {
       fetchGroup: "group/fetchGroup",
       fetchUsers: "user/fetchUsers",
       fetchTenantRoles: "tenant/fetchTenantRoles",
-      addUserToGroup: "group/addUserToGroup"
+      addUserToGroup: "group/addUserToGroup",
+      changeGroupMembership: "group/changeGroupMembership",
+      removeUserFromGroup: "group/removeUserFromGroup"
     }),
     async onUserSelect({username}) {
       await this.addUserToGroup({groupId: this.groupId, username, membershipType: "MEMBER"});
       await this.fetchUsers({groupId: this.groupId});
     },
-    hasTenantRole(user, tenantRole) {
-      return user.realm_roles.indexOf(tenantRole.name) >= 0;
+    hasTenantRole(user, membershipType) {
+      console.log("###### " + user.membership_type + " - " + membershipType)
+      return membershipType === "MEMBER" || user.membership_type === membershipType;
+    },
+    async removeUser({username}) {
+      await this.removeUserFromGroup({groupId: this.groupId, username});
+      await this.fetchUsers({groupId: this.groupId});
+    },
+    async changeMembership({username, membershipType}) {
+      console.log("changeMembership ", {username, membershipType})
+      // await this.changeGroupMembership({groupId: this.groupId, username: username, membershipType: membershipType})
+      await this.fetchUsers({groupId: this.groupId});
     }
   },
   beforeMount() {
