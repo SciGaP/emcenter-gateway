@@ -1,7 +1,6 @@
 <template>
-  <div>
-    <b-pagination v-model="currentPage" :total-rows="rows" size="sm"></b-pagination>
-  </div>
+  <b-pagination v-model="currentPage" :total-rows="rows" size="sm"
+                style="margin: 0px;display: inline-flex;"></b-pagination>
 </template>
 
 <script>

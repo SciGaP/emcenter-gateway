@@ -68,7 +68,7 @@
           </b-tbody>
         </b-table-simple>
       </div>
-      <div style="padding: 10px;text-align: right;">
+      <div style="padding: 10px;" class="bg-light text-right">
         <Pagination/>
       </div>
     </b-overlay>
