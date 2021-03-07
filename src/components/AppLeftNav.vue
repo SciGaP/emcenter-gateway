@@ -4,7 +4,7 @@
       <li>
         <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
           <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <b-icon icon="person-fill"></b-icon>
+            <img :src="svgDashboard" style="width: 16px;height: 16px;"/>
             Dashboard
           </a>
         </router-link>
@@ -12,7 +12,7 @@
       <li>
         <router-link to="/collections" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
           <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <b-icon icon="person-fill"></b-icon>
+            <img :src="svgFileRuled" style="width: 16px;height: 16px;"/>
             Collections
           </a>
         </router-link>
@@ -64,7 +64,7 @@
       <li>
         <router-link to="/groups" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
           <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <b-icon icon="people"></b-icon>
+            <img :src="svgPeople" style="width: 16px;height: 16px;"/>
             Groups
           </a>
         </router-link>
@@ -72,7 +72,7 @@
       <li>
         <router-link to="/settings" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
           <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <b-icon icon="people"></b-icon>
+            <img :src="svgGear" style="width: 16px;height: 16px;"/>
             Storage Settings
           </a>
         </router-link>
@@ -94,12 +94,22 @@
 import store from "../store";
 import {mapGetters, mapActions} from "vuex";
 import exampleProfilePicture from "../assets/120493210_1443413932520618_6347067080170311282_n.jpg";
+import svgPeople from "../assets/people.svg";
+import svgDashboard from "../assets/dashboard.svg";
+import svgFileRuled from "../assets/file-ruled.svg";
+import svgGear from "../assets/gear.svg";
 
 export default {
   name: 'AppLeftNav',
   store: store,
   data: () => {
-    return {exampleProfilePicture: exampleProfilePicture}
+    return {
+      svgPeople: svgPeople,
+      svgDashboard: svgDashboard,
+      svgFileRuled: svgFileRuled,
+      svgGear: svgGear,
+      exampleProfilePicture: exampleProfilePicture
+    }
   },
   computed: {
     ...mapGetters({
