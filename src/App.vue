@@ -1,7 +1,10 @@
 <template>
-  <div id="app">
+  <div id="app" class="bg-light">
     <AppHeader/>
-    <router-view/>
+    <div class="vh-100" style="display: flex;">
+      <AppLeftNav style="width: 250px;"/>
+      <router-view style="flex: 1;"/>
+    </div>
     <!--    <div class="h-100 p-3 page-body">-->
 
     <!--      <AppLeftNav/>-->
@@ -23,10 +26,11 @@ import "./styles.scss";
 import AppHeader from "./components/AppHeader";
 // import AppLeftNav from "./components/AppLeftNav";
 import AppFooter from "./components/AppFooter";
+import AppLeftNav from "@/components/AppLeftNav";
 
 export default {
   name: 'App',
-  components: {AppFooter, AppHeader},
+  components: {AppLeftNav, AppFooter, AppHeader},
   store: store,
   data: () => {
     return {exampleProfilePicture: exampleProfilePicture}

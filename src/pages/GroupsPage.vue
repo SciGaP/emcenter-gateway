@@ -1,7 +1,7 @@
 <template>
   <Page title="Groups" :breadcrumb-links="[]">
 
-    <div class="text-right">
+    <div class="text-right w-100">
       <b-button variant="primary" size="sm" v-on:click="openCreateNewGroupModal">Create New PI Group
       </b-button>
 
@@ -23,37 +23,50 @@
       </b-modal>
     </div>
 
-    <b-overlay :show="!groups" rounded="sm">
+    <!--    <b-table-->
+    <!--        id="table-transition-example"-->
+    <!--        :busy.sync="!groups"-->
+    <!--        class="w-100"-->
+    <!--        :items="groups"-->
+    <!--        :fields="['name', 'ownerId', '']"-->
+    <!--        small-->
+    <!--        primary-key="groupId"-->
+    <!--    ></b-table>-->
+
+    <b-overlay :show="!groups" rounded="sm" class="w-100">
       <div class="mt-2">
-        <table class="w-100">
-          <thead>
-          <tr>
-            <th>Group Name</th>
-            <th>Owner</th>
-            <th></th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="group in groups" :key="group.groupId">
-            <td>
-              {{ group.name }}
-            </td>
-            <td>
-              {{ group.ownerId }}
-            </td>
-            <td>
-              <router-link :to="`/groups/${group.groupId}`" v-slot="{ href, route, navigate}">
-                <a :href="href" @click="navigate">
-                  Edit
+
+        <b-table-simple class="w-100">
+          <b-thead class="bg-light">
+            <b-tr>
+              <b-th>Group Name</b-th>
+              <b-th>Owner</b-th>
+              <b-th>Members</b-th>
+              <b-th></b-th>
+            </b-tr>
+          </b-thead>
+          <b-tbody>
+            <b-tr v-for="group in groups" :key="group.groupId">
+              <b-td>
+                {{ group.name }}
+              </b-td>
+              <b-td>
+                {{ group.ownerId }}
+              </b-td>
+              <b-td>5</b-td>
+              <b-td>
+                <router-link :to="`/groups/${group.groupId}`" v-slot="{ href, route, navigate}">
+                  <a :href="href" @click="navigate">
+                    Edit
+                  </a>
+                </router-link>
+                <a href="#" v-on:click.prevent="deleteGroup({groupId:group.groupId})">
+                  Delete
                 </a>
-              </router-link>
-              <a href="#" v-on:click.prevent="deleteGroup({groupId:group.groupId})">
-                Delete
-              </a>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+              </b-td>
+            </b-tr>
+          </b-tbody>
+        </b-table-simple>
       </div>
       <div style="padding: 10px;text-align: right;">
         <Pagination/>

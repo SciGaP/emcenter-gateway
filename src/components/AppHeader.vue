@@ -1,16 +1,18 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" variant="primary" v-if="authenticated">
-    <b-navbar-brand href="#">{{ $t('app.top-header.title') }}</b-navbar-brand>
+  <b-navbar toggleable="lg" type="light" variant="light" class="bg-white" v-if="authenticated">
+    <b-navbar-brand href="#" style="font-size: 1.6rem;color: #9a0002;padding-left: 20px;">
+      {{ $t('app.top-header.title') }}
+    </b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <router-link to="/settings" v-slot="{ href, route, navigate, isActive, isExactActive}">
-          <b-nav-item :active="isExactActive" :href="href" @click="navigate">Settings</b-nav-item>
-        </router-link>
+        <!--        <router-link to="/settings" v-slot="{ href, route, navigate, isActive, isExactActive}">-->
+        <!--          <b-nav-item :active="isExactActive" :href="href" @click="navigate">Settings</b-nav-item>-->
+        <!--        </router-link>-->
 
-        <b-nav-item href="#" disabled>Data</b-nav-item>
+        <!--        <b-nav-item href="#" disabled>Data</b-nav-item>-->
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
@@ -27,10 +29,23 @@
         <!--          <b-dropdown-item href="#">FA</b-dropdown-item>-->
         <!--        </b-nav-item-dropdown>-->
 
-        <b-nav-item-dropdown right>
+        <b-nav-item href="#">
+          <div class="text-center text-dark">
+            <div>
+              <b-icon icon="bell"></b-icon>
+            </div>
+            <div><small>Notifications</small></div>
+          </div>
+        </b-nav-item>
+        <b-nav-item-dropdown right no-caret>
           <!-- Using 'button-content' slot -->
           <template #button-content>
-            <em>{{ currentUsername }}</em>
+            <div class="text-center text-dark">
+              <div>
+                <b-icon icon="person-circle"></b-icon>
+              </div>
+              <div><small>{{ currentUsername }}</small></div>
+            </div>
           </template>
           <b-dropdown-item href="#">Profile</b-dropdown-item>
           <b-dropdown-item href="#" v-on:click.prevent="logout">Sign Out</b-dropdown-item>

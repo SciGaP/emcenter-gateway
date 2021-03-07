@@ -1,26 +1,92 @@
 <template>
-  <div class="p-2 left-menu" v-if="authenticated">
-    <div class="left-menu-navigation">
-      <ul>
-        <li class="pb-3" style="border-bottom: 1px solid #eee;">
-          <router-link to="/data" v-slot="{ href, route, navigate, isActive, isExactActive}">
-            <a :class="{active: isExactActive}" :href="href" @click="navigate">
-              <b-icon icon="person-fill"></b-icon>
-              My Folders / Files
-            </a>
-          </router-link>
-        </li>
-        <li v-for="group in groups" :key="group.groupId">
-          <router-link :to="`/data?groupId=${group.groupId}`"
-                       v-slot="{ href, route, navigate, isActive, isExactActive}">
-            <a :class="{active: isExactActive}" :href="href" @click="navigate">
-              <b-icon icon="people-fill"></b-icon>
-              {{ group.name }}
-            </a>
-          </router-link>
-        </li>
-      </ul>
-    </div>
+  <div v-if="authenticated" class="p-3">
+    <ul>
+      <li>
+        <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+          <a :class="{active: isExactActive}" :href="href" @click="navigate">
+            <b-icon icon="person-fill"></b-icon>
+            Dashboard
+          </a>
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/collections" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+          <a :class="{active: isExactActive}" :href="href" @click="navigate">
+            <b-icon icon="person-fill"></b-icon>
+            Collections
+          </a>
+        </router-link>
+        <ul>
+          <li>
+            <router-link to="/collections/recent" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+              <a :class="{active: isExactActive}" :href="href" @click="navigate">
+                Recent
+              </a>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/collections/downloaded" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+              <a :class="{active: isExactActive}" :href="href" @click="navigate">
+                Downloaded
+              </a>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/collections/shared" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+              <a :class="{active: isExactActive}" :href="href" @click="navigate">
+                Shared
+              </a>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/collections/received" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+              <a :class="{active: isExactActive}" :href="href" @click="navigate">
+                Received
+              </a>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/collections/uploaded" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+              <a :class="{active: isExactActive}" :href="href" @click="navigate">
+                Uploaded
+              </a>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/collections/deleted" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+              <a :class="{active: isExactActive}" :href="href" @click="navigate">
+                Deleted
+              </a>
+            </router-link>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <router-link to="/groups" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+          <a :class="{active: isExactActive}" :href="href" @click="navigate">
+            <b-icon icon="people"></b-icon>
+            Groups
+          </a>
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/settings" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+          <a :class="{active: isExactActive}" :href="href" @click="navigate">
+            <b-icon icon="people"></b-icon>
+            Storage Settings
+          </a>
+        </router-link>
+      </li>
+      <!--    <li v-for="group in groups" :key="group.groupId">-->
+      <!--      <router-link :to="`/data?groupId=${group.groupId}`" v-slot="{ href, route, navigate, isActive, isExactActive}"-->
+      <!--                   tag="">-->
+      <!--        <a :class="{active: isExactActive}" :href="href" @click="navigate">-->
+      <!--          <b-icon icon="people-fill"></b-icon>-->
+      <!--          {{ group.name }}-->
+      <!--        </a>-->
+      <!--      </router-link>-->
+      <!--    </li>-->
+    </ul>
   </div>
 </template>
 
@@ -94,55 +160,37 @@ export default {
 }
 </script>
 
-<style>
-.left-menu {
-  width: 250px;
-  background-color: white;
-  border-radius: 10px;
-}
-
-.left-menu-navigation {
-
-}
-
-.left-menu-profile {
-  text-align: center;
-  color: #707070;
-}
-
-.left-menu-profile .left-menu-profile-name {
-  font-weight: 600;
-  font-size: 21px;
-}
-
-.left-menu-profile .left-menu-profile-role {
-  font-size: 13px;
-}
-
-.left-menu-navigation ul {
+<style scoped>
+ul {
   list-style: none;
-  margin: 0px;
   padding: 0px;
 }
 
-.left-menu-navigation ul li a {
-  color: #707070;
+ul li ul {
+  padding-left: 40px;
+}
+
+ul li a {
+  text-align: left;
+  letter-spacing: 0px;
+  color: #4A3C31;
+  padding: 10px 15px;
+  margin-bottom: 2px;
   display: block;
-  padding: 6px 23px;
+  font-size: 1rem;
 }
 
-.left-menu-navigation ul li a.active {
-  background-color: #fdf3f6;
-  color: #c64f59;
-  border-radius: 18px;
-}
 
-.left-menu-navigation ul li a:hover {
-  color: #c64f59;
+ul li a:hover {
+  color: #196fa0;
   text-decoration: none;
 }
 
-.left-menu-navigation ul li a svg {
-  margin-right: 10px;
+ul li a.active {
+  color: #196fa0;
+  background: #0062981A 0% 0% no-repeat padding-box;
+  border-radius: 30px;
+  opacity: 1;
+  text-decoration: none;
 }
 </style>
