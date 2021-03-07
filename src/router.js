@@ -52,7 +52,7 @@ export default new Router({
                 import("./pages/SettingsPage")
         },
         {
-            path: "/data",
+            path: "/collections",
             name: "data",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>

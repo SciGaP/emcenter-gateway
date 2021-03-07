@@ -1,44 +1,44 @@
 <template>
   <Page :title="title" :breadcrumb-links="breadcrumbLinks">
-    <div class="w-100">
-      <div class="w-100">
-        <label for="demo-1">Search</label>
-        <input type="text" id="demo-1" aria-describedby="demo-1-note">
-        <small>
-          <a href="#" data-modal-trigger="modal-1">Advanced search</a>
-        </small>
-      </div>
+    <!--    <div class="w-100">-->
+    <!--      &lt;!&ndash;      <div class="w-100">&ndash;&gt;-->
+    <!--      &lt;!&ndash;        <label for="demo-1">Search</label>&ndash;&gt;-->
+    <!--      &lt;!&ndash;        <input type="text" id="demo-1" aria-describedby="demo-1-note">&ndash;&gt;-->
+    <!--      &lt;!&ndash;        <small>&ndash;&gt;-->
+    <!--      &lt;!&ndash;          <a href="#" data-modal-trigger="modal-1">Advanced search</a>&ndash;&gt;-->
+    <!--      &lt;!&ndash;        </small>&ndash;&gt;-->
+    <!--      &lt;!&ndash;      </div>&ndash;&gt;-->
 
-      <!--      <b-input-group size="sm">-->
-      <!--        <b-form-input placeholder="Search" size="sm"></b-form-input>-->
-      <!--        <b-input-group-append>-->
-      <!--          <b-button v-b-modal.modal-1>-->
-      <!--            <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon>-->
-      <!--          </b-button>-->
-      <!--        </b-input-group-append>-->
-      <!--      </b-input-group>-->
+    <!--      <b-input-group size="sm">-->
+    <!--        <b-form-input placeholder="Search" size="sm"></b-form-input>-->
+    <!--        <b-input-group-append>-->
+    <!--          <b-button v-b-modal.modal-1>-->
+    <!--            <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon>-->
+    <!--          </b-button>-->
+    <!--        </b-input-group-append>-->
+    <!--      </b-input-group>-->
 
-      <b-modal id="modal-1" title="Search / Filter">
-        <p class="my-4">Advanced searching/ filtering criteria. </p>
-        <div>
-          <strong>Microscope</strong>
-          <ul style="list-style: none; padding: 0px;">
-            <li v-for="microscope in ['IU Cardiac-MS1', 'IU-med-MS1', 'IU-med-MS2']" :key="microscope">
-              <b-form-checkbox
-                  :id="`checkbox-group-user-${microscope}`"
-                  :name="`checkbox-group-user-${microscope}`"
-                  :checked="true"
-              >
-                {{ microscope }}
-              </b-form-checkbox>
-            </li>
-          </ul>
-        </div>
-        <template slot="modal-footer">
-          <b-button>Search</b-button>
-        </template>
-      </b-modal>
-    </div>
+    <!--      <b-modal id="modal-1" title="Search / Filter">-->
+    <!--        <p class="my-4">Advanced searching/ filtering criteria. </p>-->
+    <!--        <div>-->
+    <!--          <strong>Microscope</strong>-->
+    <!--          <ul style="list-style: none; padding: 0px;">-->
+    <!--            <li v-for="microscope in ['IU Cardiac-MS1', 'IU-med-MS1', 'IU-med-MS2']" :key="microscope">-->
+    <!--              <b-form-checkbox-->
+    <!--                  :id="`checkbox-group-user-${microscope}`"-->
+    <!--                  :name="`checkbox-group-user-${microscope}`"-->
+    <!--                  :checked="true"-->
+    <!--              >-->
+    <!--                {{ microscope }}-->
+    <!--              </b-form-checkbox>-->
+    <!--            </li>-->
+    <!--          </ul>-->
+    <!--        </div>-->
+    <!--        <template slot="modal-footer">-->
+    <!--          <b-button>Search</b-button>-->
+    <!--        </template>-->
+    <!--      </b-modal>-->
+    <!--    </div>-->
 
     <div class="w-100">
 
@@ -58,24 +58,24 @@
           </span>
         </div>
         <div class="text-right">
-          <button type="button" v-if="hasAnythingSelected()">
+          <b-button size="sm" variant="link" v-if="hasAnythingSelected()">
             Download
-          </button>
-          <button type="button" data-modal-trigger="modal-share"
-                  v-if="hasAnythingSelected()">
+          </b-button>
+          <b-button size="sm" variant="link" data-modal-trigger="modal-share"
+                    v-if="hasAnythingSelected()">
             Share
-          </button>
-          <button type="button" v-if="hasAnythingSelected()">
+          </b-button>
+          <b-button size="sm" variant="link" v-if="hasAnythingSelected()">
             History
-          </button>
-          <button type="button" :class="{'': displayMode !== 'list'}"
-                  v-on:click="switchDisplayMode('list')">
+          </b-button>
+          <b-button size="sm" :variant="displayMode !== 'list'? 'outline-primary': 'primary'"
+                    v-on:click="switchDisplayMode('list')">
             <b-icon icon="list" aria-hidden="true"></b-icon>
-          </button>
-          <button type="button" class="ml-2" :class="{'': displayMode !== 'grid'}"
-                  v-on:click="switchDisplayMode('grid')">
+          </b-button>
+          <b-button size="sm" :variant="displayMode !== 'grid'? 'outline-primary': 'primary'" class="ml-2"
+                    v-on:click="switchDisplayMode('grid')">
             <b-icon icon="grid" aria-hidden="true"></b-icon>
-          </button>
+          </b-button>
         </div>
       </div>
 
@@ -85,7 +85,7 @@
       <div class="w-100" style="display: flex;flex-direction: row;">
         <div v-if="displayMode === 'grid'">
           <input type="checkbox" name="all-grid" id="all-grid" :checked="isAllSelected()"
-                 v-on:click="toggleAllSelection()"/>
+                 v-on:click="toggleAllSelection()" style="margin: 3px 10px;"/>
           <label for="all-grid">Select All</label>
         </div>
         <!--        <div>-->
@@ -105,12 +105,13 @@
       </div>
 
       <div class="w-100" v-if="files && folders">
+
         <b-row v-if="displayMode === 'grid'">
           <b-col style="min-width: 300px;max-width: 300px;padding: 5px;" v-for="folder in folders"
                  :key="folder.folderId">
             <div class="w-100" style="border-radius: 10px;border: 1px solid #aaa;padding: 10px; display: flex;"
                  :class="{selected: isFolderSelected(folder)}">
-              <div>
+              <div style="margin: 3px 10px;">
                 <input type="checkbox" :checked="isFolderSelected(folder)" v-on:click="toggleFolderSelection(folder)"
                        :name="getFolderSelectionCheckboxId(folder)" :id="getFolderSelectionCheckboxId(folder)"/>
                 <label :for="getFolderSelectionCheckboxId(folder)" style="margin: 0px !important;"></label>
@@ -118,21 +119,21 @@
               <div style="flex: 1;">
                 <router-link :to="getFolderLink(folder)" v-slot="{ href, route, navigate}">
                   <b-icon icon="folder-fill" aria-hidden="true"></b-icon>
-                  <button :for="getFolderSelectionCheckboxId(folder)" @click="navigate">
+                  <b-button size="sm" variant="link" :for="getFolderSelectionCheckboxId(folder)" @click="navigate">
                     {{ folder.name }}
-                  </button>
+                  </b-button>
                 </router-link>
               </div>
               <div>
-                <button data-modal-trigger="modal-share">
+                <b-button size="sm" variant="link" data-modal-trigger="modal-share">
                   <b-icon icon="share-fill"></b-icon>
-                </button>
-                <button>
+                </b-button>
+                <b-button size="sm" variant="link">
                   <b-icon icon="pencil"></b-icon>
-                </button>
-                <button>
+                </b-button>
+                <b-button size="sm" variant="link">
                   <b-icon icon="download"></b-icon>
-                </button>
+                </b-button>
               </div>
             </div>
           </b-col>
@@ -155,15 +156,15 @@
                   </button>
                 </div>
                 <div>
-                  <button data-modal-trigger="modal-share">
+                  <b-button size="sm" variant="link" data-modal-trigger="modal-share">
                     <b-icon icon="share-fill"></b-icon>
-                  </button>
-                  <button>
+                  </b-button>
+                  <b-button size="sm" variant="link">
                     <b-icon icon="pencil"></b-icon>
-                  </button>
-                  <button>
+                  </b-button>
+                  <b-button size="sm" variant="link">
                     <b-icon icon="download"></b-icon>
-                  </button>
+                  </b-button>
                 </div>
               </div>
               <div class="w-100 text-center"
@@ -181,98 +182,121 @@
 
         <div v-if="displayMode === 'list'" class="w-100">
           <div class="w-100">
-            <table class="w-100">
-              <thead>
-              <tr>
-                <td>
-                  <input type="checkbox" name="all" id="all" :checked="isAllSelected()"
-                         v-on:click="toggleAllSelection()"/>
-                  <label for="all"></label>
-                </td>
-                <th>Name</th>
-                <th>Created By</th>
-                <th>Last Updated</th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="folder in folders" :key="folder.folderId" :class="{selected: isFolderSelected(folder)}">
-                <td>
-                  <input type="checkbox" :checked="isFolderSelected(folder)" v-on:click="toggleFolderSelection(folder)"
-                         :name="getFolderSelectionCheckboxId(folder)"
-                         :id="getFolderSelectionCheckboxId(folder)"/>
-                  <label :for="getFolderSelectionCheckboxId(folder)"></label>
-                </td>
-                <td>
-                  <router-link :to="getFolderLink(folder)" v-slot="{ href, route, navigate, isActive,isExactActive }">
-                    <b-icon v-if="folder.own === false" style="height: 100%;" icon="people-fill"
-                            aria-hidden="true"></b-icon>
-                    <b-icon style="height: 100%;" icon="folder-fill" aria-hidden="true"></b-icon>
+            <b-table-simple class="w-100">
+              <b-thead>
+                <b-tr>
+                  <b-th>Collection</b-th>
+                  <b-th>Size</b-th>
+                  <b-th>Owner</b-th>
+                  <b-th>Last Updated</b-th>
+                  <b-th></b-th>
+                  <b-td>
+                    <input type="checkbox" name="all" id="all" :checked="isAllSelected()"
+                           v-on:click="toggleAllSelection()"/>
+                    <label for="all"></label>
+                  </b-td>
+                </b-tr>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="folder in folders" :key="folder.folderId" :class="{selected: isFolderSelected(folder)}">
+                  <b-td>
+                    <router-link :to="getFolderLink(folder)" v-slot="{ href, route, navigate, isActive,isExactActive }">
+                      <b-icon v-if="folder.own === false" style="height: 100%;" icon="people-fill"
+                              aria-hidden="true"></b-icon>
+                      <b-icon style="height: 100%;" icon="folder-fill" aria-hidden="true"></b-icon>
 
-                    <a :class="{active: isExactActive}" :href="href" @click="navigate"
-                       style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;">
-                      {{ folder.name }}
+                      <a :class="{active: isExactActive}" :href="href" @click="navigate"
+                         style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;">
+                        {{ folder.name }}
+                      </a>
+                    </router-link>
+                  </b-td>
+                  <b-td>2MB</b-td>
+                  <b-td>{{ folder.createdBy }}</b-td>
+                  <b-td>Dec 23d, 2020, Thomas</b-td>
+                  <b-td>
+                    <b-dropdown id="dropdown-1" text="Actions" right variant="outline-primary" size="sm">
+                      <b-dropdown-item>Download</b-dropdown-item>
+                      <b-dropdown-item>Share</b-dropdown-item>
+                      <b-dropdown-item>History</b-dropdown-item>
+                    </b-dropdown>
+                    <!--                    <div style="display: flex;">-->
+                    <!--                      <div style="flex: 1;">-->
+                    <!--                        <b-button size="sm" variant="link" data-modal-trigger="modal-share">-->
+                    <!--                          <b-icon icon="share-fill"></b-icon>-->
+                    <!--                        </b-button>-->
+                    <!--                        <b-button size="sm" variant="link">-->
+                    <!--                          <b-icon icon="download"></b-icon>-->
+                    <!--                        </b-button>-->
+                    <!--                        <b-button size="sm" variant="link">-->
+                    <!--                          <b-icon icon="info-circle-fill"></b-icon>-->
+                    <!--                        </b-button>-->
+                    <!--                        <b-button size="sm" variant="link">-->
+                    <!--                          <b-icon icon="three-dots-vertical"></b-icon>-->
+                    <!--                        </b-button>-->
+                    <!--                      </div>-->
+                    <!--                    </div>-->
+                  </b-td>
+                  <b-td>
+                    <input type="checkbox" :checked="isFolderSelected(folder)"
+                           v-on:click="toggleFolderSelection(folder)"
+                           :name="getFolderSelectionCheckboxId(folder)"
+                           :id="getFolderSelectionCheckboxId(folder)"/>
+                    <label :for="getFolderSelectionCheckboxId(folder)"></label>
+                  </b-td>
+                </b-tr>
+
+                <b-tr v-if="folders.length > 0" class="w-100 pt-5"></b-tr>
+
+                <b-tr v-for="file in files" :key="file.fileId" :class="{selected: isFileSelected(file)}">
+
+                  <b-td>
+                    <b-icon style="height: 100%;" icon="card-image" aria-hidden="true"></b-icon>
+                    <a href="#" style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;">
+                      {{ file.name }}
                     </a>
-                  </router-link>
-                </td>
-                <td>{{ folder.createdBy }}</td>
-                <td>Dec 23d, 2020, Thomas</td>
-                <td>
-                  <div style="display: flex;">
-                    <div style="flex: 1;">
-                      <button data-modal-trigger="modal-share">
-                        <b-icon icon="share-fill"></b-icon>
-                      </button>
-                      <button>
-                        <b-icon icon="download"></b-icon>
-                      </button>
-                      <button>
-                        <b-icon icon="info-circle-fill"></b-icon>
-                      </button>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-
-              <tr v-if="folders.length > 0" class="w-100 pt-5"></tr>
-
-              <tr v-for="file in files" :key="file.fileId" :class="{selected: isFileSelected(file)}">
-                <td>
-                  <input type="checkbox" :checked="isFileSelected(file)" v-on:click="toggleFileSelection(file)"
-                         :name="getFileSelectionCheckboxId(file)" :id="getFileSelectionCheckboxId(file)"/>
-                  <label :for="getFileSelectionCheckboxId(file)"></label>
-                </td>
-                <td>
-                  <b-icon style="height: 100%;" icon="card-image" aria-hidden="true"></b-icon>
-                  <a href="#" style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;">
-                    {{ file.name }}
-                  </a>
-                </td>
-                <td>{{ file.createdBy }}</td>
-                <td>Dec 23d, 2020, Thomas</td>
-                <td>
-                  <div style="display: flex;">
-                    <div style="flex: 1;">
-                      <button data-modal-trigger="modal-share">
-                        <b-icon icon="share-fill"></b-icon>
-                      </button>
-                      <button>
-                        <b-icon icon="pencil"></b-icon>
-                      </button>
-                      <button>
-                        <b-icon icon="download"></b-icon>
-                      </button>
-                      <button>
-                        <b-icon icon="info-circle-fill"></b-icon>
-                      </button>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              </tbody>
-            </table>
+                  </b-td>
+                  <b-td>1MB</b-td>
+                  <b-td>{{ file.createdBy }}</b-td>
+                  <b-td>Dec 23d, 2020, Thomas</b-td>
+                  <b-td>
+                    <b-dropdown id="dropdown-1" text="Actions" right variant="outline-primary" size="sm">
+                      <b-dropdown-item>Download</b-dropdown-item>
+                      <b-dropdown-item>Share</b-dropdown-item>
+                      <b-dropdown-item>History</b-dropdown-item>
+                    </b-dropdown>
+                    <!--                    <div style="display: flex;">-->
+                    <!--                      <div style="flex: 1;">-->
+                    <!--                        <b-button size="sm" variant="link" data-modal-trigger="modal-share">-->
+                    <!--                          <b-icon icon="share-fill"></b-icon>-->
+                    <!--                        </b-button>-->
+                    <!--                        <b-button size="sm" variant="link">-->
+                    <!--                          <b-icon icon="pencil"></b-icon>-->
+                    <!--                        </b-button>-->
+                    <!--                        <b-button size="sm" variant="link">-->
+                    <!--                          <b-icon icon="download"></b-icon>-->
+                    <!--                        </b-button>-->
+                    <!--                        <b-button size="sm" variant="link">-->
+                    <!--                          <b-icon icon="info-circle-fill"></b-icon>-->
+                    <!--                        </b-button>-->
+                    <!--                      </div>-->
+                    <!--                    </div>-->
+                  </b-td>
+                  <b-td>
+                    <input type="checkbox" :checked="isFileSelected(file)" v-on:click="toggleFileSelection(file)"
+                           :name="getFileSelectionCheckboxId(file)" :id="getFileSelectionCheckboxId(file)"/>
+                    <label :for="getFileSelectionCheckboxId(file)"></label>
+                  </b-td>
+                </b-tr>
+              </b-tbody>
+            </b-table-simple>
           </div>
         </div>
+
+        <div style="padding: 10px;" class="bg-light text-right">
+          <Pagination/>
+        </div>
+
       </div>
     </div>
 
@@ -284,10 +308,11 @@
 import {mapGetters, mapActions} from "vuex";
 import store from "../store";
 import Page from "../components/Page";
+import Pagination from "@/components/Pagination";
 
 export default {
   name: "GroupDataPage",
-  components: {Page},
+  components: {Pagination, Page},
   store: store,
   data() {
     return {
@@ -310,11 +335,11 @@ export default {
       if (this.group) {
         return this.group.name;
       } else {
-        return "My Folders & Files"
+        return "Collections"
       }
     },
     breadcrumbLinks() {
-      let _breadcrumbLinks = [{to: '/data', name: 'Datasets'}]
+      let _breadcrumbLinks = [{to: '/collections', name: 'Collections'}]
 
       if (this.group && this.group.name) {
         _breadcrumbLinks.push({to: this.groupLink, name: this.group.name});
@@ -438,7 +463,7 @@ export default {
       this.selectedFolderIdMap = {};
     },
     getDataLink({groupId} = {}, {folderId} = {}) {
-      let _dataLink = "/data?";
+      let _dataLink = "/collections?";
 
       if (groupId) {
         _dataLink += `groupId=${groupId}&`

@@ -1,5 +1,5 @@
 <template>
-  <div class="pl-2 pr-2 vh-100">
+  <div class="pl-2 pr-2 v-100">
     <div class="mb-3 w-100">
       <div class="w-100" style="min-height: 25px;">
         <Breadcrumb v-if="breadcrumbLinks && breadcrumbLinks.length > 0" class="mb-2 mt-2" :links="breadcrumbLinks"/>

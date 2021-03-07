@@ -1,5 +1,5 @@
 <template>
-  <footer style="padding: 5px; text-align: center">
+  <footer style="padding: 5px; text-align: center;margin-top: 30px;">
     <div style="flex: 1;"></div>
     <a href="https://accessibility.iu.edu/assistance/">Accessibility</a> |
     <a href="#0">Privacy Notice</a> |
