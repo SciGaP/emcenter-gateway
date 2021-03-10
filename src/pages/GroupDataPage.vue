@@ -58,16 +58,108 @@
           </span>
         </div>
         <div class="text-right">
-          <b-button size="sm" variant="link" v-if="hasAnythingSelected()">
+          <b-button variant="link" v-b-modal.modal-selected-collections-download v-if="hasAnythingSelected()">
             Download
           </b-button>
-          <b-button size="sm" variant="link" data-modal-trigger="modal-share"
-                    v-if="hasAnythingSelected()">
+          <!--          <b-modal id="modal-selected-collections-download" title="Download">-->
+          <!--            <p class="my-4">Preparing to download...... </p>-->
+          <!--          </b-modal>-->
+
+          <b-button variant="link" v-b-modal.modal-selected-collections-share v-if="hasAnythingSelected()">
             Share
           </b-button>
-          <b-button size="sm" variant="link" v-if="hasAnythingSelected()">
+          <!--          <b-modal id="modal-selected-collections-share" title="Share">-->
+          <!--            <b-table-simple small>-->
+          <!--              <b-thead>-->
+          <!--                <b-tr>-->
+          <!--                  <b-th>User</b-th>-->
+          <!--                  <b-th>Read</b-th>-->
+          <!--                  <b-th>Write</b-th>-->
+          <!--                  <b-th>Share</b-th>-->
+          <!--                </b-tr>-->
+          <!--              </b-thead>-->
+          <!--              <b-tbody>-->
+          <!--                <b-tr>-->
+          <!--                  <b-td>Dinuka</b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox :checked="true" :disabled="true"/>-->
+          <!--                  </b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox/>-->
+          <!--                  </b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox/>-->
+          <!--                  </b-td>-->
+          <!--                </b-tr>-->
+          <!--                <tr>-->
+          <!--                  <b-td>Tanya</b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox :checked="true" :disabled="true"/>-->
+          <!--                  </b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox/>-->
+          <!--                  </b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox/>-->
+          <!--                  </b-td>-->
+          <!--                </tr>-->
+          <!--                <b-tr>-->
+          <!--                  <b-td>Thomas</b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox :checked="true" :disabled="true"/>-->
+          <!--                  </b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox/>-->
+          <!--                  </b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox/>-->
+          <!--                  </b-td>-->
+          <!--                </b-tr>-->
+          <!--                <b-tr>-->
+          <!--                  <b-td>-->
+          <!--                    <UserSearchAndSelect v-on:change="(u) => u"/>-->
+          <!--                  </b-td>-->
+          <!--                </b-tr>-->
+          <!--              </b-tbody>-->
+          <!--            </b-table-simple>-->
+          <!--          </b-modal>-->
+
+          <b-button variant="link" v-b-modal.modal-selected-collections-history v-if="hasAnythingSelected()">
             History
           </b-button>
+          <!--          <b-modal id="modal-selected-collections-history" title="History">-->
+          <!--            <b-table-simple small>-->
+          <!--              <b-thead>-->
+          <!--                <b-tr>-->
+          <!--                  <b-th>User</b-th>-->
+          <!--                  <b-th>Date & Time</b-th>-->
+          <!--                </b-tr>-->
+          <!--              </b-thead>-->
+          <!--              <b-tbody>-->
+          <!--                <tr>-->
+          <!--                  <b-td>Dinuka</b-td>-->
+          <!--                  <b-td>03/05/2021 11.33am</b-td>-->
+          <!--                </tr>-->
+          <!--                <tr>-->
+          <!--                  <b-td>Dinuka</b-td>-->
+          <!--                  <b-td>03/05/2021 11.46am</b-td>-->
+          <!--                </tr>-->
+          <!--                <tr>-->
+          <!--                  <b-td>Thomas</b-td>-->
+          <!--                  <b-td>03/06/2021 01.12pm</b-td>-->
+          <!--                </tr>-->
+          <!--                <tr>-->
+          <!--                  <b-td>Sarah</b-td>-->
+          <!--                  <b-td>03/06/2021 05.22pm</b-td>-->
+          <!--                </tr>-->
+          <!--                <tr>-->
+          <!--                  <b-td>Sarah</b-td>-->
+          <!--                  <b-td>03/06/2021 05.37am</b-td>-->
+          <!--                </tr>-->
+          <!--              </b-tbody>-->
+          <!--            </b-table-simple>-->
+          <!--          </b-modal>-->
+
           <b-button size="sm" :variant="displayMode !== 'list'? 'outline-primary': 'primary'"
                     v-on:click="switchDisplayMode('list')">
             <b-icon icon="list" aria-hidden="true"></b-icon>
@@ -150,10 +242,10 @@
                          style="margin: 0px !important;"></label>
                 </div>
                 <div style="flex: 1;">
-                  <button :for="getFileSelectionCheckboxId(file)"
+                  <b-button variant="link" :for="getFileSelectionCheckboxId(file)"
                   >
                     {{ file.name }}
-                  </button>
+                  </b-button>
                 </div>
                 <div>
                   <b-button size="sm" variant="link" data-modal-trigger="modal-share">
@@ -189,7 +281,109 @@
                   <b-th>Size</b-th>
                   <b-th>Owner</b-th>
                   <b-th>Last Updated</b-th>
-                  <b-th></b-th>
+                  <b-th>
+                    <b-dropdown v-if="hasAnythingSelected()" id="dropdown-1" text="Actions" right variant="outline-primary" size="sm">
+
+                      <b-dropdown-item v-b-modal="`modal-selected-collections-download`">Download
+                      </b-dropdown-item>
+                      <b-modal :id="`modal-selected-collections-download`" title="Download">
+                        <p class="my-4">Preparing to download...... </p>
+                      </b-modal>
+
+                      <b-dropdown-item v-b-modal="`modal-selected-collections-share`">Share</b-dropdown-item>
+                      <b-modal :id="`modal-selected-collections-share`" title="Share">
+                        <b-table-simple small>
+                          <b-thead>
+                            <b-tr>
+                              <b-th>User</b-th>
+                              <b-th>Read</b-th>
+                              <b-th>Write</b-th>
+                              <b-th>Share</b-th>
+                            </b-tr>
+                          </b-thead>
+                          <b-tbody>
+                            <b-tr>
+                              <b-td>Dinuka</b-td>
+                              <b-td>
+                                <b-checkbox :checked="true" :disabled="true"/>
+                              </b-td>
+                              <b-td>
+                                <b-checkbox/>
+                              </b-td>
+                              <b-td>
+                                <b-checkbox/>
+                              </b-td>
+                            </b-tr>
+                            <tr>
+                              <b-td>Tanya</b-td>
+                              <b-td>
+                                <b-checkbox :checked="true" :disabled="true"/>
+                              </b-td>
+                              <b-td>
+                                <b-checkbox/>
+                              </b-td>
+                              <b-td>
+                                <b-checkbox/>
+                              </b-td>
+                            </tr>
+                            <b-tr>
+                              <b-td>Thomas</b-td>
+                              <b-td>
+                                <b-checkbox :checked="true" :disabled="true"/>
+                              </b-td>
+                              <b-td>
+                                <b-checkbox/>
+                              </b-td>
+                              <b-td>
+                                <b-checkbox/>
+                              </b-td>
+                            </b-tr>
+                            <b-tr>
+                              <b-td>
+                                <UserSearchAndSelect v-on:change="(u) => u"/>
+                              </b-td>
+                            </b-tr>
+                          </b-tbody>
+                        </b-table-simple>
+                      </b-modal>
+
+                      <b-dropdown-item v-b-modal="`modal-selected-collections-history`">History
+                      </b-dropdown-item>
+                      <b-modal :id="`modal-selected-collections-history`" title="History">
+                        <b-table-simple small>
+                          <b-thead>
+                            <b-tr>
+                              <b-th>User</b-th>
+                              <b-th>Date & Time</b-th>
+                            </b-tr>
+                          </b-thead>
+                          <b-tbody>
+                            <tr>
+                              <b-td>Dinuka</b-td>
+                              <b-td>03/05/2021 11.33am</b-td>
+                            </tr>
+                            <tr>
+                              <b-td>Dinuka</b-td>
+                              <b-td>03/05/2021 11.46am</b-td>
+                            </tr>
+                            <tr>
+                              <b-td>Thomas</b-td>
+                              <b-td>03/06/2021 01.12pm</b-td>
+                            </tr>
+                            <tr>
+                              <b-td>Sarah</b-td>
+                              <b-td>03/06/2021 05.22pm</b-td>
+                            </tr>
+                            <tr>
+                              <b-td>Sarah</b-td>
+                              <b-td>03/06/2021 05.37am</b-td>
+                            </tr>
+                          </b-tbody>
+                        </b-table-simple>
+                      </b-modal>
+
+                    </b-dropdown>
+                  </b-th>
                   <b-td>
                     <input type="checkbox" name="all" id="all" :checked="isAllSelected()"
                            v-on:click="toggleAllSelection()"/>
@@ -211,14 +405,110 @@
                       </a>
                     </router-link>
                   </b-td>
-                  <b-td>2MB</b-td>
+                  <b-td>16MB</b-td>
                   <b-td>{{ folder.createdBy }}</b-td>
                   <b-td>Dec 23d, 2020, Thomas</b-td>
                   <b-td>
                     <b-dropdown id="dropdown-1" text="Actions" right variant="outline-primary" size="sm">
-                      <b-dropdown-item>Download</b-dropdown-item>
-                      <b-dropdown-item>Share</b-dropdown-item>
-                      <b-dropdown-item>History</b-dropdown-item>
+
+                      <b-dropdown-item v-b-modal="`modal-collection-download-${folder.folderId}`">Download
+                      </b-dropdown-item>
+                      <b-modal :id="`modal-collection-download-${folder.folderId}`" title="Download">
+                        <p class="my-4">Preparing to download...... </p>
+                      </b-modal>
+
+                      <b-dropdown-item v-b-modal="`modal-collection-share-${folder.folderId}`">Share</b-dropdown-item>
+                      <b-modal :id="`modal-collection-share-${folder.folderId}`" title="Share">
+                        <b-table-simple small>
+                          <b-thead>
+                            <b-tr>
+                              <b-th>User</b-th>
+                              <b-th>Read</b-th>
+                              <b-th>Write</b-th>
+                              <b-th>Share</b-th>
+                            </b-tr>
+                          </b-thead>
+                          <b-tbody>
+                            <b-tr>
+                              <b-td>Dinuka</b-td>
+                              <b-td>
+                                <b-checkbox :checked="true" :disabled="true"/>
+                              </b-td>
+                              <b-td>
+                                <b-checkbox/>
+                              </b-td>
+                              <b-td>
+                                <b-checkbox/>
+                              </b-td>
+                            </b-tr>
+                            <tr>
+                              <b-td>Tanya</b-td>
+                              <b-td>
+                                <b-checkbox :checked="true" :disabled="true"/>
+                              </b-td>
+                              <b-td>
+                                <b-checkbox/>
+                              </b-td>
+                              <b-td>
+                                <b-checkbox/>
+                              </b-td>
+                            </tr>
+                            <b-tr>
+                              <b-td>Thomas</b-td>
+                              <b-td>
+                                <b-checkbox :checked="true" :disabled="true"/>
+                              </b-td>
+                              <b-td>
+                                <b-checkbox/>
+                              </b-td>
+                              <b-td>
+                                <b-checkbox/>
+                              </b-td>
+                            </b-tr>
+                            <b-tr>
+                              <b-td>
+                                <UserSearchAndSelect v-on:change="(u) => u"/>
+                              </b-td>
+                            </b-tr>
+                          </b-tbody>
+                        </b-table-simple>
+                      </b-modal>
+
+                      <b-dropdown-item v-b-modal="`modal-collection-history-${folder.folderId}`">History
+                      </b-dropdown-item>
+                      <b-modal :id="`modal-collection-history-${folder.folderId}`" title="History">
+                        <b-table-simple small>
+                          <b-thead>
+                            <b-tr>
+                              <b-th>User</b-th>
+                              <b-th>Date & Time</b-th>
+                            </b-tr>
+                          </b-thead>
+                          <b-tbody>
+                            <tr>
+                              <b-td>Dinuka</b-td>
+                              <b-td>03/05/2021 11.33am</b-td>
+                            </tr>
+                            <tr>
+                              <b-td>Dinuka</b-td>
+                              <b-td>03/05/2021 11.46am</b-td>
+                            </tr>
+                            <tr>
+                              <b-td>Thomas</b-td>
+                              <b-td>03/06/2021 01.12pm</b-td>
+                            </tr>
+                            <tr>
+                              <b-td>Sarah</b-td>
+                              <b-td>03/06/2021 05.22pm</b-td>
+                            </tr>
+                            <tr>
+                              <b-td>Sarah</b-td>
+                              <b-td>03/06/2021 05.37am</b-td>
+                            </tr>
+                          </b-tbody>
+                        </b-table-simple>
+                      </b-modal>
+
                     </b-dropdown>
                     <!--                    <div style="display: flex;">-->
                     <!--                      <div style="flex: 1;">-->
@@ -309,10 +599,11 @@ import {mapGetters, mapActions} from "vuex";
 import store from "../store";
 import Page from "../components/Page";
 import Pagination from "@/components/Pagination";
+import UserSearchAndSelect from "@/components/UserSearchAndSelect";
 
 export default {
   name: "GroupDataPage",
-  components: {Pagination, Page},
+  components: {UserSearchAndSelect, Pagination, Page},
   store: store,
   data() {
     return {

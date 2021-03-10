@@ -4,39 +4,41 @@
       :breadcrumb-links="breadcrumbLinks"
   >
     <div class="mt-2">
-      <table class="w-100">
-        <thead>
-        <tr>
-          <th style="width: 200px;">Username</th>
-          <th v-for="memberType in memberTypes" :key="memberType" class="text-right" style="width: 100px;">
-            {{ memberType }}
-          </th>
-          <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="user in users" :key="user.username">
-          <td>
-            {{ user.username }}
-          </td>
-          <td v-for="memberType in memberTypes" :key="memberType" class="text-right">
-            <b-form-checkbox
-                :id="`user-${user.username}-member_type_${memberType}`"
-                :name="`user-${user.username}-member_type_${memberType}`"
-                :checked="hasTenantRole(user, memberType)"
-                v-on:change="changeMembership({username:user.username, membershipType:memberType})"
-            >
-            </b-form-checkbox>
-          </td>
-          <td class="text-center">
-            <a href="#" v-on:click.prevent="removeUser({username: user.username})">Delete</a>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="w-100 mt-3">
-      <UserSearchAndSelect v-on:change="onUserSelect"/>
+      <b-table-simple class="w-100">
+        <b-thead>
+          <b-tr>
+            <b-th style="width: 200px;">Username</b-th>
+            <b-th v-for="memberType in memberTypes" :key="memberType" class="text-right" style="width: 100px;">
+              {{ memberType }}
+            </b-th>
+            <b-th></b-th>
+          </b-tr>
+        </b-thead>
+        <b-tbody>
+          <b-tr v-for="user in users" :key="user.username">
+            <b-td>
+              {{ user.username }}
+            </b-td>
+            <b-td v-for="memberType in memberTypes" :key="memberType" class="text-right">
+              <b-form-checkbox
+                  :id="`user-${user.username}-member_type_${memberType}`"
+                  :name="`user-${user.username}-member_type_${memberType}`"
+                  :checked="hasTenantRole(user, memberType)"
+                  v-on:change="changeMembership({username:user.username, membershipType:memberType})"
+              >
+              </b-form-checkbox>
+            </b-td>
+            <b-td class="text-center">
+              <a href="#" v-on:click.prevent="removeUser({username: user.username})">Delete</a>
+            </b-td>
+          </b-tr>
+          <b-tr>
+            <b-td>
+              <UserSearchAndSelect v-on:change="onUserSelect"/>
+            </b-td>
+          </b-tr>
+        </b-tbody>
+      </b-table-simple>
     </div>
   </Page>
 </template>
