@@ -61,3 +61,12 @@ $table-head-color: blue !default;
 //   Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 // --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
 //   'Courier New', monospace;
+
+
+.table thead th {
+  background-color: #f7f7f7;
+}
+
+.table {
+  font-size: 1rem;
+}

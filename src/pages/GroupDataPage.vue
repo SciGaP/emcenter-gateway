@@ -387,11 +387,11 @@
 
                     </b-dropdown>
                   </b-th>
-                  <b-td>
+                  <b-th>
                     <input type="checkbox" name="all" id="all" :checked="isAllSelected()"
                            v-on:click="toggleAllSelection()"/>
                     <label for="all"></label>
-                  </b-td>
+                  </b-th>
                 </b-tr>
               </b-thead>
               <b-tbody>
