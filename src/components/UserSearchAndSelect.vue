@@ -1,10 +1,13 @@
 <template>
-  <vue-typeahead-bootstrap
-      v-model="usernameSearch"
-      :data="users"
-      :serializer="user => user.username"
-      @hit="selectSearchResult"
-  />
+  <div>
+    <label style="font-size: 13px;font-weight: 600;margin: 0px;">Add new users</label>
+    <vue-typeahead-bootstrap
+        v-model="usernameSearch"
+        :data="users"
+        :serializer="user => user.username"
+        @hit="selectSearchResult"
+    />
+  </div>
 </template>
 
 <script>
