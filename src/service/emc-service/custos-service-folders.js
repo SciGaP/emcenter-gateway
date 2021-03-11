@@ -28,7 +28,7 @@ export default class EmcFolders {
         });
     }
 
-    get({parentFolderId, own = true, shared = true}) {
+    get({parentFolderId, own = true}) {
 
         // TODO
         console.log(`[FETCH] /emc/folders?parentFolderId=${parentFolderId}`);
@@ -57,20 +57,20 @@ export default class EmcFolders {
                 }
             });
 
-            const sharedFolders = [0, 1, 2, 3].map((i) => {
-                return {
-                    folderId: `shared-folder-${i}`,
-                    name: `session-${i}`,
-                    createdAt: new Date(),
-                    createdBy: "Dinuka De Silva",
-                    own: false
-                }
-            });
+            // const sharedFolders = [0, 1, 2, 3].map((i) => {
+            //     return {
+            //         folderId: `shared-folder-${i}`,
+            //         name: `session-${i}`,
+            //         createdAt: new Date(),
+            //         createdBy: "Dinuka De Silva",
+            //         own: false
+            //     }
+            // });
 
             let folders = [];
 
             if (own) folders = folders.concat(ownFolders);
-            if (shared) folders = folders.concat(sharedFolders);
+            // if (shared) folders = folders.concat(sharedFolders);
 
             resolve(folders);
         });
