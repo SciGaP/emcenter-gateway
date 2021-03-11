@@ -58,14 +58,16 @@
           </span>
         </div>
         <div class="text-right">
-          <b-button variant="link" v-b-modal.modal-selected-collections-download v-if="hasAnythingSelected()">
+          <b-button variant="link" v-b-modal.modal-selected-collections-download
+                    v-if="displayMode === 'grid' && hasAnythingSelected()">
             Download
           </b-button>
           <!--          <b-modal id="modal-selected-collections-download" title="Download">-->
           <!--            <p class="my-4">Preparing to download...... </p>-->
           <!--          </b-modal>-->
 
-          <b-button variant="link" v-b-modal.modal-selected-collections-share v-if="hasAnythingSelected()">
+          <b-button variant="link" v-b-modal.modal-selected-collections-share
+                    v-if="displayMode === 'grid' && hasAnythingSelected()">
             Share
           </b-button>
           <!--          <b-modal id="modal-selected-collections-share" title="Share">-->
@@ -124,9 +126,9 @@
           <!--            </b-table-simple>-->
           <!--          </b-modal>-->
 
-          <b-button variant="link" v-b-modal.modal-selected-collections-history v-if="hasAnythingSelected()">
-            History
-          </b-button>
+          <!--          <b-button variant="link" v-b-modal.modal-selected-collections-history v-if="hasAnythingSelected()">-->
+          <!--            History-->
+          <!--          </b-button>-->
           <!--          <b-modal id="modal-selected-collections-history" title="History">-->
           <!--            <b-table-simple small>-->
           <!--              <b-thead>-->
@@ -282,7 +284,8 @@
                   <b-th>Created On</b-th>
                   <b-th>Last Updated</b-th>
                   <b-th>
-                    <b-dropdown v-if="hasAnythingSelected()" id="dropdown-1" text="Actions" right variant="outline-primary" size="sm">
+                    <b-dropdown v-if="hasAnythingSelected()" id="dropdown-1" text="Actions" right
+                                variant="outline-primary" size="sm">
 
                       <b-dropdown-item v-b-modal="`modal-selected-collections-download`">Download
                       </b-dropdown-item>
@@ -347,40 +350,40 @@
                         </b-table-simple>
                       </b-modal>
 
-                      <b-dropdown-item v-b-modal="`modal-selected-collections-history`">History
-                      </b-dropdown-item>
-                      <b-modal :id="`modal-selected-collections-history`" title="History">
-                        <b-table-simple small>
-                          <b-thead>
-                            <b-tr>
-                              <b-th>User</b-th>
-                              <b-th>Date & Time</b-th>
-                            </b-tr>
-                          </b-thead>
-                          <b-tbody>
-                            <tr>
-                              <b-td>Dinuka</b-td>
-                              <b-td>03/05/2021 11.33am</b-td>
-                            </tr>
-                            <tr>
-                              <b-td>Dinuka</b-td>
-                              <b-td>03/05/2021 11.46am</b-td>
-                            </tr>
-                            <tr>
-                              <b-td>Thomas</b-td>
-                              <b-td>03/06/2021 01.12pm</b-td>
-                            </tr>
-                            <tr>
-                              <b-td>Sarah</b-td>
-                              <b-td>03/06/2021 05.22pm</b-td>
-                            </tr>
-                            <tr>
-                              <b-td>Sarah</b-td>
-                              <b-td>03/06/2021 05.37am</b-td>
-                            </tr>
-                          </b-tbody>
-                        </b-table-simple>
-                      </b-modal>
+                      <!--                      <b-dropdown-item v-b-modal="`modal-selected-collections-history`">History-->
+                      <!--                      </b-dropdown-item>-->
+                      <!--                      <b-modal :id="`modal-selected-collections-history`" title="History">-->
+                      <!--                        <b-table-simple small>-->
+                      <!--                          <b-thead>-->
+                      <!--                            <b-tr>-->
+                      <!--                              <b-th>User</b-th>-->
+                      <!--                              <b-th>Date & Time</b-th>-->
+                      <!--                            </b-tr>-->
+                      <!--                          </b-thead>-->
+                      <!--                          <b-tbody>-->
+                      <!--                            <tr>-->
+                      <!--                              <b-td>Dinuka</b-td>-->
+                      <!--                              <b-td>03/05/2021 11.33am</b-td>-->
+                      <!--                            </tr>-->
+                      <!--                            <tr>-->
+                      <!--                              <b-td>Dinuka</b-td>-->
+                      <!--                              <b-td>03/05/2021 11.46am</b-td>-->
+                      <!--                            </tr>-->
+                      <!--                            <tr>-->
+                      <!--                              <b-td>Thomas</b-td>-->
+                      <!--                              <b-td>03/06/2021 01.12pm</b-td>-->
+                      <!--                            </tr>-->
+                      <!--                            <tr>-->
+                      <!--                              <b-td>Sarah</b-td>-->
+                      <!--                              <b-td>03/06/2021 05.22pm</b-td>-->
+                      <!--                            </tr>-->
+                      <!--                            <tr>-->
+                      <!--                              <b-td>Sarah</b-td>-->
+                      <!--                              <b-td>03/06/2021 05.37am</b-td>-->
+                      <!--                            </tr>-->
+                      <!--                          </b-tbody>-->
+                      <!--                        </b-table-simple>-->
+                      <!--                      </b-modal>-->
 
                     </b-dropdown>
                   </b-th>
