@@ -278,8 +278,8 @@
               <b-thead>
                 <b-tr>
                   <b-th>Collection</b-th>
-                  <b-th>Size</b-th>
                   <b-th>Owner</b-th>
+                  <b-th>Created On</b-th>
                   <b-th>Last Updated</b-th>
                   <b-th>
                     <b-dropdown v-if="hasAnythingSelected()" id="dropdown-1" text="Actions" right variant="outline-primary" size="sm">
@@ -405,9 +405,9 @@
                       </a>
                     </router-link>
                   </b-td>
-                  <b-td>16MB</b-td>
                   <b-td>{{ folder.createdBy }}</b-td>
-                  <b-td>Dec 23d, 2020, Thomas</b-td>
+                  <b-td>08/31/2020 14:00 PM</b-td>
+                  <b-td>09/07/2020 13:00 PM</b-td>
                   <b-td>
                     <b-dropdown id="dropdown-1" text="Actions" right variant="outline-primary" size="sm">
 
@@ -546,9 +546,9 @@
                       {{ file.name }}
                     </a>
                   </b-td>
-                  <b-td>1MB</b-td>
                   <b-td>{{ file.createdBy }}</b-td>
-                  <b-td>Dec 23d, 2020, Thomas</b-td>
+                  <b-td>08/31/2020 14:00 PM</b-td>
+                  <b-td>09/07/2020 13:00 PM</b-td>
                   <b-td>
                     <b-dropdown id="dropdown-1" text="Actions" right variant="outline-primary" size="sm">
                       <b-dropdown-item>Download</b-dropdown-item>
