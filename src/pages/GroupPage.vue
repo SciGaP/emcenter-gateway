@@ -48,7 +48,7 @@
 import {mapGetters, mapActions} from "vuex";
 import store from "../store";
 import Page from "../components/Page";
-import UserSearchAndSelect from "@/components/UserSearchAndSelect";
+import UserSearchAndSelect from "@/components/EntitySelectInput";
 
 export default {
   name: "GroupPage",
