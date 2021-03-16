@@ -2,17 +2,24 @@ import decode from "jwt-decode";
 import {hasTokenExpired} from "../util/jwt.util";
 import {custosService} from "../util/custos.util";
 
-const ACCESS_TOKEN_KEY = 'access_token';
-const ID_TOKEN_KEY = 'id_token';
-const REFRESH_TOKEN_KEY = 'refresh_token';
+// const ACCESS_TOKEN_KEY = 'access_token';
+// const ID_TOKEN_KEY = 'id_token';
+// const REFRESH_TOKEN_KEY = 'refresh_token';
 
 const state = {
-    accessToken: localStorage.getItem(ACCESS_TOKEN_KEY),
-    idToken: localStorage.getItem(ID_TOKEN_KEY),
-    refreshToken: localStorage.getItem(REFRESH_TOKEN_KEY)
+    accessToken: null,
+    idToken: null,
+    refreshToken: null
 };
 
 const actions = {
+    async init({commit}) {
+        commit("SET_TOKENS", {
+            accessToken: custosService.identity.accessToken,
+            idToken: custosService.identity.idToken,
+            refreshToken: custosService.identity.refreshToken
+        });
+    },
     async fetchAuthorizationEndpoint() {
         const {clientId, redirectUri} = custosService;
         const {data: {authorization_endpoint}} = await custosService.identity.getOpenIdConfig();
@@ -31,8 +38,8 @@ const actions = {
         commit("SET_TOKENS", {accessToken: access_token, idToken: id_token, refreshToken: refresh_token});
     },
     async logout({commit}) {
-        await custosService.identity.logout();
         commit("CLEAR_TOKENS");
+        await custosService.identity.logout();
     },
     async refreshAuthentication({commit, state}) {
         if (state.refreshToken && hasTokenExpired(state.refreshToken)) {
@@ -47,18 +54,18 @@ const actions = {
 
 const mutations = {
     SET_TOKENS(state, {accessToken, idToken, refreshToken}) {
-        localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-        localStorage.setItem(ID_TOKEN_KEY, idToken);
-        localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+        custosService.identity.accessToken = accessToken;
+        custosService.identity.idToken = idToken;
+        custosService.identity.refreshToken = refreshToken;
 
         state.accessToken = accessToken;
         state.idToken = idToken;
         state.refreshToken = refreshToken;
     },
     CLEAR_TOKENS(state) {
-        localStorage.removeItem(ACCESS_TOKEN_KEY);
-        localStorage.removeItem(ID_TOKEN_KEY);
-        localStorage.removeItem(REFRESH_TOKEN_KEY);
+        custosService.identity.accessToken = null;
+        custosService.identity.idToken = null;
+        custosService.identity.refreshToken = null;
 
         state.accessToken = null;
         state.idToken = null;

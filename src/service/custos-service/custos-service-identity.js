@@ -9,35 +9,60 @@ export default class CustosIdentity {
      * @type {CustosService}
      */
     _custosService = null;
-
-    _accessToken = null;
-
-    _refreshToken = null;
-
-    _idToken = null;
+    changeListeners = [];
 
     constructor(custosService) {
         this._custosService = custosService;
 
-        this._accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-        this._idToken = localStorage.getItem(ID_TOKEN_KEY);
-        this._refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+        window.addEventListener('storage', (e) => {
+            for (let i = 0; i < this.changeListeners.length; i++) {
+                this.changeListeners[i] && typeof this.changeListeners[i] === "function" && this.changeListeners[i](e);
+            }
+        });
     }
 
     get accessToken() {
-        return this._accessToken;
+        return sessionStorage.getItem(ACCESS_TOKEN_KEY);
+    }
+
+    set accessToken(accessToken) {
+        if (accessToken == null) {
+            sessionStorage.removeItem(ACCESS_TOKEN_KEY);
+        } else {
+            sessionStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+        }
     }
 
     get refreshToken() {
-        return this._refreshToken;
+        return sessionStorage.getItem(REFRESH_TOKEN_KEY);
+    }
+
+    set refreshToken(refreshToken) {
+        if (refreshToken == null) {
+            sessionStorage.removeItem(REFRESH_TOKEN_KEY);
+        } else {
+            sessionStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+        }
     }
 
     get idToken() {
-        return this._idToken;
+        return sessionStorage.getItem(ID_TOKEN_KEY);
+    }
+
+    set idToken(idToken) {
+        if (idToken == null) {
+            sessionStorage.removeItem(ID_TOKEN_KEY);
+        } else {
+            sessionStorage.setItem(ID_TOKEN_KEY, idToken);
+        }
     }
 
     get custosService() {
         return this._custosService;
+    }
+
+    onChange(changeListener) {
+        this.changeListeners.push(changeListener);
     }
 
     getOpenIdConfig() {
@@ -52,13 +77,9 @@ export default class CustosIdentity {
     _saveTokenResponse(response) {
         const {data: {access_token, id_token, refresh_token}} = response;
 
-        this._accessToken = access_token;
-        this._refreshToken = refresh_token;
-        this._idToken = id_token;
-
-        localStorage.setItem(ACCESS_TOKEN_KEY, this.accessToken);
-        localStorage.setItem(ID_TOKEN_KEY, this.idToken);
-        localStorage.setItem(REFRESH_TOKEN_KEY, this.refreshToken);
+        this.accessToken = access_token;
+        this.idToken = id_token;
+        this.refreshToken = refresh_token;
 
         return response;
     }

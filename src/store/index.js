@@ -10,11 +10,17 @@ import auth from "./modules/auth.store";
 
 import emcFile from "./modules/emc/emc-file.store";
 import emcFolder from "./modules/emc/emc-folder.store";
+import {custosService} from "@/store/util/custos.util";
 
 
 Vue.use(Vuex);
 
 const debug = process.env.NODE_ENV !== 'production';
+
+const custosSessionPlugin = store => {
+    store.dispatch('auth/init')
+    custosService.identity.onChange(() => store.dispatch('auth/init'))
+}
 
 export default new Vuex.Store({
     modules: {
@@ -28,5 +34,5 @@ export default new Vuex.Store({
         "emcFolder": emcFolder
     },
     strict: debug,
-    plugins: debug ? [createLogger()] : [],
+    plugins: debug ? [createLogger(), custosSessionPlugin] : [custosSessionPlugin],
 })
