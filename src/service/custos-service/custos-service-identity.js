@@ -22,38 +22,38 @@ export default class CustosIdentity {
     }
 
     get accessToken() {
-        return sessionStorage.getItem(ACCESS_TOKEN_KEY);
+        return localStorage.getItem(ACCESS_TOKEN_KEY);
     }
 
     set accessToken(accessToken) {
         if (accessToken == null) {
-            sessionStorage.removeItem(ACCESS_TOKEN_KEY);
+            localStorage.removeItem(ACCESS_TOKEN_KEY);
         } else {
-            sessionStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+            localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
         }
     }
 
     get refreshToken() {
-        return sessionStorage.getItem(REFRESH_TOKEN_KEY);
+        return localStorage.getItem(REFRESH_TOKEN_KEY);
     }
 
     set refreshToken(refreshToken) {
         if (refreshToken == null) {
-            sessionStorage.removeItem(REFRESH_TOKEN_KEY);
+            localStorage.removeItem(REFRESH_TOKEN_KEY);
         } else {
-            sessionStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+            localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
         }
     }
 
     get idToken() {
-        return sessionStorage.getItem(ID_TOKEN_KEY);
+        return localStorage.getItem(ID_TOKEN_KEY);
     }
 
     set idToken(idToken) {
         if (idToken == null) {
-            sessionStorage.removeItem(ID_TOKEN_KEY);
+            localStorage.removeItem(ID_TOKEN_KEY);
         } else {
-            sessionStorage.setItem(ID_TOKEN_KEY, idToken);
+            localStorage.setItem(ID_TOKEN_KEY, idToken);
         }
     }
 
