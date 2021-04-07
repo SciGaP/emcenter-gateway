@@ -4,7 +4,7 @@
     <a href="https://accessibility.iu.edu/assistance/">Accessibility</a> |
     <a href="#0">Privacy Notice</a> |
     <a href="https://www.iu.edu/copyright/index.html">Copyright</a>
-    &copy; 2019 The Trustees of
+    &copy; 2021 The Trustees of
     <a href="https://www.iu.edu/">Indiana University</a>
   </footer>
 </template>
