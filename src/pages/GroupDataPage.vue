@@ -162,12 +162,12 @@
           <!--            </b-table-simple>-->
           <!--          </b-modal>-->
 
-          <b-button size="sm" :variant="displayMode !== 'list'? 'outline-primary': 'primary'"
+          <b-button size="sm" v-if="parentFolderId" :variant="displayMode !== 'list'? 'outline-primary': 'primary'"
                     v-on:click="switchDisplayMode('list')">
             <b-icon icon="list" aria-hidden="true"></b-icon>
           </b-button>
-          <b-button size="sm" :variant="displayMode !== 'grid'? 'outline-primary': 'primary'" class="ml-2"
-                    v-on:click="switchDisplayMode('grid')">
+          <b-button size="sm" v-if="parentFolderId" :variant="displayMode !== 'grid'? 'outline-primary': 'primary'"
+                    class="ml-2" v-on:click="switchDisplayMode('grid')">
             <b-icon icon="grid" aria-hidden="true"></b-icon>
           </b-button>
         </div>
@@ -275,6 +275,19 @@
 
 
         <div v-if="displayMode === 'list'" class="w-100">
+          <div class="w-100 text-right">
+            <b-button variant="link" v-b-modal="`modal-create-collection-group`">Group Collections</b-button>
+            <b-modal :id="`modal-create-collection-group`" title="Collection Group">
+              <div>
+                <label for="collection-group-name">Collection Group Name</label>
+                <b-form-input id="collection-group-name"></b-form-input>
+              </div>
+              <template #modal-footer="{close}">
+                <b-button size="sm" variant="outline-primary" v-on:click="close()">Cancel</b-button>
+                <b-button size="sm" variant="primary" v-on:click="close()">Save</b-button>
+              </template>
+            </b-modal>
+          </div>
           <div class="w-100">
             <b-table-simple class="w-100">
               <b-thead>
@@ -661,6 +674,400 @@
           <Pagination/>
         </div>
 
+      </div>
+    </div>
+
+    <div class="w-100">
+      <div class="w-100">
+        <h1 v-if="title"
+            style="font-size: 1.5rem;font-weight: 500;color: rgb(55, 58, 60);padding-top: 25px;padding-bottom: 10px;">
+          Collection Groups
+        </h1>
+      </div>
+      <div class="w-100">
+        <b-table-simple class="w-100">
+          <b-thead>
+            <b-tr>
+              <b-th>Collection Group</b-th>
+              <b-th>Owner</b-th>
+              <b-th>Created On</b-th>
+              <b-th>Last Updated</b-th>
+              <b-th>
+                <b-dropdown :disabled="!hasAnythingSelected()" id="dropdown-1" text="Actions" right
+                            variant="outline-primary" size="sm">
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-share`">Share</b-dropdown-item>
+                  <b-modal :id="`modal-selected-collections-share`" title="Share">
+                    <b-table-simple small>
+                      <b-thead>
+                        <b-tr>
+                          <b-th>User</b-th>
+                          <b-th>Read</b-th>
+                          <b-th>Write</b-th>
+                          <b-th>Share</b-th>
+                        </b-tr>
+                      </b-thead>
+                      <b-tbody>
+                        <b-tr>
+                          <b-td>Dinuka</b-td>
+                          <b-td>
+                            <b-checkbox :checked="true" :disabled="true"/>
+                          </b-td>
+                          <b-td>
+                            <b-checkbox/>
+                          </b-td>
+                          <b-td>
+                            <b-checkbox/>
+                          </b-td>
+                        </b-tr>
+                        <tr>
+                          <b-td>Tanya</b-td>
+                          <b-td>
+                            <b-checkbox :checked="true" :disabled="true"/>
+                          </b-td>
+                          <b-td>
+                            <b-checkbox/>
+                          </b-td>
+                          <b-td>
+                            <b-checkbox/>
+                          </b-td>
+                        </tr>
+                        <b-tr>
+                          <b-td>Thomas</b-td>
+                          <b-td>
+                            <b-checkbox :checked="true" :disabled="true"/>
+                          </b-td>
+                          <b-td>
+                            <b-checkbox/>
+                          </b-td>
+                          <b-td>
+                            <b-checkbox/>
+                          </b-td>
+                        </b-tr>
+                        <b-tr>
+                          <b-td>
+                            <UserSearchAndSelect v-on:change="(u) => u"/>
+                          </b-td>
+                        </b-tr>
+                      </b-tbody>
+                    </b-table-simple>
+                  </b-modal>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-copy`">Copy</b-dropdown-item>
+                  <b-modal :id="`modal-selected-collections-copy`" title="Copy">
+                    <p class="my-4">Preparing to Copy...... </p>
+                  </b-modal>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-share-history`">Share History
+                  </b-dropdown-item>
+                  <b-modal :id="`modal-selected-collections-share-history`" title="Share History">
+                    <p class="my-4">Share History...... </p>
+                  </b-modal>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-history`">Collection History
+                  </b-dropdown-item>
+                  <b-modal :id="`modal-selected-collections-history`" size="lg" title="Collection History">
+                    <b-table-simple small>
+                      <b-thead>
+                        <b-tr>
+                          <b-th>Date and Time</b-th>
+                          <b-th>Status</b-th>
+                          <b-th>Owner</b-th>
+                          <b-th>By</b-th>
+                          <b-th>To</b-th>
+                          <b-th>Details</b-th>
+                        </b-tr>
+                      </b-thead>
+                      <b-tbody>
+                        <b-tr>
+                          <b-td>09/07/2020 13:00 PM</b-td>
+                          <b-td>Shared</b-td>
+                          <b-td>Me</b-td>
+                          <b-td>Me</b-td>
+                          <b-td>Group 1</b-td>
+                          <b-td>-</b-td>
+                        </b-tr>
+                        <b-tr>
+                          <b-td>08/31/2020 14:00 PM</b-td>
+                          <b-td>Copied</b-td>
+                          <b-td>Me</b-td>
+                          <b-td>-</b-td>
+                          <b-td>Google Drive</b-td>
+                          <b-td>-</b-td>
+                        </b-tr>
+                        <b-tr>
+                          <b-td>08/31/2020 12:00 PM</b-td>
+                          <b-td>Modified</b-td>
+                          <b-td>Me</b-td>
+                          <b-td>-</b-td>
+                          <b-td>-</b-td>
+                          <b-td>2 files deleted</b-td>
+                        </b-tr>
+                        <b-tr>
+                          <b-td>08/30/2020 12:00 PM</b-td>
+                          <b-td>Modified</b-td>
+                          <b-td>Me</b-td>
+                          <b-td>Philip Walker</b-td>
+                          <b-td>-</b-td>
+                          <b-td>Collection name changed</b-td>
+                        </b-tr>
+                        <b-tr>
+                          <b-td>08/23/2020 12:00 PM</b-td>
+                          <b-td>Shared</b-td>
+                          <b-td>Me</b-td>
+                          <b-td>Philip Walker</b-td>
+                          <b-td>Allen Edwards</b-td>
+                          <b-td>-</b-td>
+                        </b-tr>
+                      </b-tbody>
+                    </b-table-simple>
+                    <template #modal-footer="{close}">
+                      <b-button size="sm" variant="outline-primary" v-on:click="close">Close</b-button>
+                    </template>
+                  </b-modal>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-edit`">Edit</b-dropdown-item>
+                  <b-modal :id="`modal-selected-collections-edit`" title="Edit">
+                    <p class="my-4">Edit...... </p>
+                  </b-modal>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-archive`">Archive</b-dropdown-item>
+                  <b-modal :id="`modal-selected-collections-archive`" title="Archive">
+                    <b-alert variant="info" show="">
+                      Archiving files clears space in the current storage and can be retrieved for later
+                    </b-alert>
+                    <template #modal-footer="{cancel, ok}">
+                      <b-button size="sm" variant="outline-primary" v-on:click="cancel()">Cancel</b-button>
+                      <b-button variant="primary" size="sm" v-on:click="ok()">Archive</b-button>
+                    </template>
+                  </b-modal>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-delete`">Delete</b-dropdown-item>
+                  <b-modal :id="`modal-selected-collections-delete`" title="Delete">
+                    <b-alert variant="danger" show="">
+                      Deleting a file would result in permanent loss of data for anyone with the file including
+                      share recipients. Data once lost cannot be retrieved.
+                    </b-alert>
+                    <div>
+                      An alternative option is Archive files instead
+                    </div>
+                    <template #modal-footer="{close}">
+                      <b-button size="sm" variant="outline-primary"
+                                v-on:click="close();$bvModal.show(`modal-selected-collections-archive`)">
+                        Archive Files
+                      </b-button>
+                      <b-button variant="primary" size="sm"
+                                v-on:click="close();$bvModal.show(`modal-selected-collections-delete-confirmation`)">
+                        I still want to send Delete request
+                      </b-button>
+                    </template>
+                  </b-modal>
+                  <!--                      <b-modal :id="`modal-selected-collections-archive-confirmation`" title="Archive">-->
+                  <!--                        <b-alert variant="info" show="">-->
+                  <!--                          Archiving files clears space in the current storage and can be retrieved for later-->
+                  <!--                        </b-alert>-->
+                  <!--                        <template #modal-footer="{cancel, ok}">-->
+                  <!--                          <b-button size="sm" variant="outline-primary" v-on:click="cancel()">Cancel</b-button>-->
+                  <!--                          <b-button variant="primary" size="sm" v-on:click="ok()">Archive</b-button>-->
+                  <!--                        </template>-->
+                  <!--                      </b-modal>-->
+                  <b-modal :id="`modal-selected-collections-delete-confirmation`" title="Delete Request">
+                    <b-alert variant="danger" show="">
+                      Deleting a file would result in permanent loss of data for anyone with the file including
+                      share recipients. Data once lost cannot be retrieved.
+                    </b-alert>
+                    <div>
+                      A delete request will be sent to your admin.
+                      <br/><br/>
+                      We'll notify you once the deletion has been performed
+                    </div>
+                    <template #modal-footer="{cancel, ok}">
+                      <b-button size="sm" variant="outline-primary" v-on:click="cancel()">Cancel</b-button>
+                      <b-button variant="primary" size="sm" v-on:click="ok()">Send request</b-button>
+                    </template>
+                  </b-modal>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-download`">Download</b-dropdown-item>
+                  <b-modal :id="`modal-selected-collections-download`" title="Download">
+                    <p class="my-4">Preparing to download...... </p>
+                  </b-modal>
+
+
+                  <!--                      <b-dropdown-item v-b-modal="`modal-selected-collections-history`">History-->
+                  <!--                      </b-dropdown-item>-->
+                  <!--                      <b-modal :id="`modal-selected-collections-history`" title="History">-->
+                  <!--                        <b-table-simple small>-->
+                  <!--                          <b-thead>-->
+                  <!--                            <b-tr>-->
+                  <!--                              <b-th>User</b-th>-->
+                  <!--                              <b-th>Date & Time</b-th>-->
+                  <!--                            </b-tr>-->
+                  <!--                          </b-thead>-->
+                  <!--                          <b-tbody>-->
+                  <!--                            <tr>-->
+                  <!--                              <b-td>Dinuka</b-td>-->
+                  <!--                              <b-td>03/05/2021 11.33am</b-td>-->
+                  <!--                            </tr>-->
+                  <!--                            <tr>-->
+                  <!--                              <b-td>Dinuka</b-td>-->
+                  <!--                              <b-td>03/05/2021 11.46am</b-td>-->
+                  <!--                            </tr>-->
+                  <!--                            <tr>-->
+                  <!--                              <b-td>Thomas</b-td>-->
+                  <!--                              <b-td>03/06/2021 01.12pm</b-td>-->
+                  <!--                            </tr>-->
+                  <!--                            <tr>-->
+                  <!--                              <b-td>Sarah</b-td>-->
+                  <!--                              <b-td>03/06/2021 05.22pm</b-td>-->
+                  <!--                            </tr>-->
+                  <!--                            <tr>-->
+                  <!--                              <b-td>Sarah</b-td>-->
+                  <!--                              <b-td>03/06/2021 05.37am</b-td>-->
+                  <!--                            </tr>-->
+                  <!--                          </b-tbody>-->
+                  <!--                        </b-table-simple>-->
+                  <!--                      </b-modal>-->
+
+                </b-dropdown>
+              </b-th>
+              <b-th>
+                <input type="checkbox" name="all" id="select_all_collection_groups_checkbox"
+                       :checked="isAllSelected()" v-on:click="toggleAllSelection()"/>
+                <label for="all"></label>
+              </b-th>
+            </b-tr>
+          </b-thead>
+          <b-tbody>
+            <b-tr
+                v-for="folder in [{name: 'Collection Gorup 1', createdBy: 'Marlon'}, {name: 'Collection Gorup 2', createdBy: 'Suresh'}]"
+                :key="folder.folderId" :class="{selected: isFolderSelected(folder)}">
+              <b-td>
+                <router-link :to="getFolderLink(folder)" v-slot="{ href, route, navigate, isActive,isExactActive }">
+                  <!--                      <b-icon v-if="folder.own === false" style="height: 100%;" icon="people-fill"-->
+                  <!--                              aria-hidden="true"></b-icon>-->
+                  <!--                      <b-icon style="height: 100%;" icon="folder-fill" aria-hidden="true"></b-icon>-->
+
+                  <a :class="{active: isExactActive}" :href="href" @click="navigate"
+                     style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;">
+                    {{ folder.name }}
+                  </a>
+                </router-link>
+              </b-td>
+              <b-td>{{ folder.createdBy }}</b-td>
+              <b-td>08/31/2020 14:00 PM</b-td>
+              <b-td>09/07/2020 13:00 PM</b-td>
+              <b-td>
+                <b-dropdown id="dropdown-1" text="Actions" right variant="outline-primary" size="sm">
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-share`">Share</b-dropdown-item>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-copy`">Copy</b-dropdown-item>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-share-history`">Share History
+                  </b-dropdown-item>
+
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-history`">Collection History
+                  </b-dropdown-item>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-edit`">Edit</b-dropdown-item>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-archive`">Archive</b-dropdown-item>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-delete`">Delete</b-dropdown-item>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-download`">Download</b-dropdown-item>
+
+                </b-dropdown>
+                <!--                    <div style="display: flex;">-->
+                <!--                      <div style="flex: 1;">-->
+                <!--                        <b-button size="sm" variant="link" data-modal-trigger="modal-share">-->
+                <!--                          <b-icon icon="share-fill"></b-icon>-->
+                <!--                        </b-button>-->
+                <!--                        <b-button size="sm" variant="link">-->
+                <!--                          <b-icon icon="download"></b-icon>-->
+                <!--                        </b-button>-->
+                <!--                        <b-button size="sm" variant="link">-->
+                <!--                          <b-icon icon="info-circle-fill"></b-icon>-->
+                <!--                        </b-button>-->
+                <!--                        <b-button size="sm" variant="link">-->
+                <!--                          <b-icon icon="three-dots-vertical"></b-icon>-->
+                <!--                        </b-button>-->
+                <!--                      </div>-->
+                <!--                    </div>-->
+              </b-td>
+              <b-td>
+                <input type="checkbox" :checked="isFolderSelected(folder)"
+                       v-on:click="toggleFolderSelection(folder)"
+                       :name="getFolderSelectionCheckboxId(folder)"
+                       :id="getFolderSelectionCheckboxId(folder)"/>
+                <label :for="getFolderSelectionCheckboxId(folder)"></label>
+              </b-td>
+            </b-tr>
+
+            <b-tr v-if="folders.length > 0" class="w-100 pt-5"></b-tr>
+
+            <b-tr v-for="file in files" :key="file.fileId" :class="{selected: isFileSelected(file)}">
+
+              <b-td>
+                <b-icon style="height: 100%;" icon="card-image" aria-hidden="true"></b-icon>
+                <a href="#" style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;">
+                  {{ file.name }}
+                </a>
+              </b-td>
+              <b-td>{{ file.createdBy }}</b-td>
+              <b-td>08/31/2020 14:00 PM</b-td>
+              <b-td>09/07/2020 13:00 PM</b-td>
+              <b-td>
+                <b-dropdown id="dropdown-1" text="Actions" right variant="outline-primary" size="sm">
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-share`">Share</b-dropdown-item>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-copy`">Copy</b-dropdown-item>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-share-history`">Share History
+                  </b-dropdown-item>
+
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-history`">Collection History
+                  </b-dropdown-item>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-edit`">Edit</b-dropdown-item>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-archive`">Archive</b-dropdown-item>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-delete`">Delete</b-dropdown-item>
+
+                  <b-dropdown-item v-b-modal="`modal-selected-collections-download`">Download</b-dropdown-item>
+
+                </b-dropdown>
+                <!--                    <div style="display: flex;">-->
+                <!--                      <div style="flex: 1;">-->
+                <!--                        <b-button size="sm" variant="link" data-modal-trigger="modal-share">-->
+                <!--                          <b-icon icon="share-fill"></b-icon>-->
+                <!--                        </b-button>-->
+                <!--                        <b-button size="sm" variant="link">-->
+                <!--                          <b-icon icon="pencil"></b-icon>-->
+                <!--                        </b-button>-->
+                <!--                        <b-button size="sm" variant="link">-->
+                <!--                          <b-icon icon="download"></b-icon>-->
+                <!--                        </b-button>-->
+                <!--                        <b-button size="sm" variant="link">-->
+                <!--                          <b-icon icon="info-circle-fill"></b-icon>-->
+                <!--                        </b-button>-->
+                <!--                      </div>-->
+                <!--                    </div>-->
+              </b-td>
+              <b-td>
+                <input type="checkbox" :checked="isFileSelected(file)" v-on:click="toggleFileSelection(file)"
+                       :name="getFileSelectionCheckboxId(file)" :id="getFileSelectionCheckboxId(file)"/>
+                <label :for="getFileSelectionCheckboxId(file)"></label>
+              </b-td>
+            </b-tr>
+          </b-tbody>
+        </b-table-simple>
+      </div>
+      <div style="padding: 10px;" class="bg-light text-right">
+        <Pagination/>
       </div>
     </div>
 
