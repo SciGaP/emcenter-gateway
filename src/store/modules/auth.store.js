@@ -21,9 +21,9 @@ const actions = {
         });
     },
     async fetchAuthorizationEndpoint() {
-        const {clientId, redirectUri} = custosService;
+        const {clientId, redirectURI} = custosService;
         const {data: {authorization_endpoint}} = await custosService.identity.getOpenIdConfig();
-        window.location.href = `${authorization_endpoint}?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=openid&kc_idp_hint=oidc`;
+        window.location.href = `${authorization_endpoint}?response_type=code&client_id=${clientId}&redirect_uri=${redirectURI}&scope=openid&kc_idp_hint=oidc`;
     },
     async authenticateUsingCode({commit}, {tokenEndpoint, code}) {
         const {data: {access_token, id_token, refresh_token}} = await custosService.identity.getToken({
