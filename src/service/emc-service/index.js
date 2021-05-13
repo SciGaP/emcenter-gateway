@@ -1,14 +1,20 @@
-// import axios from "axios";
-// import http from "http";
-// import https from "https";
+import axios from "axios";
+import http from "http";
+import https from "https";
 import EmcFiles from "./custos-service-files";
 import EmcFolders from "./custos-service-folders";
+import {custosService} from "@/store/util/custos.util";
 
-// const httpAgent = new http.Agent({keepAlive: true});
-// const httpsAgent = new https.Agent({keepAlive: true});
+const httpAgent = new http.Agent({keepAlive: true});
+const httpsAgent = new https.Agent({keepAlive: true});
 
 export default class EmcService {
-    static ENDPOINTS = {};
+    static baseURL = "http://localhost:10000/v1.0/api";
+
+    static ENDPOINTS = {
+        COLLECTIONS: "/drms/resource/searchPreference",
+        DATASETS: "/drms/resource/searchPreference"
+    };
 
     constructor() {
         this._files = new EmcFiles(this);
@@ -51,17 +57,20 @@ export default class EmcService {
     //     });
     // }
     //
-    // get axiosInstanceWithTokenAuthorization() {
-    //     return axios.create({
-    //         httpAgent,
-    //         httpsAgent,
-    //         baseURL: this.baseURL,
-    //         withCredentials: false,
-    //         headers: {
-    //             'Accept': '*/*',
-    //             'Content-Type': 'application/json',
-    //             'Authorization': `Bearer ${this.identity.accessToken}`
-    //         }
-    //     });
-    // }
+    get axiosInstanceWithTokenAuthorizationForCollectionsGet() {
+        return axios.create({
+            httpAgent,
+            httpsAgent,
+            baseURL: EmcService.baseURL,
+            withCredentials: false,
+            headers: {
+                'Accept': '*/*',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': "*",
+                'Origin': '*'
+            }
+        }).post(EmcService.ENDPOINTS.COLLECTIONS, {
+            "authToken": {"access_token": custosService.identity.accessToken}
+        });
+    }
 }
