@@ -1,5 +1,6 @@
 <template>
   <div v-if="authenticated" class="p-3">
+    <CollectionToastQueue/>
     <ul>
 <!--      <li>-->
 <!--        <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">-->
@@ -102,9 +103,11 @@ import svgPeople from "../assets/people.svg";
 import svgDashboard from "../assets/dashboard.svg";
 import svgFileRuled from "../assets/file-ruled.svg";
 import svgGear from "../assets/gear.svg";
+import CollectionToastQueue from "@/components/CollectionToastQueue";
 
 export default {
   name: 'AppLeftNav',
+  components: {CollectionToastQueue},
   store: store,
   data: () => {
     return {

@@ -79,11 +79,6 @@
                   </b-button>
                 </div>
               </div>
-              <!--              <div class="d-flex flex-grow-1 align-items-baseline">-->
-              <!--                <b-img blank blank-color="#ff5555" class="mr-2" width="12" height="12"></b-img>-->
-              <!--                <strong class="mr-auto">Notice!</strong>-->
-              <!--                <small class="text-muted mr-2">42 seconds ago</small>-->
-              <!--              </div>-->
             </template>
             <div style="max-height: 300px; overflow: auto;">
               <b-table-simple>

@@ -59,8 +59,9 @@ body {
 }
 
 .progress-ring {
-  width: 30px;
-  height: 30px;
+  width: 46px;
+  height: 38px;
+  padding: 5px;
 }
 
 .progress-ring-circle {
