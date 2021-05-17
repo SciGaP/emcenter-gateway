@@ -58,10 +58,52 @@
           </span>
         </div>
         <div class="text-left">
-          <b-button variant="link" v-if="hasAnythingSelected()">
+          <b-button variant="link" v-if="hasAnythingSelected()" @click="$bvToast.show('download-toast')">
             <b-icon icon="download"></b-icon>
             Download
           </b-button>
+
+          <b-toast id="download-toast" variant="secondary" solid toaster="b-toaster-bottom-right" no-auto-hide>
+            <template #toast-title>
+              Downloading (7)
+              <!--              <div class="d-flex flex-grow-1 align-items-baseline">-->
+              <!--                <b-img blank blank-color="#ff5555" class="mr-2" width="12" height="12"></b-img>-->
+              <!--                <strong class="mr-auto">Notice!</strong>-->
+              <!--                <small class="text-muted mr-2">42 seconds ago</small>-->
+              <!--              </div>-->
+            </template>
+            <div style="max-height: 300px; overflow: auto;">
+              <b-table-simple>
+                <b-thead style="visibility: hidden;position: fixed;top:-100px">
+                  <b-tr>
+                    <b-th>Name</b-th>
+                    <b-th>Progress</b-th>
+                  </b-tr>
+                </b-thead>
+                <b-tbody>
+                  <b-tr v-for="i in [1,2,3,4,5,6,7,8,9]" :key="i">
+                    <b-td>file-xxxxxx-{{ i }}</b-td>
+                    <b-td class="text-right">
+                      <ProgressCircle value="30" min="0" max="100"/>
+                      <b-button variant="link-secondary close">
+                        <b-icon icon="x"></b-icon>
+                      </b-button>
+                    </b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+              <!--              <div v-for="i in [1,2,3,4,5,6,7,8,9]" :key="i">-->
+              <!--                <div style="display: flex; flex-direction: row;">-->
+              <!--                  <div style="flex: 1;padding: 5px;">file-xxxxxx-{{ i }}</div>-->
+              <!--                  <div>-->
+              <!--                    <ProgressCircle value="30" min="0" max="100"/>-->
+              <!--                  </div>-->
+              <!--                </div>-->
+              <!--              </div>-->
+            </div>
+          </b-toast>
+
+
           <b-button variant="link" v-if="hasAnythingSelected()">
             <b-icon icon="cloud"></b-icon>
             Copy to
@@ -88,18 +130,18 @@
           </b-button>
 
 
-<!--          <b-button variant="link" v-b-modal.modal-selected-collections-download-->
-<!--                    v-if="displayMode === 'grid' && hasAnythingSelected()">-->
-<!--            Download-->
-<!--          </b-button>-->
+          <!--          <b-button variant="link" v-b-modal.modal-selected-collections-download-->
+          <!--                    v-if="displayMode === 'grid' && hasAnythingSelected()">-->
+          <!--            Download-->
+          <!--          </b-button>-->
           <!--          <b-modal id="modal-selected-collections-download" title="Download">-->
           <!--            <p class="my-4">Preparing to download...... </p>-->
           <!--          </b-modal>-->
 
-<!--          <b-button variant="link" v-b-modal.modal-selected-collections-share-->
-<!--                    v-if="displayMode === 'grid' && hasAnythingSelected()">-->
-<!--            Share-->
-<!--          </b-button>-->
+          <!--          <b-button variant="link" v-b-modal.modal-selected-collections-share-->
+          <!--                    v-if="displayMode === 'grid' && hasAnythingSelected()">-->
+          <!--            Share-->
+          <!--          </b-button>-->
           <!--          <b-modal id="modal-selected-collections-share" title="Share">-->
           <!--            <b-table-simple small>-->
           <!--              <b-thead>-->
@@ -192,38 +234,38 @@
           <!--            </b-table-simple>-->
           <!--          </b-modal>-->
 
-<!--          <b-button size="sm" v-if="parentFolderId" :variant="displayMode !== 'list'? 'outline-primary': 'primary'"-->
-<!--                    v-on:click="switchDisplayMode('list')">-->
-<!--            <b-icon icon="list" aria-hidden="true"></b-icon>-->
-<!--          </b-button>-->
-<!--          <b-button size="sm" v-if="parentFolderId" :variant="displayMode !== 'grid'? 'outline-primary': 'primary'"-->
-<!--                    class="ml-2" v-on:click="switchDisplayMode('grid')">-->
-<!--            <b-icon icon="grid" aria-hidden="true"></b-icon>-->
-<!--          </b-button>-->
+          <!--          <b-button size="sm" v-if="parentFolderId" :variant="displayMode !== 'list'? 'outline-primary': 'primary'"-->
+          <!--                    v-on:click="switchDisplayMode('list')">-->
+          <!--            <b-icon icon="list" aria-hidden="true"></b-icon>-->
+          <!--          </b-button>-->
+          <!--          <b-button size="sm" v-if="parentFolderId" :variant="displayMode !== 'grid'? 'outline-primary': 'primary'"-->
+          <!--                    class="ml-2" v-on:click="switchDisplayMode('grid')">-->
+          <!--            <b-icon icon="grid" aria-hidden="true"></b-icon>-->
+          <!--          </b-button>-->
         </div>
       </div>
 
-<!--      <div class="w-100" style="display: flex;flex-direction: row;">-->
-<!--        <div v-if="displayMode === 'grid'">-->
-<!--          <input type="checkbox" name="all-grid" id="all-grid" :checked="isAllSelected()"-->
-<!--                 v-on:click="toggleAllSelection()" style="margin: 3px 10px;"/>-->
-<!--          <label for="all-grid">Select All</label>-->
-<!--        </div>-->
-<!--                        <div>-->
-<!--                          <span v-if="numberOfFoldersSelected > 0">-->
-<!--                            {{ numberOfFoldersSelected }} folder(s)-->
-<!--                          </span>-->
-<!--                          <span v-if="numberOfFoldersSelected > 0 && numberOfFilesSelected > 0">-->
-<!--                            {{ numberOfFoldersSelected }} folder(s)-->
-<!--                          </span>-->
-<!--                          <span v-if="numberOfFilesSelected > 0">-->
-<!--                            {{ numberOfFilesSelected }} file(s)-->
-<!--                          </span>-->
-<!--                          <span v-if="numberOfFoldersSelected > 0 || numberOfFilesSelected > 0">-->
-<!--                            selected-->
-<!--                          </span>-->
-<!--                        </div>-->
-<!--      </div>-->
+      <!--      <div class="w-100" style="display: flex;flex-direction: row;">-->
+      <!--        <div v-if="displayMode === 'grid'">-->
+      <!--          <input type="checkbox" name="all-grid" id="all-grid" :checked="isAllSelected()"-->
+      <!--                 v-on:click="toggleAllSelection()" style="margin: 3px 10px;"/>-->
+      <!--          <label for="all-grid">Select All</label>-->
+      <!--        </div>-->
+      <!--                        <div>-->
+      <!--                          <span v-if="numberOfFoldersSelected > 0">-->
+      <!--                            {{ numberOfFoldersSelected }} folder(s)-->
+      <!--                          </span>-->
+      <!--                          <span v-if="numberOfFoldersSelected > 0 && numberOfFilesSelected > 0">-->
+      <!--                            {{ numberOfFoldersSelected }} folder(s)-->
+      <!--                          </span>-->
+      <!--                          <span v-if="numberOfFilesSelected > 0">-->
+      <!--                            {{ numberOfFilesSelected }} file(s)-->
+      <!--                          </span>-->
+      <!--                          <span v-if="numberOfFoldersSelected > 0 || numberOfFilesSelected > 0">-->
+      <!--                            selected-->
+      <!--                          </span>-->
+      <!--                        </div>-->
+      <!--      </div>-->
 
       <div class="w-100" v-if="files && folders">
 
@@ -385,11 +427,12 @@ import {mapGetters, mapActions} from "vuex";
 import store from "../store";
 import Page from "../components/Page";
 import Pagination from "@/components/Pagination";
+import ProgressCircle from "@/components/ProgressCircle";
 // import UserSearchAndSelect from "@/components/EntitySelectInput";
 
 export default {
   name: "GroupDataPage",
-  components: {Pagination, Page},
+  components: {ProgressCircle, Pagination, Page},
   store: store,
   data() {
     return {
