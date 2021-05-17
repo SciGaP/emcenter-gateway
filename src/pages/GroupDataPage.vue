@@ -63,9 +63,22 @@
             Download
           </b-button>
 
-          <b-toast id="download-toast" variant="secondary" solid toaster="b-toaster-bottom-right" no-auto-hide>
+          <b-toast id="download-toast" solid toaster="b-toaster-bottom-right" no-auto-hide no-close-button>
             <template #toast-title>
-              Downloading (7)
+              <div class="w-100" style="display: flex; flex-direction: row;">
+                <div style="flex: 1;font-size: 15px;line-height: 35px;">
+                  Downloading (7)
+                </div>
+
+                <div>
+                  <b-button variant="link" style="color: white;">
+                    <b-icon icon="chevron-compact-down"></b-icon>
+                  </b-button>
+                  <b-button variant="link" style="color: white;">
+                    <b-icon icon="x"></b-icon>
+                  </b-button>
+                </div>
+              </div>
               <!--              <div class="d-flex flex-grow-1 align-items-baseline">-->
               <!--                <b-img blank blank-color="#ff5555" class="mr-2" width="12" height="12"></b-img>-->
               <!--                <strong class="mr-auto">Notice!</strong>-->
@@ -85,7 +98,7 @@
                     <b-td>file-xxxxxx-{{ i }}</b-td>
                     <b-td class="text-right">
                       <ProgressCircle value="30" min="0" max="100"/>
-                      <b-button variant="link-secondary close">
+                      <b-button variant="link-secondary">
                         <b-icon icon="x"></b-icon>
                       </b-button>
                     </b-td>
