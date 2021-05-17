@@ -24,7 +24,6 @@ import {mapGetters, mapActions} from "vuex";
 import exampleProfilePicture from "./assets/120493210_1443413932520618_6347067080170311282_n.jpg";
 import "./styles.scss";
 import AppHeader from "./components/AppHeader";
-// import AppLeftNav from "./components/AppLeftNav";
 import AppFooter from "./components/AppFooter";
 import AppLeftNav from "@/components/AppLeftNav";
 
