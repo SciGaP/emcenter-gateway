@@ -203,27 +203,27 @@
         </div>
       </div>
 
-      <div class="w-100" style="display: flex;flex-direction: row;">
-        <div v-if="displayMode === 'grid'">
-          <input type="checkbox" name="all-grid" id="all-grid" :checked="isAllSelected()"
-                 v-on:click="toggleAllSelection()" style="margin: 3px 10px;"/>
-          <label for="all-grid">Select All</label>
-        </div>
-        <!--                <div>-->
-        <!--                  <span v-if="numberOfFoldersSelected > 0">-->
-        <!--                    {{ numberOfFoldersSelected }} folder(s)-->
-        <!--                  </span>-->
-        <!--                  <span v-if="numberOfFoldersSelected > 0 && numberOfFilesSelected > 0">-->
-        <!--                    {{ numberOfFoldersSelected }} folder(s)-->
-        <!--                  </span>-->
-        <!--                  <span v-if="numberOfFilesSelected > 0">-->
-        <!--                    {{ numberOfFilesSelected }} file(s)-->
-        <!--                  </span>-->
-        <!--                  <span v-if="numberOfFoldersSelected > 0 || numberOfFilesSelected > 0">-->
-        <!--                    selected-->
-        <!--                  </span>-->
-        <!--                </div>-->
-      </div>
+<!--      <div class="w-100" style="display: flex;flex-direction: row;">-->
+<!--        <div v-if="displayMode === 'grid'">-->
+<!--          <input type="checkbox" name="all-grid" id="all-grid" :checked="isAllSelected()"-->
+<!--                 v-on:click="toggleAllSelection()" style="margin: 3px 10px;"/>-->
+<!--          <label for="all-grid">Select All</label>-->
+<!--        </div>-->
+<!--                        <div>-->
+<!--                          <span v-if="numberOfFoldersSelected > 0">-->
+<!--                            {{ numberOfFoldersSelected }} folder(s)-->
+<!--                          </span>-->
+<!--                          <span v-if="numberOfFoldersSelected > 0 && numberOfFilesSelected > 0">-->
+<!--                            {{ numberOfFoldersSelected }} folder(s)-->
+<!--                          </span>-->
+<!--                          <span v-if="numberOfFilesSelected > 0">-->
+<!--                            {{ numberOfFilesSelected }} file(s)-->
+<!--                          </span>-->
+<!--                          <span v-if="numberOfFoldersSelected > 0 || numberOfFilesSelected > 0">-->
+<!--                            selected-->
+<!--                          </span>-->
+<!--                        </div>-->
+<!--      </div>-->
 
       <div class="w-100" v-if="files && folders">
 

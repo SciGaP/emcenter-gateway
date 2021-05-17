@@ -1,41 +1,199 @@
 <template>
   <Page :title="title" :breadcrumb-links="breadcrumbLinks">
     <div class="w-100">
-      <div class="w-100 mt-2" style="display: flex; flex-direction: row;display: inline-flex;align-items: center;">
+<!--      <div class="w-100 mt-2" style="display: flex; flex-direction: row;display: inline-flex;align-items: center;">-->
+<!--        <div style="flex: 1;">-->
+<!--          <span v-if="numberOfFoldersSelected > 0">-->
+<!--            {{ numberOfFoldersSelected }} collection groups<span v-if="numberOfFoldersSelected > 1">s</span>-->
+<!--          </span>-->
+<!--          &lt;!&ndash;          <span v-if="numberOfFoldersSelected > 0 && numberOfFilesSelected > 0">&ndash;&gt;-->
+<!--          &lt;!&ndash;            &&ndash;&gt;-->
+<!--          &lt;!&ndash;          </span>&ndash;&gt;-->
+<!--          &lt;!&ndash;          <span v-if="numberOfFilesSelected > 0">&ndash;&gt;-->
+<!--          &lt;!&ndash;            {{ numberOfFilesSelected }} file(s)&ndash;&gt;-->
+<!--          &lt;!&ndash;          </span>&ndash;&gt;-->
+<!--          <span v-if="numberOfFoldersSelected > 0 || numberOfFilesSelected > 0">-->
+<!--            selected-->
+<!--          </span>-->
+<!--        </div>-->
+<!--      </div>-->
+
+      <div class="w-100"
+           style="display: flex; flex-direction: row;min-height:45px; display: inline-flex;align-items: center;">
         <div style="flex: 1;">
           <span v-if="numberOfFoldersSelected > 0">
-            {{ numberOfFoldersSelected }} collection groups<span v-if="numberOfFoldersSelected > 1">s</span>
+            {{ numberOfFoldersSelected }} collection group<span v-if="numberOfFoldersSelected > 1">s</span>
           </span>
-          <!--          <span v-if="numberOfFoldersSelected > 0 && numberOfFilesSelected > 0">-->
-          <!--            &-->
-          <!--          </span>-->
-          <!--          <span v-if="numberOfFilesSelected > 0">-->
-          <!--            {{ numberOfFilesSelected }} file(s)-->
-          <!--          </span>-->
+<!--          <span v-if="numberOfFoldersSelected > 0 && numberOfFilesSelected > 0">-->
+<!--            &-->
+<!--          </span>-->
+<!--          <span v-if="numberOfFilesSelected > 0">-->
+<!--            {{ numberOfFilesSelected }} dataset<span v-if="numberOfFilesSelected > 1">s</span>-->
+<!--          </span>-->
           <span v-if="numberOfFoldersSelected > 0 || numberOfFilesSelected > 0">
             selected
           </span>
         </div>
-      </div>
+        <div class="text-left">
+          <b-button variant="link" v-if="hasAnythingSelected()">
+            <b-icon icon="download"></b-icon>
+            Download
+          </b-button>
+          <b-button variant="link" v-if="hasAnythingSelected()">
+            <b-icon icon="cloud"></b-icon>
+            Copy to
+          </b-button>
+
+          <b-button variant="link" v-if="hasAnythingSelected()">
+            <b-icon icon="share"></b-icon>
+            Share
+          </b-button>
+
+          <b-button variant="link" v-if="hasAnythingSelected()">
+            <b-icon icon="folder"></b-icon>
+            Group Collections
+          </b-button>
+
+          <b-button variant="link" v-if="hasAnythingSelected()">
+            <b-icon icon="archive"></b-icon>
+            Archive
+          </b-button>
+
+          <b-button variant="link" v-if="hasAnythingSelected()">
+            <b-icon icon="trash"></b-icon>
+            Delete
+          </b-button>
+
+          <b-button variant="link" v-b-modal="`modal-create-collection-group`">
+            <b-icon icon="plus"></b-icon>
+            Create New
+          </b-button>
+
+          <b-modal :id="`modal-create-collection-group`" title="Collection Group">
+            <div>
+              <label for="collection-group-name">Collection Group Name</label>
+              <b-form-input id="collection-group-name"></b-form-input>
+            </div>
+            <template #modal-footer="{close}">
+              <b-button size="sm" variant="outline-primary" v-on:click="close()">Cancel</b-button>
+              <b-button size="sm" variant="primary" v-on:click="close()">Save</b-button>
+            </template>
+          </b-modal>
 
 
-      <div class="w-100 pt-4"></div>
+          <!--          <b-button variant="link" v-b-modal.modal-selected-collections-download-->
+          <!--                    v-if="displayMode === 'grid' && hasAnythingSelected()">-->
+          <!--            Download-->
+          <!--          </b-button>-->
+          <!--          <b-modal id="modal-selected-collections-download" title="Download">-->
+          <!--            <p class="my-4">Preparing to download...... </p>-->
+          <!--          </b-modal>-->
 
-      <div class="w-100 text-right">
-        <b-button variant="link" v-b-modal="`modal-create-collection-group`">
-          <b-icon icon="plus"></b-icon>
-          Create New
-        </b-button>
-        <b-modal :id="`modal-create-collection-group`" title="Collection Group">
-          <div>
-            <label for="collection-group-name">Collection Group Name</label>
-            <b-form-input id="collection-group-name"></b-form-input>
-          </div>
-          <template #modal-footer="{close}">
-            <b-button size="sm" variant="outline-primary" v-on:click="close()">Cancel</b-button>
-            <b-button size="sm" variant="primary" v-on:click="close()">Save</b-button>
-          </template>
-        </b-modal>
+          <!--          <b-button variant="link" v-b-modal.modal-selected-collections-share-->
+          <!--                    v-if="displayMode === 'grid' && hasAnythingSelected()">-->
+          <!--            Share-->
+          <!--          </b-button>-->
+          <!--          <b-modal id="modal-selected-collections-share" title="Share">-->
+          <!--            <b-table-simple small>-->
+          <!--              <b-thead>-->
+          <!--                <b-tr>-->
+          <!--                  <b-th>User</b-th>-->
+          <!--                  <b-th>Read</b-th>-->
+          <!--                  <b-th>Write</b-th>-->
+          <!--                  <b-th>Share</b-th>-->
+          <!--                </b-tr>-->
+          <!--              </b-thead>-->
+          <!--              <b-tbody>-->
+          <!--                <b-tr>-->
+          <!--                  <b-td>Dinuka</b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox :checked="true" :disabled="true"/>-->
+          <!--                  </b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox/>-->
+          <!--                  </b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox/>-->
+          <!--                  </b-td>-->
+          <!--                </b-tr>-->
+          <!--                <tr>-->
+          <!--                  <b-td>Tanya</b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox :checked="true" :disabled="true"/>-->
+          <!--                  </b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox/>-->
+          <!--                  </b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox/>-->
+          <!--                  </b-td>-->
+          <!--                </tr>-->
+          <!--                <b-tr>-->
+          <!--                  <b-td>Thomas</b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox :checked="true" :disabled="true"/>-->
+          <!--                  </b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox/>-->
+          <!--                  </b-td>-->
+          <!--                  <b-td>-->
+          <!--                    <b-checkbox/>-->
+          <!--                  </b-td>-->
+          <!--                </b-tr>-->
+          <!--                <b-tr>-->
+          <!--                  <b-td>-->
+          <!--                    <UserSearchAndSelect v-on:change="(u) => u"/>-->
+          <!--                  </b-td>-->
+          <!--                </b-tr>-->
+          <!--              </b-tbody>-->
+          <!--            </b-table-simple>-->
+          <!--          </b-modal>-->
+
+          <!--          <b-button variant="link" v-b-modal.modal-selected-collections-history v-if="hasAnythingSelected()">-->
+          <!--            History-->
+          <!--          </b-button>-->
+          <!--          <b-modal id="modal-selected-collections-history" title="History">-->
+          <!--            <b-table-simple small>-->
+          <!--              <b-thead>-->
+          <!--                <b-tr>-->
+          <!--                  <b-th>User</b-th>-->
+          <!--                  <b-th>Date & Time</b-th>-->
+          <!--                </b-tr>-->
+          <!--              </b-thead>-->
+          <!--              <b-tbody>-->
+          <!--                <tr>-->
+          <!--                  <b-td>Dinuka</b-td>-->
+          <!--                  <b-td>03/05/2021 11.33am</b-td>-->
+          <!--                </tr>-->
+          <!--                <tr>-->
+          <!--                  <b-td>Dinuka</b-td>-->
+          <!--                  <b-td>03/05/2021 11.46am</b-td>-->
+          <!--                </tr>-->
+          <!--                <tr>-->
+          <!--                  <b-td>Thomas</b-td>-->
+          <!--                  <b-td>03/06/2021 01.12pm</b-td>-->
+          <!--                </tr>-->
+          <!--                <tr>-->
+          <!--                  <b-td>Sarah</b-td>-->
+          <!--                  <b-td>03/06/2021 05.22pm</b-td>-->
+          <!--                </tr>-->
+          <!--                <tr>-->
+          <!--                  <b-td>Sarah</b-td>-->
+          <!--                  <b-td>03/06/2021 05.37am</b-td>-->
+          <!--                </tr>-->
+          <!--              </b-tbody>-->
+          <!--            </b-table-simple>-->
+          <!--          </b-modal>-->
+
+          <!--          <b-button size="sm" v-if="parentFolderId" :variant="displayMode !== 'list'? 'outline-primary': 'primary'"-->
+          <!--                    v-on:click="switchDisplayMode('list')">-->
+          <!--            <b-icon icon="list" aria-hidden="true"></b-icon>-->
+          <!--          </b-button>-->
+          <!--          <b-button size="sm" v-if="parentFolderId" :variant="displayMode !== 'grid'? 'outline-primary': 'primary'"-->
+          <!--                    class="ml-2" v-on:click="switchDisplayMode('grid')">-->
+          <!--            <b-icon icon="grid" aria-hidden="true"></b-icon>-->
+          <!--          </b-button>-->
+        </div>
       </div>
 
       <div class="w-100" v-if="folders">
