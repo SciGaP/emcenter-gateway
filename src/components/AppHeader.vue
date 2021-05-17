@@ -1,5 +1,6 @@
 <template>
-  <b-navbar toggleable="lg" type="light" variant="light" class="bg-white" v-if="authenticated">
+  <b-navbar toggleable="lg" type="light" variant="light" class="bg-white" v-if="authenticated"
+            style="box-shadow: 0px 0px 4px 0px #adb5bd;">
     <b-navbar-brand href="#" style="font-size: 1.6rem;color: #9a0002;padding-left: 20px;">
       {{ $t('app.top-header.title') }}
     </b-navbar-brand>

@@ -1,79 +1,83 @@
 <template>
   <div v-if="authenticated" class="p-3">
     <ul>
-      <li>
-        <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
-          <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <img :src="svgDashboard" style="width: 16px;height: 16px;"/>
-            Dashboard
-          </a>
-        </router-link>
-      </li>
+<!--      <li>-->
+<!--        <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">-->
+<!--          <a :class="{active: isExactActive}" :href="href" @click="navigate">-->
+<!--            <img :src="svgDashboard" style="width: 16px;height: 16px;"/>-->
+<!--            Dashboard-->
+<!--          </a>-->
+<!--        </router-link>-->
+<!--      </li>-->
       <li>
         <router-link to="/collections" v-slot="{ href, route, navigate, isActive}" tag="">
           <a :class="{active: isActive}" :href="href" @click="navigate">
             <img :src="svgFileRuled" style="width: 16px;height: 16px;"/>
-            Collections
+            My Collections
           </a>
         </router-link>
-        <ul>
-          <li>
-            <router-link to="/collections/recent" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
-              <a :class="{active: isExactActive}" :href="href" @click="navigate">
-                Recent
-              </a>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/collections/downloaded" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
-              <a :class="{active: isExactActive}" :href="href" @click="navigate">
-                Downloaded
-              </a>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/collections/shared" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
-              <a :class="{active: isExactActive}" :href="href" @click="navigate">
-                Shared
-              </a>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/collections/received" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
-              <a :class="{active: isExactActive}" :href="href" @click="navigate">
-                Received
-              </a>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/collections/uploaded" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
-              <a :class="{active: isExactActive}" :href="href" @click="navigate">
-                Uploaded
-              </a>
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/collections/deleted" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
-              <a :class="{active: isExactActive}" :href="href" @click="navigate">
-                Deleted
-              </a>
-            </router-link>
-          </li>
-        </ul>
+      </li>
+      <li>
+        <router-link to="/downloaded" v-slot="{ href, route, navigate, isActive}" tag="">
+          <a :class="{active: isActive}" :href="href" @click="navigate">
+            <b-icon icon="download"></b-icon>
+            Downloaded
+          </a>
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/shared" v-slot="{ href, route, navigate, isActive}" tag="">
+          <a :class="{active: isActive}" :href="href" @click="navigate">
+            <b-icon icon="share"></b-icon>
+            Shared
+          </a>
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/collection-groups" v-slot="{ href, route, navigate, isActive}" tag="">
+          <a :class="{active: isActive}" :href="href" @click="navigate">
+            <b-icon icon="folder"></b-icon>
+            Collection Groups
+          </a>
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/archived" v-slot="{ href, route, navigate, isActive}" tag="">
+          <a :class="{active: isActive}" :href="href" @click="navigate">
+            <b-icon icon="archive"></b-icon>
+            Archived
+          </a>
+        </router-link>
       </li>
       <li>
         <router-link to="/groups" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
           <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <img :src="svgPeople" style="width: 16px;height: 16px;"/>
-            Groups
+            <b-icon icon="people"></b-icon>
+            My Groups
           </a>
         </router-link>
       </li>
       <li>
         <router-link to="/settings" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
           <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <img :src="svgGear" style="width: 16px;height: 16px;"/>
+            <b-icon icon="gear"></b-icon>
             Storage Settings
+          </a>
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/notifications" v-slot="{ href, route, navigate, isActive}" tag="">
+          <a :class="{active: isActive}" :href="href" @click="navigate">
+            <b-icon icon="bell"></b-icon>
+            Notifications
+          </a>
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/profile" v-slot="{ href, route, navigate, isActive}" tag="">
+          <a :class="{active: isActive}" :href="href" @click="navigate">
+            <b-icon icon="person"></b-icon>
+            Profile
           </a>
         </router-link>
       </li>

@@ -59,6 +59,13 @@ export default new Router({
                 import("./pages/GroupDataPage")
         },
         {
+            path: "/collection-groups",
+            name: "data",
+            beforeEnter: _validateAuthenticationBeforeEnter,
+            component: () =>
+                import("./pages/CollectionGroups")
+        },
+        {
             path: "/groups",
             name: "groups",
             beforeEnter: _validateAuthenticationBeforeEnter,

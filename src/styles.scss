@@ -32,8 +32,8 @@ $light: #F7F7F7 !default;
 $table-border-width: 1px !default;
 $table-border-color: $light !default;
 
-$table-head-bg: red !default;
-$table-head-color: blue !default;
+//$table-head-bg: red !default;
+//$table-head-color: blue !default;
 //$table-th-font-weight: null !default;
 
 //$table-dark-color: $white !default;
@@ -119,7 +119,8 @@ $alert-color-level:                 6 !default;
 
 
 .table thead th {
-  background-color: #f7f7f7;
+  //background-color: #f7f7f7;
+  border: none;
 }
 
 .table {
