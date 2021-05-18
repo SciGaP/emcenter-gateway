@@ -3,6 +3,7 @@ import axios from "axios";
 
 const state = {
     fileMap: {},
+    fileDownloadMap: {},
     fileThumbnailMap: {},
     fileListMap: {}
 };
@@ -36,6 +37,32 @@ const actions = {
         commit("SET_FILE_LIST", {queryString, fileIds});
     },
 
+    async downloadFile({commit, state}, {fileId}) {
+        if (!state.fileDownloadMap[fileId] || !state.fileDownloadMap[fileId].processing) {
+            const fileDownload = {content: null, processing: true, errors: null, progress: 20};
+            commit("SET_FILE_DOWNLOAD", {fileId, ...fileDownload});
+
+            await new Promise((resolve => setTimeout(resolve, 1000)));
+            fileDownload.progress = 30;
+            commit("SET_FILE_DOWNLOAD", {fileId, ...fileDownload});
+
+
+            await new Promise((resolve => setTimeout(resolve, 1000)));
+            fileDownload.progress = 70;
+            commit("SET_FILE_DOWNLOAD", {fileId, ...fileDownload});
+
+
+            await new Promise((resolve => setTimeout(resolve, 1000)));
+            fileDownload.progress = 99;
+            commit("SET_FILE_DOWNLOAD", {fileId, ...fileDownload});
+
+            fileDownload.content = await emcService.files.downloadFile({fileId});
+            fileDownload.processing = false;
+            fileDownload.progress = 100;
+            commit("SET_FILE_DOWNLOAD", {fileId, ...fileDownload});
+        }
+    },
+
     async fetchFileThumbnail({commit}, {fileId}) {
 
         // TODO
@@ -60,6 +87,15 @@ const mutations = {
             [fileId]: {
                 ...state.fileMap[fileId],
                 fileId, name, createdAt, createdBy, status, mimeType
+            }
+        };
+    },
+    SET_FILE_DOWNLOAD(state, {fileId, content, processing, progress}) {
+        state.fileDownloadMap = {
+            ...state.fileDownloadMap,
+            [fileId]: {
+                ...state.fileDownloadMap[fileId],
+                fileId, content, processing, progress
             }
         };
     },
@@ -97,13 +133,43 @@ const getters = {
             if (state.fileMap[fileId]) {
                 const {name, createdAt, createdBy, status, mimeType} = state.fileMap[fileId];
                 let fileThumbnailDataUrl = null;
+                let download = null;
+
                 if (state.fileThumbnailMap[fileId]) {
                     fileThumbnailDataUrl = state.fileThumbnailMap[fileId];
                 }
-                return {fileId, name, createdAt, createdBy, status, mimeType, fileThumbnailDataUrl};
+
+                if (state.fileDownloadMap[fileId]) {
+                    download = state.fileDownloadMap[fileId];
+                }
+
+                return {fileId, name, createdAt, createdBy, status, mimeType, fileThumbnailDataUrl, download};
             } else {
                 return null;
             }
+        }
+    },
+
+    getFileDownload: (state) => {
+        return ({fileId}) => {
+            if (state.fileDownloadMap[fileId]) {
+                return state.fileDownloadMap[fileId];
+            } else {
+                return null;
+            }
+        }
+    },
+
+    getDownloadProcessingFiles: (state, getters) => {
+        return () => {
+            const processingFiles = [];
+            for (let fileId in state.fileDownloadMap) {
+                if (state.fileDownloadMap[fileId].processing) {
+                    processingFiles.push(getters.getFile({fileId}))
+                }
+            }
+
+            return processingFiles
         }
     }
 }

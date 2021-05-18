@@ -58,7 +58,7 @@
           </span>
         </div>
         <div class="text-left">
-          <b-button variant="link" v-if="hasAnythingSelected()" @click="$bvToast.show('download-toast')">
+          <b-button variant="link" v-if="hasAnythingSelected()" @click="downloadSelectedFiles()">
             <b-icon icon="download"></b-icon>
             Download
           </b-button>
@@ -704,6 +704,13 @@ export default {
       }
 
       return false;
+    },
+    downloadSelectedFiles() {
+      for (let fileId in this.selectedFileIdMap) {
+        if (this.selectedFileIdMap[fileId]) {
+          this.$store.dispatch("emcFile/downloadFile", {fileId});
+        }
+      }
     }
   },
   watch: {

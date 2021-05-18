@@ -22,6 +22,14 @@ export default class EmcFiles {
         ]
     }
 
+    downloadFile({fileId}) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(`file-content-${fileId}`);
+            }, 2000);
+        })
+    }
+
     get({parentFolderId}) {
 
         // TODO
