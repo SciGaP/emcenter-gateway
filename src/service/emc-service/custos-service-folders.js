@@ -460,15 +460,19 @@ export default class EmcFolders {
             ]
         };
 
-        return resources.filter(({type}) => type === "Collection")
-            .map(({properties: {createdAt, createdBy, name, collectionId}}) => {
-                return {
-                    folderId: collectionId,
-                    name: name,
-                    createdAt: createdAt,
-                    createdBy: createdBy,
-                    own: own
-                }
-            });
+        if (parentFolderId) {
+            return [];
+        } else {
+            return resources.filter(({type}) => type === "Collection")
+                .map(({properties: {createdAt, createdBy, name, collectionId}}) => {
+                    return {
+                        folderId: collectionId,
+                        name: name,
+                        createdAt: createdAt,
+                        createdBy: createdBy,
+                        own: own
+                    }
+                });
+        }
     }
 }

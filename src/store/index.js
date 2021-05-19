@@ -10,6 +10,7 @@ import auth from "./modules/auth.store";
 
 import emcFile from "./modules/emc/emc-file.store";
 import emcFolder from "./modules/emc/emc-folder.store";
+import emcCollectionGroup from "./modules/emc/emc-collection-group.store";
 import {custosService} from "@/store/util/custos.util";
 
 
@@ -31,7 +32,8 @@ export default new Vuex.Store({
         group,
         tenant,
         "emcFile": emcFile,
-        "emcFolder": emcFolder
+        "emcFolder": emcFolder,
+        "emcCollectionGroup": emcCollectionGroup
     },
     strict: debug,
     plugins: debug ? [createLogger(), custosSessionPlugin] : [custosSessionPlugin],

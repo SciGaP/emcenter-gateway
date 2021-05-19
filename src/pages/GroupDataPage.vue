@@ -58,7 +58,7 @@
           </span>
         </div>
         <div class="text-left">
-          <b-button variant="link" v-if="hasAnythingSelected()" @click="downloadSelectedFiles()">
+          <b-button variant="link" v-if="hasAnythingSelected()" @click="downloadEverythingSelected()">
             <b-icon icon="download"></b-icon>
             Download
           </b-button>
@@ -705,10 +705,21 @@ export default {
 
       return false;
     },
+    downloadEverythingSelected() {
+      this.downloadSelectedFiles();
+      this.downloadSelectedFolders();
+    },
     downloadSelectedFiles() {
       for (let fileId in this.selectedFileIdMap) {
         if (this.selectedFileIdMap[fileId]) {
           this.$store.dispatch("emcFile/downloadFile", {fileId});
+        }
+      }
+    },
+    downloadSelectedFolders() {
+      for (let folderId in this.selectedFolderIdMap) {
+        if (this.selectedFolderIdMap[folderId]) {
+          this.$store.dispatch("emcFolder/downloadFolder", {folderId});
         }
       }
     }

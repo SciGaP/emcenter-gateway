@@ -34,6 +34,13 @@ const actions = {
 
         commit("SET_FOLDER_LIST", {queryString, folderIds});
     },
+    async downloadFolder({dispatch, rootGetters}, {folderId}) {
+        await dispatch('emcFile/fetchFiles', {parentFolderId: folderId}, {root: true});
+        const files = rootGetters["emcFile/getFiles"]({parentFolderId: folderId});
+        for (let i = 0; i < files.length; i++) {
+            dispatch('emcFile/downloadFile', {fileId: files[i].fileId}, {root: true});
+        }
+    },
     async fetchFolderPath({commit}, {folderId}) {
         const folderPath = await emcService.folders.fetchPath({folderId});
         const folderIds = folderPath.map(({folderId}) => {

@@ -462,16 +462,20 @@ export default class EmcFiles {
             ]
         };
 
-        return resources.filter(({type}) => type === "Dataset")
-            .map(({properties: {createdAt, createdBy, name, datasetId}}) => {
-                return {
-                    fileId: datasetId,
-                    name: name,
-                    createdAt: createdAt,
-                    createdBy: createdBy,
-                    status: "",
-                    mimeType: "text/plain"
-                }
-            });
+        if (!parentFolderId) {
+            return [];
+        } else {
+            return resources.filter(({type}) => type === "Dataset")
+                .map(({properties: {createdAt, createdBy, name, datasetId}}) => {
+                    return {
+                        fileId: datasetId,
+                        name: name,
+                        createdAt: createdAt,
+                        createdBy: createdBy,
+                        status: "",
+                        mimeType: "text/plain"
+                    }
+                });
+        }
     }
 }
