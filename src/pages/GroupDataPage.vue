@@ -352,7 +352,7 @@
 
                 <b-tr v-if="folders.length > 0" class="w-100 pt-5"></b-tr>
 
-                <b-tr v-for="file in files" :key="file.fileId" :class="{selected: isFileSelected(file)}">
+                <b-tr v-for="(file) in files" :key="file.fileId" :class="{selected: isFileSelected(file)}">
                   <b-td>
                     <input type="checkbox" :checked="isFileSelected(file)" v-on:click="toggleFileSelection(file)"
                            :name="getFileSelectionCheckboxId(file)" :id="getFileSelectionCheckboxId(file)"/>

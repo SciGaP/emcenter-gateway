@@ -1,5 +1,5 @@
 <template>
-  <b-modal :id="modalId" :title="file.name" size="md">
+  <b-modal :id="modalId" :title="file.name" size="lg">
     <div>
       <div>
         <b-button variant="link">
@@ -25,9 +25,15 @@
                                                            :folder-ids="[]"
                                                            :file-ids="[fileId]"/>
       </div>
-      <div>
+      <div style="display: flex; flex-direction: row;">
         <!--        <div>{{ file }}</div>-->
+        <b-button variant="link" v-on:click="$emit('left')">
+          <b-icon icon="arrow-left"></b-icon>
+        </b-button>
         <b-icon icon="image" style="width: 100%;height: 300px;"></b-icon>
+        <b-button variant="link"  v-on:click="$emit('right')">
+          <b-icon icon="arrow-right"></b-icon>
+        </b-button>
       </div>
     </div>
     <template #modal-footer="{close}">
@@ -50,7 +56,11 @@ export default {
   components: {MapSelectedFilesAndFoldersToCollectionGroupsModal},
   props: {
     modalId: {default: ""},
-    fileId: {default: ""}
+    fileId: {default: ""},
+    fileIds: {default: []}
+  },
+  data() {
+    return {}
   },
   computed: {
     file() {
