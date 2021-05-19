@@ -1,5 +1,3 @@
-// import {emcService} from "@/store/util/emc.util";
-
 const state = {
     collectionGroupMap: {
         0: {
@@ -19,17 +17,10 @@ const state = {
             lastUpdatedAt: new Date().toISOString()
         }
     },
-    collectionGroupFileMap: {
-        0: [],
-        1: []
-    },
-    collectionGroupFolderMap: {
-        0: [],
-        1: []
-    },
+    collectionGroupFileMap: {},
+    collectionGroupFolderMap: {},
     collectionGroupList: [0, 1]
 };
-
 
 const actions = {
     async createCollectionGroup({commit, state, rootGetters}, {name}) {
@@ -71,32 +62,24 @@ const mutations = {
             ...state.collectionGroupList,
             collectionGroupId
         ];
-        state.collectionGroupFileMap = {
-            ...state.collectionGroupFileMap,
-            [collectionGroupId]: []
-        };
-        state.collectionGroupFolderMap = {
-            ...state.collectionGroupFolderMap,
-            [collectionGroupId]: []
-        };
     },
     SET_COLLECTION_GROUP_FILE(state, {collectionGroupId, fileId}) {
         console.log("state.collectionGroupFileMap : ", state.collectionGroupFileMap);
         state.collectionGroupFileMap = {
             ...state.collectionGroupFileMap,
-            [collectionGroupId]: [
+            [collectionGroupId]: {
                 ...state.collectionGroupFileMap[collectionGroupId],
-                fileId
-            ]
+                [fileId]: true
+            }
         };
     },
     SET_COLLECTION_GROUP_FOLDER(state, {collectionGroupId, folderId}) {
         state.collectionGroupFolderMap = {
             ...state.collectionGroupFolderMap,
-            [collectionGroupId]: [
+            [collectionGroupId]: {
                 ...state.collectionGroupFolderMap[collectionGroupId],
-                folderId
-            ]
+                [folderId]: true
+            }
         };
     }
 }
@@ -117,24 +100,30 @@ const getters = {
     },
     getCollectionGroupFiles: (state, getters, rootState, rootGetters) => {
         return ({collectionGroupId}) => {
+            const files = [];
             if (state.collectionGroupFileMap[collectionGroupId]) {
-                return state.collectionGroupFileMap[collectionGroupId].map((fileId) => {
-                    return rootGetters["emcFile/getFile"]({fileId});
-                });
-            } else {
-                return [];
+                for (let fileId in state.collectionGroupFileMap[collectionGroupId]) {
+                    if (state.collectionGroupFileMap[collectionGroupId][fileId]) {
+                        files.push(rootGetters["emcFile/getFile"]({fileId}));
+                    }
+                }
             }
+
+            return files;
         }
     },
     getCollectionGroupFolders: (state, getters, rootState, rootGetters) => {
         return ({collectionGroupId}) => {
+            const folders = [];
             if (state.collectionGroupFolderMap[collectionGroupId]) {
-                return state.collectionGroupFolderMap[collectionGroupId].map((folderId) => {
-                    return rootGetters["emcFolder/getFolder"]({folderId});
-                });
-            } else {
-                return [];
+                for (let folderId in state.collectionGroupFolderMap[collectionGroupId]) {
+                    if (state.collectionGroupFolderMap[collectionGroupId][folderId]) {
+                        folders.push(rootGetters["emcFolder/getFolder"]({folderId}));
+                    }
+                }
             }
+
+            return folders;
         }
     }
 }
