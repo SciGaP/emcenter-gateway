@@ -4,7 +4,7 @@
       <div class="w-100" style="min-height: 25px;">
         <Breadcrumb v-if="breadcrumbLinks && breadcrumbLinks.length > 0" class="mb-2 mt-2" :links="breadcrumbLinks"/>
       </div>
-      <h1 v-if="title" style="font-size: 2rem;font-weight: 200;color: black;">{{ title }}</h1>
+      <h1 v-if="title" style="font-size: 2rem;font-weight: 300;color: black;">{{ title }}</h1>
     </div>
     <div class="w-100" style="">
       <slot></slot>
