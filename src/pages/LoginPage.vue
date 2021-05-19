@@ -111,7 +111,7 @@ export default {
         if (this.successRedirect) {
           this.$router.push(this.successRedirect);
         } else {
-          this.$router.push('workspace');
+          this.$router.push('collections');
         }
       }
     }

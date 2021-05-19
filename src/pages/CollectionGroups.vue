@@ -56,10 +56,10 @@
             Share
           </b-button>
 
-          <b-button variant="link" v-if="hasAnythingSelected()">
-            <b-icon icon="folder"></b-icon>
-            Group Collections
-          </b-button>
+<!--          <b-button variant="link" v-if="hasAnythingSelected()">-->
+<!--            <b-icon icon="folder"></b-icon>-->
+<!--            Group Collections-->
+<!--          </b-button>-->
 
           <b-button variant="link" v-if="hasAnythingSelected()">
             <b-icon icon="archive"></b-icon>
