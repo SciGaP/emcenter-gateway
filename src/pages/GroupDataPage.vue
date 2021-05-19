@@ -360,9 +360,11 @@
                   </b-td>
                   <b-td>
                     <b-icon style="height: 100%;" icon="card-image" aria-hidden="true"></b-icon>
-                    <a href="#" style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;">
+                    <a href="#" style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
+                       v-b-modal="`file-preview-modal-${file.fileId}`">
                       {{ file.name }}
                     </a>
+                    <FilePreviewModal :modal-id="`file-preview-modal-${file.fileId}`" :file-id="file.fileId"/>
                   </b-td>
                   <b-td>1MB</b-td>
                   <b-td>08/31/2020 14:00 PM</b-td>
@@ -391,10 +393,11 @@ import Page from "../components/Page";
 import Pagination from "@/components/Pagination";
 import MapSelectedFilesAndFoldersToCollectionGroupsModal
   from "@/components/modals/map-selected-files-and-folders-to-collection-groups-modal";
+import FilePreviewModal from "@/components/modals/file-preview-modal";
 
 export default {
   name: "GroupDataPage",
-  components: {MapSelectedFilesAndFoldersToCollectionGroupsModal, Pagination, Page},
+  components: {FilePreviewModal, MapSelectedFilesAndFoldersToCollectionGroupsModal, Pagination, Page},
   store: store,
   data() {
     return {
