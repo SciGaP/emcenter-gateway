@@ -77,7 +77,7 @@
             <b-icon icon="folder"></b-icon>
             Group Collections
           </b-button>
-          <MapSelectedFilesAndFoldersToCollectionGroupsModal id="map-to-collection-groups-modal"
+          <MapSelectedFilesAndFoldersToCollectionGroupsModal modal-id="map-to-collection-groups-modal"
                                                              :folder-ids="selectedFolderIds"
                                                              :file-ids="selectedFileIds"/>
 

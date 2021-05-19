@@ -1,5 +1,5 @@
 <template>
-  <b-modal :id="id" title="Collection Group">
+  <b-modal :id="modalId" title="Collection Group">
     <div>
       <div v-for="collectionGroup in collectionGroups" :key="collectionGroup.collectionGroupId">
         <input type="checkbox" :checked="isCollectionGroupMapped(collectionGroup)"
@@ -26,7 +26,7 @@ export default {
   name: "map-selected-files-and-folders-to-collection-groups-modal",
   store: store,
   props: {
-    id: {
+    modalId: {
       default: ""
     },
     fileIds: {

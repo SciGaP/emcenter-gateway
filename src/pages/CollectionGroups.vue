@@ -76,7 +76,7 @@
             Create New
           </b-button>
 
-          <CreateNewCollectionGroupModal id="modal-create-collection-group"/>
+          <CreateNewCollectionGroupModal modal-id="modal-create-collection-group"/>
           <!--          <b-modal :id="`modal-create-collection-group`" title="Collection Group">-->
           <!--            <div>-->
           <!--              <label for="collection-group-name">Collection Group Name</label>-->
