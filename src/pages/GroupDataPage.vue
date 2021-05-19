@@ -63,55 +63,6 @@
             Download
           </b-button>
 
-          <b-toast id="download-toast" solid toaster="b-toaster-bottom-right" no-auto-hide no-close-button>
-            <template #toast-title>
-              <div class="w-100" style="display: flex; flex-direction: row;">
-                <div style="flex: 1;font-size: 15px;line-height: 35px;">
-                  Downloading (7)
-                </div>
-
-                <div>
-                  <b-button variant="link" style="color: white;">
-                    <b-icon icon="chevron-compact-down"></b-icon>
-                  </b-button>
-                  <b-button variant="link" style="color: white;">
-                    <b-icon icon="x"></b-icon>
-                  </b-button>
-                </div>
-              </div>
-            </template>
-            <div style="max-height: 300px; overflow: auto;">
-              <b-table-simple>
-                <b-thead style="visibility: hidden;position: fixed;top:-100px">
-                  <b-tr>
-                    <b-th>Name</b-th>
-                    <b-th>Progress</b-th>
-                  </b-tr>
-                </b-thead>
-                <b-tbody>
-                  <b-tr v-for="i in [1,2,3,4,5,6,7,8,9]" :key="i">
-                    <b-td>file-xxxxxx-{{ i }}</b-td>
-                    <b-td class="text-right">
-                      <ProgressCircle value="30" min="0" max="100"/>
-                      <b-button variant="link-secondary">
-                        <b-icon icon="x"></b-icon>
-                      </b-button>
-                    </b-td>
-                  </b-tr>
-                </b-tbody>
-              </b-table-simple>
-              <!--              <div v-for="i in [1,2,3,4,5,6,7,8,9]" :key="i">-->
-              <!--                <div style="display: flex; flex-direction: row;">-->
-              <!--                  <div style="flex: 1;padding: 5px;">file-xxxxxx-{{ i }}</div>-->
-              <!--                  <div>-->
-              <!--                    <ProgressCircle value="30" min="0" max="100"/>-->
-              <!--                  </div>-->
-              <!--                </div>-->
-              <!--              </div>-->
-            </div>
-          </b-toast>
-
-
           <b-button variant="link" v-if="hasAnythingSelected()">
             <b-icon icon="cloud"></b-icon>
             Copy to
@@ -122,10 +73,13 @@
             Share
           </b-button>
 
-          <b-button variant="link" v-if="hasAnythingSelected()">
+          <b-button variant="link" v-if="hasAnythingSelected()" v-b-modal="`map-to-collection-groups-modal`">
             <b-icon icon="folder"></b-icon>
             Group Collections
           </b-button>
+          <MapSelectedFilesAndFoldersToCollectionGroupsModal id="map-to-collection-groups-modal"
+                                                             :folder-ids="selectedFolderIds"
+                                                             :file-ids="selectedFileIds"/>
 
           <b-button variant="link" v-if="hasAnythingSelected()">
             <b-icon icon="archive"></b-icon>
@@ -435,12 +389,12 @@ import {mapGetters, mapActions} from "vuex";
 import store from "../store";
 import Page from "../components/Page";
 import Pagination from "@/components/Pagination";
-import ProgressCircle from "@/components/ProgressCircle";
-// import UserSearchAndSelect from "@/components/EntitySelectInput";
+import MapSelectedFilesAndFoldersToCollectionGroupsModal
+  from "@/components/modals/map-selected-files-and-folders-to-collection-groups-modal";
 
 export default {
   name: "GroupDataPage",
-  components: {ProgressCircle, Pagination, Page},
+  components: {MapSelectedFilesAndFoldersToCollectionGroupsModal, Pagination, Page},
   store: store,
   data() {
     return {
@@ -575,6 +529,26 @@ export default {
       }
 
       return _numberOfFoldersSelected;
+    },
+    selectedFileIds() {
+      const fileIds = [];
+      for (let fileId in this.selectedFileIdMap) {
+        if (this.selectedFileIdMap[fileId]) {
+          fileIds.push(fileId);
+        }
+      }
+
+      return fileIds;
+    },
+    selectedFolderIds() {
+      const folderIds = [];
+      for (let folderId in this.selectedFolderIdMap) {
+        if (this.selectedFolderIdMap[folderId]) {
+          folderIds.push(folderId);
+        }
+      }
+
+      return folderIds;
     }
   },
   methods: {

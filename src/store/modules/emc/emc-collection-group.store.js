@@ -48,8 +48,17 @@ const mutations = {
             ...state.collectionGroupList,
             collectionGroupId
         ];
+        state.collectionGroupFileMap = {
+            ...state.collectionGroupFileMap,
+            [collectionGroupId]: []
+        };
+        state.collectionGroupFolderMap = {
+            ...state.collectionGroupFolderMap,
+            [collectionGroupId]: []
+        };
     },
     SET_COLLECTION_GROUP_FILE(state, {collectionGroupId, fileId}) {
+        console.log("state.collectionGroupFileMap : ", state.collectionGroupFileMap);
         state.collectionGroupFileMap = {
             ...state.collectionGroupFileMap,
             [collectionGroupId]: [
@@ -83,7 +92,7 @@ const getters = {
             return state.collectionGroupMap[collectionGroupId];
         }
     },
-    getCollectionGroupFiles: (state, rootGetters) => {
+    getCollectionGroupFiles: (state, getters, rootState, rootGetters) => {
         return ({collectionGroupId}) => {
             if (state.collectionGroupFileMap[collectionGroupId]) {
                 return state.collectionGroupFileMap[collectionGroupId].map((fileId) => {
@@ -94,7 +103,7 @@ const getters = {
             }
         }
     },
-    getCollectionGroupFolders: (state, rootGetters) => {
+    getCollectionGroupFolders: (state, getters, rootState, rootGetters) => {
         return ({collectionGroupId}) => {
             if (state.collectionGroupFolderMap[collectionGroupId]) {
                 return state.collectionGroupFolderMap[collectionGroupId].map((folderId) => {
