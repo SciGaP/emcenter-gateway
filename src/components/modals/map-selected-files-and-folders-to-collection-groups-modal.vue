@@ -1,8 +1,6 @@
 <template>
   <b-modal :id="id" title="Collection Group">
     <div>
-      {{this.fileIds}}
-      {{this.folderIds}}
       <div v-for="collectionGroup in collectionGroups" :key="collectionGroup.collectionGroupId">
         <input type="checkbox" :checked="isCollectionGroupMapped(collectionGroup)"
                v-on:click="toggleCollectionGroup(collectionGroup)"

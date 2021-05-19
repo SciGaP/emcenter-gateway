@@ -1,10 +1,33 @@
 // import {emcService} from "@/store/util/emc.util";
 
 const state = {
-    collectionGroupMap: {},
-    collectionGroupFileMap: {},
-    collectionGroupFolderMap: {},
-    collectionGroupList: []
+    collectionGroupMap: {
+        0: {
+            collectionGroupId: 0,
+            name: "Brain Tumor Analysis",
+            createdBy: "admin",
+            createdAt: new Date().toISOString(),
+            lastUpdatedBy: "admin",
+            lastUpdatedAt: new Date().toISOString()
+        },
+        1: {
+            collectionGroupId: 1,
+            name: "Bio Tech Paper",
+            createdBy: "admin",
+            createdAt: new Date().toISOString(),
+            lastUpdatedBy: "admin",
+            lastUpdatedAt: new Date().toISOString()
+        }
+    },
+    collectionGroupFileMap: {
+        0: [],
+        1: []
+    },
+    collectionGroupFolderMap: {
+        0: [],
+        1: []
+    },
+    collectionGroupList: [0, 1]
 };
 
 
