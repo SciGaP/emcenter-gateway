@@ -19,7 +19,15 @@ const actions = {
             {id, username, first_name, last_name, email, realm_roles, client_roles, attributes, membership_type}
         ) => {
             commit("SET_USER", {
-                id, username, first_name, last_name, email, realm_roles, client_roles, attributes, membership_type
+                id,
+                username,
+                firstName: first_name,
+                lastName: last_name,
+                email,
+                realmRoles: realm_roles,
+                clientRoles: client_roles,
+                attributes,
+                membershipType: membership_type
             });
 
             return username;
@@ -31,19 +39,19 @@ const actions = {
 
 
 const mutations = {
-    SET_USER(state, {id, username, first_name, last_name, email, realm_roles, client_roles, attributes, membership_type}) {
+    SET_USER(state, {id, username, firstName, lastName, email, realmRoles, clientRoles, attributes, membershipType}) {
         state.userMap = {
             ...state.userMap,
             [username]: {
                 id,
                 username,
-                first_name,
-                last_name,
+                firstName,
+                lastName,
                 email,
-                realm_roles,
-                client_roles,
+                realmRoles,
+                clientRoles,
                 attributes,
-                membership_type
+                membershipType
             }
         }
     },

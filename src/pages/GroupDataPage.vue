@@ -68,10 +68,11 @@
             Copy to
           </b-button>
 
-          <b-button variant="link" v-if="hasAnythingSelected()">
+          <b-button variant="link" v-if="hasAnythingSelected()" v-b-modal="`share-modal`">
             <b-icon icon="share"></b-icon>
             Share
           </b-button>
+          <ShareModal id="share-modal"/>
 
           <b-button variant="link" v-if="hasAnythingSelected()" v-b-modal="`map-to-collection-groups-modal`">
             <b-icon icon="folder"></b-icon>
@@ -394,10 +395,11 @@ import Pagination from "@/components/Pagination";
 import MapSelectedFilesAndFoldersToCollectionGroupsModal
   from "@/components/modals/map-selected-files-and-folders-to-collection-groups-modal";
 import FilePreviewModal from "@/components/modals/file-preview-modal";
+import ShareModal from "@/components/modals/share-modal";
 
 export default {
   name: "GroupDataPage",
-  components: {FilePreviewModal, MapSelectedFilesAndFoldersToCollectionGroupsModal, Pagination, Page},
+  components: {ShareModal, FilePreviewModal, MapSelectedFilesAndFoldersToCollectionGroupsModal, Pagination, Page},
   store: store,
   data() {
     return {

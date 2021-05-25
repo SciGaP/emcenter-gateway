@@ -1,6 +1,5 @@
 <template>
   <div>
-    <label style="font-size: 13px;font-weight: 600;margin: 0px;">Add new users</label>
     <vue-typeahead-bootstrap
         v-model="usernameSearch"
         :data="typeheadData"
@@ -8,7 +7,7 @@
         @hit="selectSearchResult"
     >
       <template slot="suggestion" slot-scope="{ data, htmlText }">
-        <small v-if="!data.username" style="font-size: 10px">GROUP</small> <br/>
+        <small v-if="!data.username" style="font-size: 10px">GROUP <br/></small>
         <span v-html="htmlText"></span>
       </template>
     </vue-typeahead-bootstrap>
@@ -21,7 +20,7 @@ import {mapGetters, mapActions} from "vuex";
 import store from "../store";
 
 export default {
-  name: "EntitySelectInput.vue",
+  name: "EntitySelectInput",
   store: store,
   data() {
     return {
