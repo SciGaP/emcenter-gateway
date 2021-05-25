@@ -7,12 +7,14 @@
           <b-icon icon="person"></b-icon>
           {{ user.firstName }} {{ user.lastName }}
         </div>
-        <b-dropdown :id="`${modalId}-user-${user.username}`" offset="30" text="Viewer" variant="link" size="sm">
-          <b-dropdown-item href="#">Viewer</b-dropdown-item>
-          <b-dropdown-item href="#">Editor</b-dropdown-item>
-          <b-dropdown-item href="#">Owner</b-dropdown-item>
+        <b-dropdown :id="`${modalId}-user-${user.username}`" v-model="userToPermissionMap[user.username]" offset="30"
+                    :text="userToPermissionMap[user.username]" variant="link" size="sm">
+          <b-dropdown-item v-for="permissionType in permissionTypes" :key="permissionType"
+                           v-on:click="onEntitySelect(user, permissionType)" href="#">
+            {{ permissionType }}
+          </b-dropdown-item>
         </b-dropdown>
-        <b-button variant="link" size="sm">
+        <b-button variant="link" size="sm" v-on:click="onEntitySelect(user, false)">
           <b-icon icon="x"></b-icon>
         </b-button>
       </li>
@@ -23,17 +25,22 @@
           <b-icon icon="people"></b-icon>
           {{ group.name }}
         </div>
-        <b-dropdown :id="`${modalId}-group-${group.groupId}`" offset="30" text="Viewer" variant="link" size="sm">
-          <b-dropdown-item href="#">Viewer</b-dropdown-item>
-          <b-dropdown-item href="#">Editor</b-dropdown-item>
-          <b-dropdown-item href="#">Owner</b-dropdown-item>
+        <b-dropdown :id="`${modalId}-group-${group.groupId}`" v-model="groupToPermissionMap[group.groupId]" offset="30"
+                    :text="groupToPermissionMap[group.groupId]" variant="link" size="sm">
+          <b-dropdown-item v-for="permissionType in permissionTypes" :key="permissionType"
+                           v-on:click="onEntitySelect(group, permissionType)" href="#">
+            {{ permissionType }}
+          </b-dropdown-item>
         </b-dropdown>
+        <b-button variant="link" size="sm" v-on:click="onEntitySelect(group, false)">
+          <b-icon icon="x"></b-icon>
+        </b-button>
       </li>
     </ul>
-    <template #modal-footer>
+    <template #modal-footer={close}>
       <div class="text-right">
-        <b-button variant="primary" size="sm">Save</b-button>
-        <b-button class="ml-2" variant="secondary" size="sm">Cancel</b-button>
+        <b-button variant="primary" size="sm" v-on:click="close">Save</b-button>
+        <b-button class="ml-2" variant="secondary" size="sm" v-on:click="close">Cancel</b-button>
       </div>
     </template>
   </b-modal>
@@ -49,33 +56,62 @@ export default {
   props: {
     modalId: {
       default: "share-modal"
+    },
+    permissionTypes: {
+      type: Array,
+      default() {
+        return ["Viewer", "Editor", "Owner"]
+      }
+    },
+    defaultPermissionType: {
+      default: "Viewer"
     }
   },
   store: store,
   data() {
     return {
-      usernames: [],
-      groupIds: []
+      userToPermissionMap: {},
+      groupToPermissionMap: {}
     }
   },
   computed: {
     users() {
-      return this.usernames.map(username => this.$store.getters["user/getUser"]({username}));
+      const _users = [];
+      for (let username in this.userToPermissionMap) {
+        if (this.userToPermissionMap[username]) {
+          _users.push(this.$store.getters["user/getUser"]({username}));
+        }
+      }
+
+      return _users;
     },
     groups() {
-      return this.groupIds.map(groupId => this.$store.getters["group/getGroup"]({groupId}));
+      const _groups = [];
+      for (let groupId in this.groupToPermissionMap) {
+        if (this.groupToPermissionMap[groupId]) {
+          _groups.push(this.$store.getters["group/getGroup"]({groupId}));
+        }
+      }
+
+      return _groups;
     }
   },
   methods: {
     reset() {
-      this.usernames = [];
-      this.groupIds = [];
+      this.userToPermissionMap = {};
+      this.groupToPermissionMap = {};
     },
-    onEntitySelect({username, groupId}) {
-      if (username && this.usernames.indexOf(username) < 0) {
-        this.usernames.push(username)
-      } else if (groupId && this.groupIds.indexOf(groupId) < 0) {
-        this.groupIds.push(groupId)
+    onEntitySelect({username, groupId}, permissionType = this.defaultPermissionType) {
+      if (username) {
+        this.userToPermissionMap = {
+          ...this.userToPermissionMap,
+          [username]: permissionType
+        };
+      } else if (groupId) {
+        this.groupToPermissionMap = {
+          ...this.groupToPermissionMap,
+          [groupId]: permissionType
+        };
       }
     }
   }
