@@ -57,6 +57,16 @@ export default {
     modalId: {
       default: "share-modal"
     },
+    fileIds: {
+      default() {
+        return []
+      }
+    },
+    folderIds: {
+      default() {
+        return []
+      }
+    },
     permissionTypes: {
       type: Array,
       default() {

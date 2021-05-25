@@ -30,11 +30,15 @@ export default {
       default: ""
     },
     fileIds: {
-      default: []
+      default() {
+        return []
+      }
     },
     folderIds: {
-      default: []
-    }
+      default() {
+        return []
+      }
+    },
   },
   data() {
     return {

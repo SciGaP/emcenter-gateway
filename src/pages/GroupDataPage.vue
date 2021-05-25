@@ -63,10 +63,11 @@
             Download
           </b-button>
 
-          <b-button variant="link" v-if="hasAnythingSelected()">
+          <b-button variant="link" v-if="hasAnythingSelected()" v-b-modal="`copy-modal`">
             <b-icon icon="cloud"></b-icon>
             Copy to
           </b-button>
+          <CopyModal id="copy-modal"/>
 
           <b-button variant="link" v-if="hasAnythingSelected()" v-b-modal="`share-modal`">
             <b-icon icon="share"></b-icon>
@@ -396,10 +397,14 @@ import MapSelectedFilesAndFoldersToCollectionGroupsModal
   from "@/components/modals/map-selected-files-and-folders-to-collection-groups-modal";
 import FilePreviewModal from "@/components/modals/file-preview-modal";
 import ShareModal from "@/components/modals/share-modal";
+import CopyModal from "@/components/modals/copy-modal";
 
 export default {
   name: "GroupDataPage",
-  components: {ShareModal, FilePreviewModal, MapSelectedFilesAndFoldersToCollectionGroupsModal, Pagination, Page},
+  components: {
+    CopyModal,
+    ShareModal, FilePreviewModal, MapSelectedFilesAndFoldersToCollectionGroupsModal, Pagination, Page
+  },
   store: store,
   data() {
     return {
