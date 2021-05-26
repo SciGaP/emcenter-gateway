@@ -56,10 +56,10 @@
             Share
           </b-button>
 
-<!--          <b-button variant="link" v-if="hasAnythingSelected()">-->
-<!--            <b-icon icon="folder"></b-icon>-->
-<!--            Group Collections-->
-<!--          </b-button>-->
+          <!--          <b-button variant="link" v-if="hasAnythingSelected()">-->
+          <!--            <b-icon icon="folder"></b-icon>-->
+          <!--            Group Collections-->
+          <!--          </b-button>-->
 
           <b-button variant="link" v-if="hasAnythingSelected()">
             <b-icon icon="archive"></b-icon>
@@ -209,9 +209,9 @@
             <b-thead>
               <b-tr>
                 <b-th>
-                  <input type="checkbox" name="all" id="all" :checked="isAllSelected()"
-                         v-on:click="toggleAllSelection()"/>
-                  <label for="all"></label>
+                  <b-checkbox type="checkbox" name="all" id="all" :checked="isAllSelected()"
+                              v-on:change="toggleAllSelection()"/>
+                  <label for="all">Select All</label>
                 </b-th>
                 <b-th>Name</b-th>
                 <b-th>size</b-th>
@@ -225,11 +225,13 @@
                     :key="collectionGroup.folderId"
                     :class="{selected: isCollectionGroupSelected(collectionGroup)}">
                 <b-td>
-                  <input type="checkbox" :checked="isCollectionGroupSelected(collectionGroup)"
-                         v-on:click="toggleCollectionGroupSelection(collectionGroup)"
-                         :name="getCollectionGroupSelectionCheckboxId(collectionGroup)"
-                         :id="getCollectionGroupSelectionCheckboxId(collectionGroup)"/>
-                  <label :for="getCollectionGroupSelectionCheckboxId(collectionGroup)"></label>
+                  <b-checkbox type="checkbox" :checked="isCollectionGroupSelected(collectionGroup)"
+                              v-on:change="toggleCollectionGroupSelection(collectionGroup)"
+                              :name="getCollectionGroupSelectionCheckboxId(collectionGroup)"
+                              :id="getCollectionGroupSelectionCheckboxId(collectionGroup)"/>
+                  <label :for="getCollectionGroupSelectionCheckboxId(collectionGroup)">
+                    {{ collectionGroup.name }}
+                  </label>
                 </b-td>
                 <b-td>
                   <router-link :to="getFolderLink(collectionGroup)"
@@ -255,11 +257,11 @@
               <b-tr v-for="folder in folders" :key="folder.folderId"
                     :class="{selected: isFolderSelected(folder)}">
                 <b-td>
-                  <input type="checkbox" :checked="isFolderSelected(folder)"
-                         v-on:click="toggleFolderSelection(folder)"
-                         :name="getFolderSelectionCheckboxId(folder)"
-                         :id="getFolderSelectionCheckboxId(folder)"/>
-                  <label :for="getFolderSelectionCheckboxId(folder)"></label>
+                  <b-checkbox type="checkbox" :checked="isFolderSelected(folder)"
+                              v-on:change="toggleFolderSelection(folder)"
+                              :name="getFolderSelectionCheckboxId(folder)"
+                              :id="getFolderSelectionCheckboxId(folder)"/>
+                  <label :for="getFolderSelectionCheckboxId(folder)">{{ folder.name }}</label>
                 </b-td>
                 <b-td>
                   <router-link :to="getFolderLink(folder)" v-slot="{ href, route, navigate, isActive,isExactActive }">
@@ -283,9 +285,9 @@
 
               <b-tr v-for="file in files" :key="file.fileId" :class="{selected: isFileSelected(file)}">
                 <b-td>
-                  <input type="checkbox" :checked="isFileSelected(file)" v-on:click="toggleFileSelection(file)"
-                         :name="getFileSelectionCheckboxId(file)" :id="getFileSelectionCheckboxId(file)"/>
-                  <label :for="getFileSelectionCheckboxId(file)"></label>
+                  <b-checkbox type="checkbox" :checked="isFileSelected(file)" v-on:change="toggleFileSelection(file)"
+                              :name="getFileSelectionCheckboxId(file)" :id="getFileSelectionCheckboxId(file)"/>
+                  <label :for="getFileSelectionCheckboxId(file)">{{ file.name }}</label>
                 </b-td>
                 <b-td>
                   <b-icon style="height: 100%;" icon="card-image" aria-hidden="true"></b-icon>
@@ -486,9 +488,9 @@ export default {
     },
     getDataLink({folderId, collectionGroupId} = {}) {
       let _dataLink = "/collections?";
-      if (collectionGroupId !== null) {
+      if (collectionGroupId !== null && collectionGroupId !== undefined) {
         _dataLink = `/collection-groups?collectionGroupId=${collectionGroupId}&`
-      } else if (folderId !== null) {
+      } else if (folderId !== null && folderId !== undefined) {
         _dataLink = `/collections?parentFolderId=${folderId}&`
       }
 
@@ -521,6 +523,12 @@ export default {
       }
 
       // this.allFilesAndFoldersSelected = selected;
+
+      console.log("#### toggleAllSelection", selected)
+
+      this.collectionGroups.map(collectionGroup => {
+        this.toggleCollectionGroupSelection(collectionGroup, selected);
+      });
 
       this.folders.map(folder => {
         this.toggleFolderSelection(folder, selected);
@@ -565,7 +573,15 @@ export default {
     },
     isAllSelected() {
       console.log("isAllSelected");
-      let _isAllSelected = false;
+      let _isAllSelected = true;
+
+      for (let i = 0; i < this.collectionGroups.length; i++) {
+        if (!this.isCollectionGroupSelected(this.collectionGroups[i])) {
+          return false;
+        } else {
+          _isAllSelected = true;
+        }
+      }
 
       for (let i = 0; i < this.folders.length; i++) {
         if (!this.isFolderSelected(this.folders[i])) {
@@ -653,6 +669,12 @@ export default {
 .selected,
 table tbody tr.selected {
   background-color: #d6e2ed;
+}
+
+table label {
+  visibility: hidden;
+  position: fixed;
+  top: -100px;
 }
 
 </style>

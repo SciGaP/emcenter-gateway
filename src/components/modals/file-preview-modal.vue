@@ -57,7 +57,11 @@ export default {
   props: {
     modalId: {default: ""},
     fileId: {default: ""},
-    fileIds: {default: []}
+    fileIds: {
+      default() {
+        return []
+      }
+    }
   },
   data() {
     return {}

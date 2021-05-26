@@ -67,13 +67,13 @@
             <b-icon icon="cloud"></b-icon>
             Copy to
           </b-button>
-          <CopyModal id="copy-modal"/>
+          <CopyModal modal-id="copy-modal"/>
 
           <b-button variant="link" v-if="hasAnythingSelected()" v-b-modal="`share-modal`">
             <b-icon icon="share"></b-icon>
             Share
           </b-button>
-          <ShareModal id="share-modal"/>
+          <ShareModal modal-id="share-modal"/>
 
           <b-button variant="link" v-if="hasAnythingSelected()" v-b-modal="`map-to-collection-groups-modal`">
             <b-icon icon="folder"></b-icon>
@@ -322,6 +322,7 @@
                   <b-th>Created On</b-th>
                   <b-th>Last Updated</b-th>
                   <b-th>Owner</b-th>
+                  <b-th></b-th>
                 </b-tr>
               </b-thead>
               <b-tbody>
@@ -349,6 +350,40 @@
                   <b-td>08/31/2020 14:00 PM</b-td>
                   <b-td>09/07/2020 13:00 PM</b-td>
                   <b-td>{{ folder.createdBy }}</b-td>
+                  <b-td>
+                    <b-button variant="link" size="sm" @click="downloadEverythingSelected()"
+                              v-b-tooltip.hover="`Download`">
+                      <b-icon icon="download"></b-icon>
+                    </b-button>
+
+                    <b-button variant="link" size="sm" v-b-modal="`copy-modal-${folder.folderId}`"
+                              v-b-tooltip.hover="`Copy to`">
+                      <b-icon icon="cloud"></b-icon>
+                    </b-button>
+                    <CopyModal :modal-id="`copy-modal-${folder.folderId}`" :folder-ids="[folder.folderId]"/>
+
+                    <b-button variant="link" size="sm" v-b-modal="`share-modal-${folder.folderId}`"
+                              v-b-tooltip.hover="`Share`">
+                      <b-icon icon="share"></b-icon>
+                    </b-button>
+                    <ShareModal :modal-id="`share-modal-${folder.folderId}`" :folder-ids="[folder.folderId]"/>
+
+                    <b-button variant="link" size="sm" v-b-modal="`map-to-collection-groups-modal-${folder.folderId}`"
+                              v-b-tooltip.hover="`Group Collections`">
+                      <b-icon icon="folder"></b-icon>
+                    </b-button>
+                    <MapSelectedFilesAndFoldersToCollectionGroupsModal
+                        :modal-id="`map-to-collection-groups-modal-${folder.folderId}`"
+                        :folder-ids="[folder.folderId]"/>
+
+                    <b-button variant="link" size="sm" v-b-tooltip.hover="`Archive`">
+                      <b-icon icon="archive"></b-icon>
+                    </b-button>
+
+                    <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`">
+                      <b-icon icon="trash"></b-icon>
+                    </b-button>
+                  </b-td>
 
                 </b-tr>
 
@@ -372,6 +407,40 @@
                   <b-td>08/31/2020 14:00 PM</b-td>
                   <b-td>09/07/2020 13:00 PM</b-td>
                   <b-td>{{ file.createdBy }}</b-td>
+                  <b-td>
+                    <b-button variant="link" size="sm" @click="downloadEverythingSelected()"
+                              v-b-tooltip.hover="`Download`">
+                      <b-icon icon="download"></b-icon>
+                    </b-button>
+
+                    <b-button variant="link" size="sm" v-b-modal="`copy-modal-${file.fileId}`"
+                              v-b-tooltip.hover="`Copy to`">
+                      <b-icon icon="cloud"></b-icon>
+                    </b-button>
+                    <CopyModal :modal-id="`copy-modal-${file.fileId}`" :file-ids="[file.fileId]"/>
+
+                    <b-button variant="link" size="sm" v-b-modal="`share-modal-${file.fileId}`"
+                              v-b-tooltip.hover="`Share`">
+                      <b-icon icon="share"></b-icon>
+                    </b-button>
+                    <ShareModal :modal-id="`share-modal-${file.fileId}`" :file-ids="[file.fileId]"/>
+
+                    <b-button variant="link" size="sm" v-b-modal="`map-to-collection-groups-modal-${file.fileId}`"
+                              v-b-tooltip.hover="`Group Collections`">
+                      <b-icon icon="folder"></b-icon>
+                    </b-button>
+                    <MapSelectedFilesAndFoldersToCollectionGroupsModal
+                        :modal-id="`map-to-collection-groups-modal-${file.fileId}`"
+                        :file-ids="[file.fileId]"/>
+
+                    <b-button variant="link" size="sm" v-b-tooltip.hover="`Archive`">
+                      <b-icon icon="archive"></b-icon>
+                    </b-button>
+
+                    <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`">
+                      <b-icon icon="trash"></b-icon>
+                    </b-button>
+                  </b-td>
                 </b-tr>
               </b-tbody>
             </b-table-simple>
