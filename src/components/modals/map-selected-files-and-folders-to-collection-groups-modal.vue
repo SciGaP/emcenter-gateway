@@ -1,10 +1,10 @@
 <template>
-  <b-modal :id="modalId" size="sm" hide-header hide-footer>
+  <b-modal :id="modalId" size="sm" hide-footer title="Add to collection groups">
     <ul>
       <li v-for="collectionGroup in collectionGroups" :key="collectionGroup.collectionGroupId">
-        <input type="checkbox" :checked="isCollectionGroupMapped(collectionGroup)"
-               v-on:click="toggleCollectionGroup(collectionGroup)"
-               :name="collectionGroup.collectionGroupId" :id="collectionGroup.collectionGroupId"/>
+        <b-checkbox type="checkbox" :checked="isCollectionGroupMapped(collectionGroup)"
+                    v-on:change="toggleCollectionGroup(collectionGroup)"
+                    name="collectionGroup" :id="`collectionGroup-${collectionGroup.collectionGroupId}`"/>
         <label :for="collectionGroup.collectionGroupId">{{ collectionGroup.name }}</label>
       </li>
     </ul>
@@ -77,6 +77,11 @@ ul {
   list-style: none;
   margin: 0px;
   padding: 10px;
+}
+
+ul li {
+  display: flex;
+  flex-direction: row;
 }
 
 ul li label {

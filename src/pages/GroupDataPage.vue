@@ -313,9 +313,9 @@
               <b-thead>
                 <b-tr>
                   <b-th>
-                    <input type="checkbox" name="all" id="all" :checked="isAllSelected()"
-                           v-on:click="toggleAllSelection()"/>
-                    <label for="all"></label>
+                    <b-checkbox type="checkbox" name="all" id="all" :checked="isAllSelected()"
+                                v-on:change="toggleAllSelection()"/>
+                    <label for="all">Select all</label>
                   </b-th>
                   <b-th>Collection</b-th>
                   <b-th>size</b-th>
@@ -327,11 +327,11 @@
               <b-tbody>
                 <b-tr v-for="folder in folders" :key="folder.folderId" :class="{selected: isFolderSelected(folder)}">
                   <b-td>
-                    <input type="checkbox" :checked="isFolderSelected(folder)"
-                           v-on:click="toggleFolderSelection(folder)"
-                           :name="getFolderSelectionCheckboxId(folder)"
-                           :id="getFolderSelectionCheckboxId(folder)"/>
-                    <label :for="getFolderSelectionCheckboxId(folder)"></label>
+                    <b-checkbox type="checkbox" :checked="isFolderSelected(folder)"
+                                v-on:change="toggleFolderSelection(folder)"
+                                :name="getFolderSelectionCheckboxId(folder)"
+                                :id="getFolderSelectionCheckboxId(folder)"/>
+                    <label :for="getFolderSelectionCheckboxId(folder)">{{ folder.name }}</label>
                   </b-td>
                   <b-td>
                     <router-link :to="getFolderLink(folder)" v-slot="{ href, route, navigate, isActive,isExactActive }">
@@ -356,9 +356,9 @@
 
                 <b-tr v-for="(file) in files" :key="file.fileId" :class="{selected: isFileSelected(file)}">
                   <b-td>
-                    <input type="checkbox" :checked="isFileSelected(file)" v-on:click="toggleFileSelection(file)"
-                           :name="getFileSelectionCheckboxId(file)" :id="getFileSelectionCheckboxId(file)"/>
-                    <label :for="getFileSelectionCheckboxId(file)"></label>
+                    <b-checkbox type="checkbox" :checked="isFileSelected(file)" v-on:change="toggleFileSelection(file)"
+                                :name="getFileSelectionCheckboxId(file)" :id="getFileSelectionCheckboxId(file)"/>
+                    <label :for="getFileSelectionCheckboxId(file)">{{ file.name }}</label>
                   </b-td>
                   <b-td>
                     <b-icon style="height: 100%;" icon="card-image" aria-hidden="true"></b-icon>
@@ -739,6 +739,12 @@ export default {
 .selected,
 table tbody tr.selected {
   background-color: #d6e2ed;
+}
+
+table label {
+  visibility: hidden;
+  position: fixed;
+  top: -100px;
 }
 
 </style>
