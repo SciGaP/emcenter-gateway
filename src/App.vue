@@ -1,7 +1,7 @@
 <template>
-  <div id="app" class="v-100 bg-light">
+  <div id="app" class="v-100 bg-light" style="height: 100%; display: flex; flex-direction: column;">
     <AppHeader/>
-    <div class="v-100" style="display: flex;">
+    <div class="v-100" style="flex:1;display: flex;">
       <AppLeftNav style="width: 250px;"/>
       <router-view style="flex: 1;"/>
     </div>

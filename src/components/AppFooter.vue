@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <nav class="navbar navbar-light bg-light iu-footer-nav">
+    <nav class="navbar navbar-light bg-light iu-footer-nav" style="box-shadow: rgb(173 181 189) 0px 0px 4px 0px;">
       <div class="container">
         <a class="navbar-brand" href="#">
           <img src="../assets/images/iu-sig-formal.svg" height="30" class="d-inline-block align-top" alt="">
