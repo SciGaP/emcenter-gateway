@@ -383,6 +383,13 @@
                     <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`">
                       <b-icon icon="trash"></b-icon>
                     </b-button>
+
+                    <b-button variant="link" size="sm" v-b-tooltip.hover="`Notes`"
+                              v-b-modal="`folder-notes-modal-${folder.folderId}`">
+                      <b-icon icon="chat-square-text"></b-icon>
+                    </b-button>
+                    <NotesModal :modal-id="`folder-notes-modal-${folder.folderId}`" :folder-id="folder.folderId"/>
+
                   </b-td>
 
                 </b-tr>
@@ -440,6 +447,13 @@
                     <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`">
                       <b-icon icon="trash"></b-icon>
                     </b-button>
+
+                    <b-button variant="link" size="sm" v-b-tooltip.hover="`Notes`"
+                              v-b-modal="`file-notes-modal-${file.fileId}`">
+                      <b-icon icon="chat-square-text"></b-icon>
+                    </b-button>
+                    <NotesModal :modal-id="`file-notes-modal-${file.fileId}`" :file-id="file.fileId"/>
+
                   </b-td>
                 </b-tr>
               </b-tbody>
@@ -467,10 +481,12 @@ import MapSelectedFilesAndFoldersToCollectionGroupsModal
 import FilePreviewModal from "@/components/modals/file-preview-modal";
 import ShareModal from "@/components/modals/share-modal";
 import CopyModal from "@/components/modals/copy-modal";
+import NotesModal from "@/components/modals/notes-modal";
 
 export default {
   name: "GroupDataPage",
   components: {
+    NotesModal,
     CopyModal,
     ShareModal, FilePreviewModal, MapSelectedFilesAndFoldersToCollectionGroupsModal, Pagination, Page
   },
