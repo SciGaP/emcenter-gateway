@@ -6,18 +6,28 @@
         <template #aside>
           <b-icon icon="folder"/>
         </template>
+        <b>Collection-1</b>
         <div contenteditable="true">
-          <b>Media Body</b>
-          <p>Some text</p>
+          <p>Some notes</p>
         </div>
 
         <b-media>
           <template #aside>
             <b-icon icon="folder"/>
           </template>
+            <b>Dataset-1</b>
           <div contenteditable="true">
-            <b>Media Body</b>
-            <p>Some text</p>
+            <p>Some notes</p>
+          </div>
+        </b-media>
+
+        <b-media>
+          <template #aside>
+            <b-icon icon="folder"/>
+          </template>
+            <b>Dataset-2</b>
+          <div contenteditable="true">
+            <p>Some notes</p>
           </div>
         </b-media>
       </b-media>
