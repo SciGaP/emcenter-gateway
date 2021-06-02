@@ -84,16 +84,16 @@ export default class CustosIdentity {
         return response;
     }
 
-    getToken({tokenEndpoint, code}) {
+    getToken({code}) {
         return this.custosService.axiosInstanceWithClientAuthorization.post(
-            tokenEndpoint,
+            `${CustosService.ENDPOINTS.IDENTITY}/token`,
             {'code': code, 'redirect_uri': this.custosService.redirectURI, 'grant_type': 'authorization_code'}
         ).then(this._saveTokenResponse.bind(this));
     }
 
-    localLogin({tokenEndpoint, username, password}) {
+    localLogin({username, password}) {
         return this.custosService.axiosInstanceWithClientAuthorization.post(
-            tokenEndpoint,
+            `${CustosService.ENDPOINTS.IDENTITY}/token`,
             {'grant_type': 'password', 'username': username, 'password': password}
         ).then(this._saveTokenResponse.bind(this));
     }
@@ -102,7 +102,11 @@ export default class CustosIdentity {
         return this.custosService.axiosInstanceWithClientAuthorization.post(
             `${CustosService.ENDPOINTS.IDENTITY}/user/logout`,
             {refresh_token: this.refreshToken}
-        );
+        ).then(() => {
+            this.accessToken = null;
+            this.idToken = null;
+            this.refreshToken = null;
+        })
     }
 
     getTokenUsingRefreshToken() {
@@ -111,4 +115,5 @@ export default class CustosIdentity {
             {'refresh_token': this.custosService.refreshToken, 'grant_type': 'refresh_token'}
         ).then(this._saveTokenResponse.bind(this));
     }
+
 }
