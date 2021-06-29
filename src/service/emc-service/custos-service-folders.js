@@ -1,3 +1,5 @@
+import EmcService from "@/service/emc-service/index";
+
 export default class EmcFolders {
     /**
      * @type {EmcService}
@@ -28,42 +30,46 @@ export default class EmcFolders {
         });
     }
 
-    get({parentFolderId, own = true}) {
+    async get({parentFolderId, own = true}) {
 
         // TODO
-        console.log(`[FETCH] /emc/folders?parentFolderId=${parentFolderId}`);
+        console.log(`[FETCH] /emc/folders?parentFolderId=${parentFolderId}${own}`);
 
         // const {resources} = this.emcService.axiosInstanceWithTokenAuthorizationForCollectionsGet;
 
-        const resources = [1, 2, 3, 4, 5, 6].map(id => {
-            return {
-                "id": id,
-                "entityId": "custos-hiedldxlq7wygqaihmly-10002614_250805.20000004768",
-                "ownerId": "abelota",
-                "createdBy": "abelota",
-                "createdAt": "2021-05-11T04:57:40.645Z",
-                "lastUpdatedBy": "abelota",
-                "lastUpdatedAt": "2021-05-11T04:57:40.645Z",
-                "name": `Collection ${id}`,
-                "size": "2MB",
-                "type": "Collection"
+        const {data: {resources}} = await this.emcService.axiosInstanceWithTokenAuthorization.post(
+            EmcService.ENDPOINTS.COLLECTIONS,
+            {
+                "queries": [{
+                    "field": "type",
+                    "value": "COLLECTION"
+                }],
+                "depth": 0
             }
-        });
+        );
 
-        if (parentFolderId) {
-            return [];
-        } else {
-            return resources.filter(({type}) => type === "Collection")
-                .map(({createdAt, createdBy, name, id, entityId}) => {
-                    return {
-                        folderId: id,
-                        entityId,
-                        name: name,
-                        createdAt: createdAt,
-                        createdBy: createdBy,
-                        own: own
-                    }
-                });
-        }
+
+        return resources.filter(({type}) => type === "COLLECTION")
+            .map((
+                {
+                    // resourceId, resourcePath,
+                    properties: {
+                        // entityType, tenantId,
+                        name, description, createdTime, entityId
+                    },
+                    // type, parentResourcePath, resourceName
+                }
+            ) => {
+                return {
+                    folderId: entityId,
+                    entityId,
+                    name: name,
+                    description: description,
+                    createdAt: createdTime,
+                    createdBy: "",
+                    status: "",
+                    mimeType: ""
+                }
+            });
     }
 }

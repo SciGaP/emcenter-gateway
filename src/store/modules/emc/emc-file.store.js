@@ -28,8 +28,8 @@ const actions = {
         const queryString = _getFilesQueryString({offset, limit, groupId, parentFolderId});
 
         const files = await emcService.files.get({groupId, parentFolderId});
-        const fileIds = files.map(({fileId, name, createdAt, createdBy, status, mimeType}) => {
-            commit("SET_FILE", {fileId, name, createdAt, createdBy, status, mimeType});
+        const fileIds = files.map(({fileId, name, createdAt, createdBy, status, mimeType, entityId}) => {
+            commit("SET_FILE", {fileId, name, createdAt, createdBy, status, mimeType, entityId});
 
             return fileId;
         });
@@ -81,12 +81,12 @@ const actions = {
 
 
 const mutations = {
-    SET_FILE(state, {fileId, name, createdAt, createdBy, status, mimeType}) {
+    SET_FILE(state, {fileId, name, createdAt, createdBy, status, mimeType, entityId}) {
         state.fileMap = {
             ...state.fileMap,
             [fileId]: {
                 ...state.fileMap[fileId],
-                fileId, name, createdAt, createdBy, status, mimeType
+                fileId, name, createdAt, createdBy, status, mimeType, entityId
             }
         };
     },
@@ -131,7 +131,7 @@ const getters = {
     getFile: (state) => {
         return ({fileId}) => {
             if (state.fileMap[fileId]) {
-                const {name, createdAt, createdBy, status, mimeType} = state.fileMap[fileId];
+                const {name, createdAt, createdBy, status, mimeType, entityId} = state.fileMap[fileId];
                 let fileThumbnailDataUrl = null;
                 let download = null;
 
@@ -143,7 +143,7 @@ const getters = {
                     download = state.fileDownloadMap[fileId];
                 }
 
-                return {fileId, name, createdAt, createdBy, status, mimeType, fileThumbnailDataUrl, download};
+                return {fileId, name, createdAt, createdBy, status, mimeType, fileThumbnailDataUrl, download, entityId};
             } else {
                 return null;
             }

@@ -26,8 +26,8 @@ const actions = {
         const queryString = _getFoldersQueryString({offset, limit, groupId, parentFolderId});
 
         const folders = await emcService.folders.get({parentFolderId});
-        const folderIds = folders.map(({folderId, name, createdAt, createdBy, own}) => {
-            commit("SET_FOLDER", {folderId, name, createdAt, createdBy, own});
+        const folderIds = folders.map(({folderId, name, createdAt, createdBy, own, entityId}) => {
+            commit("SET_FOLDER", {folderId, name, createdAt, createdBy, own, entityId});
 
             return folderId;
         });
@@ -53,12 +53,12 @@ const actions = {
 
 
 const mutations = {
-    SET_FOLDER(state, {folderId, name, createdAt, createdBy, own}) {
+    SET_FOLDER(state, {folderId, name, createdAt, createdBy, own, entityId}) {
         state.folderMap = {
             ...state.folderMap,
             [folderId]: {
                 ...state.folderMap[folderId],
-                folderId, name, createdAt, createdBy, own
+                folderId, name, createdAt, createdBy, own, entityId
             }
         };
     },
@@ -103,9 +103,9 @@ const getters = {
     getFolder: (state) => {
         return ({folderId}) => {
             if (state.folderMap[folderId]) {
-                const {name, createdAt, createdBy, own} = state.folderMap[folderId];
+                const {name, createdAt, createdBy, own, entityId} = state.folderMap[folderId];
 
-                return {folderId, name, createdAt, createdBy, own};
+                return {folderId, name, createdAt, createdBy, own, entityId};
             } else {
                 return null;
             }

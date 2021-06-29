@@ -9,10 +9,11 @@ const httpAgent = new http.Agent({keepAlive: true});
 const httpsAgent = new https.Agent({keepAlive: true});
 
 export default class EmcService {
-    static baseURL = "http://localhost:10000/v1.0/api";
+
+    static baseURL = "http://149.165.157.235:10000/v1.0/api";
 
     static ENDPOINTS = {
-        COLLECTIONS: "/drms/resource/searchPreference",
+        COLLECTIONS: "/drms/resource/searchResource",
         DATASETS: "/drms/resource/searchPreference"
     };
 
@@ -57,7 +58,7 @@ export default class EmcService {
     //     });
     // }
     //
-    get axiosInstanceWithTokenAuthorizationForCollectionsGet() {
+    get axiosInstanceWithTokenAuthorization() {
         return axios.create({
             httpAgent,
             httpsAgent,
@@ -67,10 +68,9 @@ export default class EmcService {
                 'Accept': '*/*',
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': "*",
-                'Origin': '*'
+                'Origin': '*',
+                'Authorization': `Bearer ${custosService.identity.accessToken}`
             }
-        }).post(EmcService.ENDPOINTS.COLLECTIONS, {
-            "authToken": {"access_token": custosService.identity.accessToken}
-        });
+        })
     }
 }
