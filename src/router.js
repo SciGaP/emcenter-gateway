@@ -36,9 +36,9 @@ async function _validateAuthenticationBeforeEnter(to, from, next) {
             await custosStore.dispatch('user/fetchUsers', {username, clientId: custosService.clientId});
         }
 
-        if (!custosStore.getters["tenant/getTenant"]({clientId: custosService.clientId})) {
-            await custosStore.dispatch("tenant/fetchTenant", {clientId: custosService.clientId});
-        }
+        // if (!custosStore.getters["tenant/getTenant"]({clientId: custosService.clientId})) {
+        //     await custosStore.dispatch("tenant/fetchTenant", {clientId: custosService.clientId});
+        // }
 
         console.log("YES authenticated " + custosStore.getters["user/getUser"]({username}));
         next(true);
