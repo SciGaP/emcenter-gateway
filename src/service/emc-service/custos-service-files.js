@@ -37,43 +37,55 @@ export default class EmcFiles {
         // TODO
         console.log(`[FETCH] /emc/files?parentFolderId=${parentFolderId}`);
 
-        const {data: {resources}} = await this.emcService.axiosInstanceWithTokenAuthorization.post(
-            EmcService.ENDPOINTS.COLLECTIONS,
-            {
-                "queries": [{
-                    "field": "type",
-                    "value": "FILE"
-                }],
-                "depth": 0
-            }
-        );
 
+        let response = null;
         if (!parentFolderId) {
-            return [];
+            response = await this.emcService.axiosInstanceWithTokenAuthorization.post(
+                EmcService.ENDPOINTS.COLLECTIONS,
+                {
+                    "queries": [{
+                        "field": "type",
+                        "value": "FILE"
+                    }],
+                    "depth": 1
+                }
+            );
         } else {
-
-            return resources.filter(({type}) => type === "FILE")
-                .map((
-                    {
-                        // resourceId, resourcePath,
-                        properties: {
-                            // entityType, tenantId,
-                            name, description, createdTime, entityId
-                        },
-                        // type, parentResourcePath, resourceName
+            response = await this.emcService.axiosInstanceWithTokenAuthorization.get(
+                EmcService.ENDPOINTS.CHILDREN,
+                {
+                    params: {
+                        "resourceId": parentFolderId,
+                        "type": "COLLECTION",
+                        "depth": 1
                     }
-                ) => {
-                    return {
-                        fileId: entityId,
-                        entityId,
-                        name: name,
-                        description: description,
-                        createdAt: createdTime,
-                        createdBy: "",
-                        status: "",
-                        mimeType: ""
-                    }
-                });
+                }
+            );
         }
+
+        const {data: {resources}} = response;
+
+        return resources.filter(({type}) => type === "FILE")
+            .map((
+                {
+                    // resourceId, resourcePath,
+                    properties: {
+                        // entityType, tenantId,
+                        name, description, createdTime, entityId
+                    },
+                    // type, parentResourcePath, resourceName
+                }
+            ) => {
+                return {
+                    fileId: entityId,
+                    entityId,
+                    name: name,
+                    description: description,
+                    createdAt: createdTime,
+                    createdBy: "",
+                    status: "",
+                    mimeType: ""
+                }
+            });
     }
 }

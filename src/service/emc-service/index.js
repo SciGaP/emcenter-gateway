@@ -14,6 +14,7 @@ export default class EmcService {
 
     static ENDPOINTS = {
         COLLECTIONS: "/drms/resource/searchResource",
+        CHILDREN: "/drms/resource/child",
         DATASETS: "/drms/resource/searchPreference"
     };
 

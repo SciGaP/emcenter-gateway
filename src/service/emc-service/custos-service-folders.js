@@ -37,16 +37,32 @@ export default class EmcFolders {
 
         // const {resources} = this.emcService.axiosInstanceWithTokenAuthorizationForCollectionsGet;
 
-        const {data: {resources}} = await this.emcService.axiosInstanceWithTokenAuthorization.post(
-            EmcService.ENDPOINTS.COLLECTIONS,
-            {
-                "queries": [{
-                    "field": "type",
-                    "value": "COLLECTION"
-                }],
-                "depth": 0
-            }
-        );
+        let response = null;
+        if (!parentFolderId) {
+            response = await this.emcService.axiosInstanceWithTokenAuthorization.post(
+                EmcService.ENDPOINTS.COLLECTIONS,
+                {
+                    "queries": [{
+                        "field": "type",
+                        "value": "COLLECTION"
+                    }],
+                    "depth": 1
+                }
+            );
+        } else {
+            response = await this.emcService.axiosInstanceWithTokenAuthorization.get(
+                EmcService.ENDPOINTS.CHILDREN,
+                {
+                    params: {
+                        "resourceId": parentFolderId,
+                        "type": "COLLECTION",
+                        "depth": 1
+                    }
+                }
+            );
+        }
+
+        const {data: {resources}} = response;
 
 
         return resources.filter(({type}) => type === "COLLECTION")
