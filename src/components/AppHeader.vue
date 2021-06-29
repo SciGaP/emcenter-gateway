@@ -49,7 +49,7 @@
             </div>
           </template>
           <b-dropdown-item href="#">Profile</b-dropdown-item>
-          <b-dropdown-item href="#" v-on:click.prevent="logout">Sign Out</b-dropdown-item>
+          <b-dropdown-item href="#" v-on:click="logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>
@@ -58,67 +58,67 @@
 
 <script>
 
-import store from "../store";
-import {mapActions, mapGetters} from "vuex";
+import {custosService} from "custos-demo-gateway/src/lib/store/util/custos.util";
+import {custosStore} from "../store";
 
 export default {
-  name: 'AppHeader',
-  store: store,
+  name: "AppHeader.vue",
+  store: custosStore,
   computed: {
-    ...mapGetters({
-      authenticated: "auth/authenticated",
-      currentUsername: "auth/currentUsername",
-      isAdmin: "auth/isAdmin",
-      getUser: "user/getUser"
-    }),
-    user() {
-      return this.getUser({username: this.currentUsername});
+    authenticated() {
+      return this.$store.getters["auth/authenticated"]
     },
-    currentUsernameInTwoLetters() {
-      return this.currentUsername.substring(0, 2).toUpperCase();
+    isAdmin() {
+      return this.$store.getters["auth/isAdmin"]
+    },
+    currentUsername() {
+      return this.$store.getters["auth/currentUsername"]
+    },
+    user() {
+      return this.$store.getters["user/getUser"]({clientId: custosService.clientId, username: this.currentUsername});
+    },
+    profileLink() {
+      return `/tenants/${custosService.clientId}/users/${this.currentUsername}`;
     }
   },
   methods: {
-    ...mapActions({
-      fetchUsers: "user/fetchUsers",
-      logoutAction: "auth/logout",
-      refreshAuthentication: "auth/refreshAuthentication"
-    }),
-    async logout() {
-      await this.logoutAction();
-    },
-    async fetchAuthenticatedUser() {
-      if (this.authenticated && (!this.user || this.user.username !== this.currentUsername)) {
-        await this.fetchUsers({
-          offset: 0,
-          limit: 1,
-          username: this.currentUsername
-        });
-      }
-    },
-    redirectToLoginIfNotAuthenticated() {
-      if (!this.authenticated && this.$router.currentRoute.path !== "/") {
-        this.$router.push('/')
-      }
-    }
-  },
-  watch: {
-    authenticated() {
-      this.redirectToLoginIfNotAuthenticated();
-    },
-    currentUsername() {
-      if (this.currentUsername) {
-        this.fetchAuthenticatedUser()
-      }
-    }
-  },
-  beforeMount() {
-    this.refreshAuthentication();
-    this.fetchAuthenticatedUser();
-    this.redirectToLoginIfNotAuthenticated();
+    logout: () => custosStore.dispatch("auth/logout")
   }
 }
 </script>
 
-<style scoped>
+<style>
+.header {
+  display: flex;
+}
+
+.header .custos-logo {
+  flex: 1;
+  display: flex;
+}
+
+.header .user-details .username {
+  font-size: 15px;
+  font-weight: 900;
+  text-align: right;
+  color: #afafae;
+}
+
+.header .user-details .email {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.07;
+  text-align: right;
+  color: #203a43;
+}
+
+.header .user-avatar-button {
+  border-radius: 30px;
+  width: 35px;
+  height: 35px;
+  padding: 0px;
+  line-height: 0px;
+  font-size: 15px;
+  background-color: #4a4a4a;
+}
 </style>

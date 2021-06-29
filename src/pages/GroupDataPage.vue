@@ -1,45 +1,5 @@
 <template>
   <Page :title="title" :breadcrumb-links="breadcrumbLinks">
-    <!--    <div class="w-100">-->
-    <!--      &lt;!&ndash;      <div class="w-100">&ndash;&gt;-->
-    <!--      &lt;!&ndash;        <label for="demo-1">Search</label>&ndash;&gt;-->
-    <!--      &lt;!&ndash;        <input type="text" id="demo-1" aria-describedby="demo-1-note">&ndash;&gt;-->
-    <!--      &lt;!&ndash;        <small>&ndash;&gt;-->
-    <!--      &lt;!&ndash;          <a href="#" data-modal-trigger="modal-1">Advanced search</a>&ndash;&gt;-->
-    <!--      &lt;!&ndash;        </small>&ndash;&gt;-->
-    <!--      &lt;!&ndash;      </div>&ndash;&gt;-->
-
-    <!--      <b-input-group size="sm">-->
-    <!--        <b-form-input placeholder="Search" size="sm"></b-form-input>-->
-    <!--        <b-input-group-append>-->
-    <!--          <b-button v-b-modal.modal-1>-->
-    <!--            <b-icon icon="caret-down-fill" aria-hidden="true"></b-icon>-->
-    <!--          </b-button>-->
-    <!--        </b-input-group-append>-->
-    <!--      </b-input-group>-->
-
-    <!--      <b-modal id="modal-1" title="Search / Filter">-->
-    <!--        <p class="my-4">Advanced searching/ filtering criteria. </p>-->
-    <!--        <div>-->
-    <!--          <strong>Microscope</strong>-->
-    <!--          <ul style="list-style: none; padding: 0px;">-->
-    <!--            <li v-for="microscope in ['IU Cardiac-MS1', 'IU-med-MS1', 'IU-med-MS2']" :key="microscope">-->
-    <!--              <b-form-checkbox-->
-    <!--                  :id="`checkbox-group-user-${microscope}`"-->
-    <!--                  :name="`checkbox-group-user-${microscope}`"-->
-    <!--                  :checked="true"-->
-    <!--              >-->
-    <!--                {{ microscope }}-->
-    <!--              </b-form-checkbox>-->
-    <!--            </li>-->
-    <!--          </ul>-->
-    <!--        </div>-->
-    <!--        <template slot="modal-footer">-->
-    <!--          <b-button>Search</b-button>-->
-    <!--        </template>-->
-    <!--      </b-modal>-->
-    <!--    </div>-->
-
     <div class="w-100">
       <div class="w-100"
            style="display: flex; flex-direction: row;min-height:45px; display: inline-flex;align-items: center;">
@@ -366,7 +326,7 @@
                               v-b-tooltip.hover="`Share`">
                       <b-icon icon="share"></b-icon>
                     </b-button>
-                    <ShareModal :modal-id="`share-modal-${folder.folderId}`" :folder-ids="[folder.folderId]"/>
+                    <ModalShareEntity :modal-id="`share-modal-${folder.folderId}`" :entity-id="folder.entityId"/>
 
                     <b-button variant="link" size="sm" v-b-modal="`map-to-collection-groups-modal-${folder.folderId}`"
                               v-b-tooltip.hover="`Group Collections`">
@@ -430,7 +390,7 @@
                               v-b-tooltip.hover="`Share`">
                       <b-icon icon="share"></b-icon>
                     </b-button>
-                    <ShareModal :modal-id="`share-modal-${file.fileId}`" :file-ids="[file.fileId]"/>
+                    <ModalShareEntity :modal-id="`share-modal-${file.fileId}`" :entity-id="file.entityId"/>
 
                     <b-button variant="link" size="sm" v-b-modal="`map-to-collection-groups-modal-${file.fileId}`"
                               v-b-tooltip.hover="`Group Collections`">
@@ -471,8 +431,6 @@
 </template>
 
 <script>
-
-import {mapGetters, mapActions} from "vuex";
 import store from "../store";
 import Page from "../components/Page";
 import Pagination from "@/components/Pagination";
@@ -482,10 +440,12 @@ import FilePreviewModal from "@/components/modals/file-preview-modal";
 import ShareModal from "@/components/modals/share-modal";
 import CopyModal from "@/components/modals/copy-modal";
 import NotesModal from "@/components/modals/notes-modal";
+import ModalShareEntity from "custos-demo-gateway/src/lib/components/modals/modal-share-entity";
 
 export default {
   name: "GroupDataPage",
   components: {
+    ModalShareEntity,
     NotesModal,
     CopyModal,
     ShareModal, FilePreviewModal, MapSelectedFilesAndFoldersToCollectionGroupsModal, Pagination, Page
@@ -501,28 +461,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      getGroup: "group/getGroup",
-      getUsers: "user/getUsers",
-      getFiles: "emcFile/getFiles",
-      getFolders: "emcFolder/getFolders",
-      getFolderPath: "emcFolder/getFolderPath",
-    }),
     title() {
-      if (this.group) {
-        return this.group.name;
-      } else {
-        return "Collections"
-      }
+      return "Collections";
     },
     breadcrumbLinks() {
       let _breadcrumbLinks = [{to: '/collections', name: 'Collections'}]
 
-      if (this.group && this.group.name) {
-        _breadcrumbLinks.push({to: this.groupLink, name: this.group.name});
-      }
-
-      const folderPath = this.getFolderPath({folderId: this.parentFolderId});
+      const folderPath = this.$store.getters["emcFolder/getFolderPath"]({folderId: this.parentFolderId});
       if (folderPath) {
         for (let i = 0; i < folderPath.length; i++) {
           const folder = folderPath[i];
@@ -538,13 +483,6 @@ export default {
 
       return _breadcrumbLinks;
     },
-    groupId() {
-      return this.$route.query.groupId;
-    },
-    group() {
-      return this.getGroup({groupId: this.groupId});
-    },
-
     parentFolderId() {
       if (this.$route.query.parentFolderId) {
         return window.decodeURIComponent(this.$route.query.parentFolderId);
@@ -552,58 +490,15 @@ export default {
         return null;
       }
     },
-
-    // TODO remove. Added temporary for demo purpose.
-    // mode() {
-    //   const folderCountInPath = this.path.length === 0 ? 0 : this.path.split("/").length;
-    //   if (folderCountInPath === 1) {
-    //     return "user";
-    //   } else if (folderCountInPath === 2) {
-    //     return "collection";
-    //   } else {
-    //     return "group";
-    //   }
-    // },
-    // nextMode() {
-    //   if (this.mode === "group") {
-    //     return "user"
-    //   } else if (this.mode === "user") {
-    //     return "collection"
-    //   } else {
-    //     return null;
-    //   }
-    // },
-
     files() {
-      const _files = this.getFiles({groupId: this.groupId, parentFolderId: this.parentFolderId});
+      const _files = this.$store.getters["emcFile/getFiles"]({parentFolderId: this.parentFolderId});
 
-      // TODO remove
-      if (_files && this.group) {
-        return _files.map(file => {
-          return {...file, name: `${this.group.name.replace(/ /ig, "-").toLowerCase()}-${file.name}`}
-
-        });
-      } else {
-        return _files;
-      }
+      return _files;
     },
     folders() {
-      const _folders = this.getFolders({groupId: this.groupId, parentFolderId: this.parentFolderId});
+      const _folders = this.$store.getters["emcFolder/getFolders"]({parentFolderId: this.parentFolderId});
 
-      // TODO remove
-      if (_folders && this.group) {
-        return _folders.map(folder => {
-          return {...folder, name: `${this.group.name.replace(/ /ig, "-").toLowerCase()}-${folder.name}`}
-        })
-      } else {
-        return _folders
-      }
-    },
-    users() {
-      return this.getUsers({groupId: this.groupId});
-    },
-    groupLink() {
-      return this.getDataLink({groupId: this.groupId});
+      return _folders;
     },
     numberOfFilesSelected() {
       let _numberOfFilesSelected = 0;
@@ -647,24 +542,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions({
-      fetchGroup: "group/fetchGroup",
-      fetchUsers: "user/fetchUsers",
-      fetchFiles: "emcFile/fetchFiles",
-      fetchFolders: "emcFolder/fetchFolders",
-      fetchFolderPath: "emcFolder/fetchFolderPath"
-    }),
     reset() {
       this.displayMode = "list";
       this.selectedFileIdMap = {};
       this.selectedFolderIdMap = {};
     },
-    getDataLink({groupId} = {}, {folderId} = {}) {
+    getDataLink({folderId} = {}) {
       let _dataLink = "/collections?";
-
-      if (groupId) {
-        _dataLink += `groupId=${groupId}&`
-      }
 
       if (folderId) {
         _dataLink += `parentFolderId=${folderId}&`
@@ -676,7 +560,7 @@ export default {
       this.displayMode = displayMode;
     },
     getFolderLink({folderId}) {
-      return this.getDataLink({groupId: this.groupId}, {folderId});
+      return this.getDataLink({folderId});
     },
     getFolderSelectionCheckboxId({folderId}) {
       return `folder-select-checkbox-${folderId}`;
@@ -794,28 +678,17 @@ export default {
     }
   },
   watch: {
-    groupId() {
-      this.reset();
-      if (this.groupId) this.fetchGroup({groupId: this.groupId});
-      // this.fetchUsers({groupId: this.groupId});
-
-      this.fetchFolders({groupId: this.groupId, parentFolderId: this.parentFolderId});
-      this.fetchFiles({groupId: this.groupId, parentFolderId: this.parentFolderId});
-      this.fetchFolderPath({folderId: this.parentFolderId});
-    },
     parentFolderId() {
       this.reset();
-      this.fetchFolders({groupId: this.groupId, parentFolderId: this.parentFolderId});
-      this.fetchFiles({groupId: this.groupId, parentFolderId: this.parentFolderId});
-      this.fetchFolderPath({folderId: this.parentFolderId});
+      this.$store.dispatch("emcFolder/fetchFolders", {parentFolderId: this.parentFolderId});
+      this.$store.dispatch("emcFile/fetchFiles", {parentFolderId: this.parentFolderId});
+      this.$store.dispatch("emcFolder/fetchFolderPath", {folderId: this.parentFolderId});
     }
   },
   beforeMount() {
-    if (this.groupId) this.fetchGroup({groupId: this.groupId});
-    // this.fetchUsers({groupId: this.groupId});
-    this.fetchFolders({groupId: this.groupId, parentFolderId: this.parentFolderId});
-    this.fetchFiles({groupId: this.groupId, parentFolderId: this.parentFolderId});
-    this.fetchFolderPath({folderId: this.parentFolderId});
+    this.$store.dispatch("emcFolder/fetchFolders", {parentFolderId: this.parentFolderId});
+    this.$store.dispatch("emcFile/fetchFiles", {parentFolderId: this.parentFolderId});
+    this.$store.dispatch("emcFolder/fetchFolderPath", {folderId: this.parentFolderId});
   }
 }
 </script>

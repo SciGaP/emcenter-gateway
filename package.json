@@ -1,5 +1,5 @@
 {
-  "name": "custos-demo-gateway",
+  "name": "emc-gateway",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,6 +12,7 @@
     "axios": "^0.21.1",
     "bootstrap-vue": "^2.16.0",
     "core-js": "^3.6.5",
+    "custos-demo-gateway": "file:../airavata-custos-portal/custos-demo-gateway",
     "dotenv": "^8.2.0",
     "http": "0.0.1-security",
     "https": "^1.0.0",

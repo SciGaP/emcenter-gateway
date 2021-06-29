@@ -60,7 +60,7 @@
                     Edit
                   </a>
                 </router-link>
-                <a href="#" v-on:click.prevent="deleteGroup({groupId:group.groupId})">
+                <a href="#" v-on:click.prevent="deleteGroup(group)">
                   Delete
                 </a>
               </b-td>
@@ -77,16 +77,14 @@
 </template>
 
 <script>
-
-import {mapGetters, mapActions} from "vuex";
-import store from "../store";
+import {custosStore} from "../store";
 import Page from "../components/Page";
 import Pagination from "../components/Pagination";
 
 export default {
   name: "GroupsPage",
   components: {Pagination, Page},
-  store: store,
+  store: custosStore,
   data() {
     return {
       newGroup: {name: null, description: null},
@@ -94,20 +92,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      currentUsername: "auth/currentUsername",
-      getGroups: "group/getGroups"
-    }),
     groups() {
-      return this.getGroups()
+      return this.$store.getters["group/getGroups"]();
     }
   },
   methods: {
-    ...mapActions({
-      fetchGroups: "group/fetchGroups",
-      createGroup: "group/createGroup",
-      deleteGroup: "group/deleteGroup"
-    }),
     getGroupLink({groupId}) {
       return `/groups/${groupId}`;
     },
@@ -115,22 +104,25 @@ export default {
       this.newGroup = {name: null, description: null};
       this.$bvModal.show("create-new-group-modal");
     },
+    async deleteGroup({groupId}) {
+      await this.$store.dispatch("group/fetchGroups", {groupId});
+    },
     async createNewGroup() {
-      await this.createGroup({
+      await this.$store.dispatch("group/createGroup", {
         name: this.newGroup.name,
         description: this.newGroup.description,
-        ownerId: this.currentUsername,
+        ownerId: this.$store.getters["auth/currentUsername"],
         realm_roles: [],
         client_roles: [],
         attributes: [],
         sub_groups: []
       })
-      await this.fetchGroups();
+      await this.$store.dispatch("group/fetchGroups");
       this.$bvModal.hide("create-new-group-modal");
     }
   },
-  beforeMount() {
-    this.fetchGroups();
+  async beforeMount() {
+    await this.$store.dispatch("group/fetchGroups");
   }
 }
 </script>

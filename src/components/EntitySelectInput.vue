@@ -17,11 +17,11 @@
 <script>
 
 import {mapGetters, mapActions} from "vuex";
-import store from "../store";
+import {custosStore} from "../store";
 
 export default {
   name: "EntitySelectInput",
-  store: store,
+  store: custosStore,
   data() {
     return {
       usernameSearch: ""

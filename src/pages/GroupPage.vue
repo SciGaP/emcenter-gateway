@@ -46,14 +46,14 @@
 <script>
 
 import {mapGetters, mapActions} from "vuex";
-import store from "../store";
+import {custosStore} from "../store";
 import Page from "../components/Page";
 import UserSearchAndSelect from "@/components/EntitySelectInput";
 
 export default {
   name: "GroupPage",
   components: {UserSearchAndSelect, Page},
-  store: store,
+  store: custosStore,
   data() {
     return {
       memberTypes: ['OWNER', 'MEMBER'],

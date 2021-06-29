@@ -19,50 +19,21 @@
 </template>
 
 <script>
-import store from "./store";
-import {mapGetters, mapActions} from "vuex";
 import exampleProfilePicture from "./assets/120493210_1443413932520618_6347067080170311282_n.jpg";
 import "./styles.scss";
 import AppHeader from "./components/AppHeader";
 import AppFooter from "./components/AppFooter";
 import AppLeftNav from "@/components/AppLeftNav";
+import {custosStore} from "./store";
 
 export default {
   name: 'App',
   components: {AppLeftNav, AppFooter, AppHeader},
-  store: store,
+  store: custosStore,
   data: () => {
     return {exampleProfilePicture: exampleProfilePicture}
   },
-  computed: {
-    ...mapGetters({
-      authenticated: "auth/authenticated",
-      currentUsername: "auth/currentUsername",
-      isAdmin: "auth/isAdmin",
-      getUser: "user/getUser"
-    }),
-    user() {
-      return this.getUser({username: this.currentUsername});
-    }
-  },
   methods: {
-    ...mapActions({
-      fetchUsers: "user/fetchUsers",
-      logoutAction: "auth/logout",
-      refreshAuthentication: "auth/refreshAuthentication"
-    }),
-    async logout() {
-      await this.logoutAction();
-    },
-    async fetchAuthenticatedUser() {
-      if (this.authenticated && (!this.user || this.user.username !== this.currentUsername)) {
-        await this.fetchUsers({
-          offset: 0,
-          limit: 1,
-          username: this.currentUsername
-        });
-      }
-    },
     redirectToLoginIfNotAuthenticated() {
       if (!this.authenticated && this.$router.currentRoute.path !== "/") {
         this.$router.push('/')
@@ -71,17 +42,14 @@ export default {
   },
   watch: {
     authenticated() {
-      this.redirectToLoginIfNotAuthenticated();
-    },
-    currentUsername() {
-      if (this.currentUsername) {
-        this.fetchAuthenticatedUser()
-      }
+      this.redirectToLoginIfNotAuthenticated()
     }
   },
-  beforeMount() {
-    this.refreshAuthentication();
-    this.fetchAuthenticatedUser();
+  computed: {
+    authenticated: () => custosStore.getters["auth/authenticated"],
+    currentUsername: () => custosStore.getters["auth/currentUsername"]
+  },
+  mounted() {
     this.redirectToLoginIfNotAuthenticated();
   }
 }

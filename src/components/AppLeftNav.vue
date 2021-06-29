@@ -2,14 +2,14 @@
   <div v-if="authenticated" class="p-3">
     <CollectionToastQueue/>
     <ul>
-<!--      <li>-->
-<!--        <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">-->
-<!--          <a :class="{active: isExactActive}" :href="href" @click="navigate">-->
-<!--            <img :src="svgDashboard" style="width: 16px;height: 16px;"/>-->
-<!--            Dashboard-->
-<!--          </a>-->
-<!--        </router-link>-->
-<!--      </li>-->
+      <!--      <li>-->
+      <!--        <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">-->
+      <!--          <a :class="{active: isExactActive}" :href="href" @click="navigate">-->
+      <!--            <img :src="svgDashboard" style="width: 16px;height: 16px;"/>-->
+      <!--            Dashboard-->
+      <!--          </a>-->
+      <!--        </router-link>-->
+      <!--      </li>-->
       <li>
         <router-link to="/collections" v-slot="{ href, route, navigate, isActive}" tag="">
           <a :class="{active: isActive}" :href="href" @click="navigate">
@@ -96,8 +96,7 @@
 </template>
 
 <script>
-import store from "../store";
-import {mapGetters, mapActions} from "vuex";
+
 import exampleProfilePicture from "../assets/120493210_1443413932520618_6347067080170311282_n.jpg";
 import svgPeople from "../assets/people.svg";
 import svgDashboard from "../assets/dashboard.svg";
@@ -105,10 +104,14 @@ import svgFileRuled from "../assets/file-ruled.svg";
 import svgGear from "../assets/gear.svg";
 import CollectionToastQueue from "@/components/CollectionToastQueue";
 
+
+import {custosService} from "custos-demo-gateway/src/lib/store/util/custos.util";
+import {custosStore} from "../store";
+
 export default {
-  name: 'AppLeftNav',
+  name: "AppLeftNav",
   components: {CollectionToastQueue},
-  store: store,
+  store: custosStore,
   data: () => {
     return {
       svgPeople: svgPeople,
@@ -119,60 +122,24 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      authenticated: "auth/authenticated",
-      currentUsername: "auth/currentUsername",
-      isAdmin: "auth/isAdmin",
-      getUser: "user/getUser",
-      getGroups: "group/getGroups",
-    }),
-    user() {
-      return this.getUser({username: this.currentUsername});
+    authenticated() {
+      return this.$store.getters["auth/authenticated"]
     },
-    groups() {
-      return this.getGroups()
+    isAdmin() {
+      return this.$store.getters["auth/isAdmin"]
+    },
+    currentUsername() {
+      return this.$store.getters["auth/currentUsername"]
+    },
+    user() {
+      return this.$store.getters["user/getUser"]({clientId: custosService.clientId, username: this.currentUsername});
+    },
+    profileLink() {
+      return `/tenants/${custosService.clientId}/users/${this.currentUsername}`;
     }
   },
   methods: {
-    ...mapActions({
-      fetchGroups: "group/fetchGroups",
-      fetchUsers: "user/fetchUsers",
-      logoutAction: "auth/logout",
-      refreshAuthentication: "auth/refreshAuthentication"
-    }),
-    async logout() {
-      await this.logoutAction();
-    },
-    async fetchAuthenticatedUser() {
-      if (this.authenticated && (!this.user || this.user.username !== this.currentUsername)) {
-        await this.fetchUsers({
-          offset: 0,
-          limit: 1,
-          username: this.currentUsername
-        });
-      }
-    },
-    redirectToLoginIfNotAuthenticated() {
-      if (!this.authenticated && this.$router.currentRoute.path !== "/") {
-        this.$router.push('/')
-      }
-    }
-  },
-  watch: {
-    authenticated() {
-      this.redirectToLoginIfNotAuthenticated();
-    },
-    currentUsername() {
-      if (this.currentUsername) {
-        this.fetchAuthenticatedUser()
-      }
-    }
-  },
-  beforeMount() {
-    this.refreshAuthentication();
-    this.fetchAuthenticatedUser();
-    this.redirectToLoginIfNotAuthenticated();
-    this.fetchGroups();
+    logout: () => custosStore.dispatch("auth/logout")
   }
 }
 </script>

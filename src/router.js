@@ -1,18 +1,46 @@
 import Vue from "vue";
 import Router from "vue-router";
-import store from './store/index';
 import Home from "./pages/HomePage";
 import Login from "./pages/LoginPage";
 
+import {custosService} from "custos-demo-gateway/src/lib/store/util/custos.util";
+import {custosStore} from "./store";
+
 Vue.use(Router)
 
-async function _validateAuthenticationBeforeEnter(to, from, next) {
-    await store.dispatch('auth/refreshAuthentication');
-    const authenticated = store.getters['auth/authenticated'];
 
+// async function _validateAuthenticationBeforeEnter(to, from, next) {
+//     const authenticated = store.getters['auth/authenticated'];
+//
+//     if (!authenticated) {
+//         next('/login');
+//     } else {
+//         next(true);
+//     }
+// }
+
+async function _validateAuthenticationBeforeEnter(to, from, next) {
+    await custosStore.dispatch('auth/refreshAuthentication');
+    const authenticated = custosStore.getters['auth/authenticated'];
+
+
+    console.log("store ", custosStore)
     if (!authenticated) {
-        next('/login');
+        console.log("NOT authenticated");
+        // next(true);
+        next('/');
     } else {
+        const username = custosStore.getters["auth/currentUsername"];
+
+        if (!custosStore.getters["user/getUser"]({username, clientId: custosService.clientId})) {
+            await custosStore.dispatch('user/fetchUsers', {username, clientId: custosService.clientId});
+        }
+
+        if (!custosStore.getters["tenant/getTenant"]({clientId: custosService.clientId})) {
+            await custosStore.dispatch("tenant/fetchTenant", {clientId: custosService.clientId});
+        }
+
+        console.log("YES authenticated " + custosStore.getters["user/getUser"]({username}));
         next(true);
     }
 }

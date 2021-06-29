@@ -58,11 +58,11 @@
 
 <script>
 import {mapGetters, mapActions} from "vuex";
-import store from "../store";
+import {custosStore} from "../store";
 
 export default {
   name: 'LoginPage',
-  store: store,
+  store: custosStore,
   props: {
     msg: String,
     seen: Boolean,
