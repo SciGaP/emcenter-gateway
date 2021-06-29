@@ -25,7 +25,7 @@ export default {
   },
   async mounted() {
     await this.authenticate();
-    await this.$router.push('/');
+    await this.$router.push('/collections');
   }
 }
 </script>
