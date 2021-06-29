@@ -1,9 +1,10 @@
 module.exports = {
     configureWebpack: config => {
         config.entry.app = [
-            './src/main.js'
+            './src/main.js',
         ]
     },
+    transpileDependencies: ["custos-demo-gateway"],
     pluginOptions: {
         i18n: {
             locale: 'en',
