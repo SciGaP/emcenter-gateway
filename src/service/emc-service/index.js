@@ -4,13 +4,14 @@ import https from "https";
 import EmcFiles from "./custos-service-files";
 import EmcFolders from "./custos-service-folders";
 import {custosService} from "custos-demo-gateway/src/lib/store/util/custos.util";
+import config from "../../config";
 
 const httpAgent = new http.Agent({keepAlive: true});
 const httpsAgent = new https.Agent({keepAlive: true});
 
 export default class EmcService {
 
-    static baseURL = "http://149.165.157.235:10000/v1.0/api";
+    static baseURL = config.value('datalakeDrmsUrl');
 
     static ENDPOINTS = {
         COLLECTIONS: "/drms/resource/searchResource",
