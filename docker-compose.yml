@@ -1,11 +1,15 @@
 version: "3.3"
 services:
   web:
-    image : "apachecustos/custos-demo-gateway-local:latest"
+    image: "apachecustos/emc-portal:latest"
     ports:
       - "8080:8080"
+    volumes:
+      - /Users/isururanawaka/Documents/Airavata_Repository/airavata-custos-portal/custos-demo-gateway/privkey.pem:/etc/nginx/privkey.pem
+      - /Users/isururanawaka/Documents/Airavata_Repository/airavata-custos-portal/custos-demo-gateway/fullchain.pem:/etc/nginx/fullchain.pem
     environment:
-      VUE_APP_CLIENT_ID: 'tenant-id'
-      VUE_APP_CLIENT_SEC: 'tenant-sec'
+      VUE_APP_CLIENT_ID: ''
+      VUE_APP_CLIENT_SEC: ''
       VUE_APP_REDIRECT_URI: 'http://localhost:8080/callback'
-      VUE_APP_CUSTOS_TOKEN_ENDPOINT: 'https://custos.scigap.org/apiserver/identity-management/v1.0.0/token'
+      VUE_APP_DATA_LAKE_DRMS_URL: 'http://149.165.157.235:10000/v1.0/api'
+
