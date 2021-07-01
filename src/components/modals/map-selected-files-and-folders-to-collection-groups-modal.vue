@@ -1,11 +1,11 @@
 <template>
   <b-modal :id="modalId" size="sm" hide-footer title="Add to collection groups">
     <ul>
-      <li v-for="collectionGroup in collectionGroups" :key="collectionGroup.collectionGroupId">
-        <b-checkbox type="checkbox" :checked="isCollectionGroupMapped(collectionGroup)"
-                    v-on:change="toggleCollectionGroup(collectionGroup)"
-                    name="collectionGroup" :id="`collectionGroup-${collectionGroup.collectionGroupId}`"/>
-        <label :for="collectionGroup.collectionGroupId">{{ collectionGroup.name }}</label>
+      <li v-for="collectionGroup in collectionGroups" :key="collectionGroup.resourceId">
+        <b-checkbox type="checkbox" :checked="isCollectionGroupMapped[collectionGroup.resourceId] === true"
+                    v-on:change="mapChildResource(collectionGroup)"
+                    name="collectionGroup" :id="`collectionGroup-${collectionGroup.resourceId}`"/>
+        <label :for="collectionGroup.resourceId">{{ collectionGroup.name }}</label>
       </li>
     </ul>
     <!--    <template #modal-footer="{close}">-->
@@ -21,6 +21,7 @@
 
 <script>
 import store from "../../store";
+import EmcResource from "@/service/emc-service/emc-service-resource";
 
 export default {
   name: "map-selected-files-and-folders-to-collection-groups-modal",
@@ -29,12 +30,7 @@ export default {
     modalId: {
       default: ""
     },
-    fileIds: {
-      default() {
-        return []
-      }
-    },
-    folderIds: {
+    resourceIds: {
       default() {
         return []
       }
@@ -42,32 +38,50 @@ export default {
   },
   data() {
     return {
-      selectedCollectionGroupsMap: {}
+      errors: [],
+      processingMapChild: {},
+
+      isCollectionGroupMapped: {}
     }
   },
   computed: {
     collectionGroups() {
-      return this.$store.getters["emcCollectionGroup/getCollectionGroups"]();
+      return this.$store.getters["emcResource/getResources"]({
+        type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
+      });
+    },
+    childResources() {
+      return this.resourceIds.map(resourceId => {
+        return this.$store.getters["emcResource/getResource"]({resourceId});
+      });
     }
   },
   methods: {
-    isCollectionGroupMapped({collectionGroupId}) {
-      return !!this.selectedCollectionGroupsMap[collectionGroupId];
-    },
-    toggleCollectionGroup({collectionGroupId}) {
-      for (let i = 0; i < this.fileIds.length; i++) {
-        this.$store.dispatch("emcCollectionGroup/mapFileToCollectionGroup", {
-          collectionGroupId,
-          fileId: this.fileIds[i]
-        })
+    async mapChildResource({resourceId, type}) {
+      this.processingMapChild = {...this.processingMapChild, [resourceId]: true};
+
+      try {
+        await Promise.all(this.childResources.map(childResource => {
+          return this.$store.dispatch("emcResource/mapChildResource", {
+            parentResourceId: resourceId, parentResourceType: type,
+            childResourceId: childResource.resourceId, childResourceType: childResource.type
+          });
+        }));
+        this.isCollectionGroupMapped[resourceId] = true;
+      } catch (error) {
+        this.errors.push({
+          title: `Unknown error when mapping to the collection group.`,
+          source: error, variant: "danger"
+        });
       }
-      for (let i = 0; i < this.folderIds.length; i++) {
-        this.$store.dispatch("emcCollectionGroup/mapFolderToCollectionGroup", {
-          collectionGroupId,
-          folderId: this.folderIds[i]
-        })
-      }
+
+      this.processingMapChild = {...this.processingMapChild, [resourceId]: false};
     }
+  },
+  beforeMount() {
+    this.$store.dispatch("emcResource/fetchResources", {
+      type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
+    });
   }
 }
 </script>

@@ -36,6 +36,16 @@ const actions = {
         commit("SET_RESOURCE_LIST", {queryString, resourceIds});
     },
 
+    // async fetchResource(obj, {resourceId}) {
+    //
+    // },
+
+    async mapChildResource(obj, {parentResourceId, parentResourceType, childResourceId, childResourceType}) {
+        await emcService.resources.mapChildResource({
+            parentResourceId, parentResourceType, childResourceId, childResourceType
+        });
+    },
+
     async downloadFile({commit, state}, {resourceId}) {
         if (!state.resourceDownloadMap[resourceId] || !state.resourceDownloadMap[resourceId].processing) {
             const resourceDownload = {content: null, processing: true, errors: null, progress: 20};

@@ -18,6 +18,7 @@ export default class EmcService {
         RESOURCE: "/drms/resource",
         RESOURCE_SEARCH: "/drms/resource/searchResource",
         RESOURCE_CHILDREN: "/drms/resource/child",
+        RESOURCE_PARENT: "/drms/resource/parent",
 
         COLLECTIONS: "/drms/resource/searchResource",
         CHILDREN: "/drms/resource/child",

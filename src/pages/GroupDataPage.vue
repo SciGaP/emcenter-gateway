@@ -153,7 +153,7 @@
                     </b-button>
                     <MapSelectedFilesAndFoldersToCollectionGroupsModal
                         :modal-id="`map-to-collection-groups-modal-${resource.resourceId}`"
-                        :file-ids="[resource.resourceId]"/>
+                        :resource-ids="[resource.resourceId]"/>
 
                     <!--                    <b-button variant="link" size="sm" v-b-tooltip.hover="`Archive`">-->
                     <!--                      <b-icon icon="archive"></b-icon>-->

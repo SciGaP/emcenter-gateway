@@ -21,12 +21,74 @@ export default class EmcResource {
         return this._emcService;
     }
 
-    fetchResourcePath({resourceId}) {
+//     "{
+//   ""parentResource"":{
+//       ""resourceId"":""2079bca4-f55c-4f35-a983-b4cb1ca18541"",
+//       ""type"":""COLLECTION""
+//   },
+//   ""childResources"":[
+// {
+//       ""resourceId"":""b8afc8d6-2a8d-4efd-8705-9ba75314e6db"",
+//       ""type"":""COLLECTION""
+//   },
+//   {
+//       ""resourceId"":""APPLICATION_DEPLOYMENT_b8raED6AUJLDoF0"",
+//       ""type"":""FILE""
+//   }
+//
+//   ]
+// }"
+
+    async mapChildResource({parentResourceId, parentResourceType, childResourceId, childResourceType}) {
+
+        // TODO
+        // console.log(`[FETCH] /emc/path?resourceId=${resourceId}`);
+
+        // GET http://149.165.157.235:10000/v1.0/api/drms/resource/parent?
+        // resourceId=FILE_ONE_bxZPopxbnPaAEq5
+        // type=FILE&depth=2
+
+        const response = await this.emcService.axiosInstanceWithTokenAuthorization.post(
+            EmcService.ENDPOINTS.RESOURCE_CHILDREN,
+            {
+                "parentResource": {
+                    "resourceId": parentResourceId,
+                    "type": parentResourceType
+                },
+                "childResources": [
+                    {
+                        "resourceId": childResourceId,
+                        "type": childResourceType
+                    }
+
+                ]
+            }
+        );
+
+        return response;
+    }
+
+    async fetchResourcePath({resourceId, type}) {
 
         // TODO
         console.log(`[FETCH] /emc/path?resourceId=${resourceId}`);
 
-        return [{resourceId: "", name: ""}]
+        // GET http://149.165.157.235:10000/v1.0/api/drms/resource/parent?
+        // resourceId=FILE_ONE_bxZPopxbnPaAEq5
+        // type=FILE&depth=2
+
+        const response = await this.emcService.axiosInstanceWithTokenAuthorization.get(
+            EmcService.ENDPOINTS.RESOURCE_PARENT,
+            {
+                params: {
+                    "resourceId": resourceId,
+                    "type": type,
+                    "depth": 2
+                }
+            }
+        );
+
+        return response;
     }
 
     downloadResource({resourceId}) {
