@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from "./router.js";
 import store from './store/index.js'
-import custosStore from "custos-demo-gateway/src/lib/store";
+import custosStore from "airavata-custos-portal/src/lib/store";
 import {BootstrapVue, IconsPlugin} from 'bootstrap-vue'
 import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
 import Vuelidate from 'vuelidate'

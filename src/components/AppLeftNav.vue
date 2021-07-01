@@ -18,22 +18,22 @@
           </a>
         </router-link>
       </li>
-      <li>
-        <router-link to="/downloaded" v-slot="{ href, route, navigate, isActive}" tag="">
-          <a :class="{active: isActive}" :href="href" @click="navigate">
-            <b-icon icon="download"></b-icon>
-            Downloaded
-          </a>
-        </router-link>
-      </li>
-      <li>
-        <router-link to="/shared" v-slot="{ href, route, navigate, isActive}" tag="">
-          <a :class="{active: isActive}" :href="href" @click="navigate">
-            <b-icon icon="share"></b-icon>
-            Shared
-          </a>
-        </router-link>
-      </li>
+      <!--      <li>-->
+      <!--        <router-link to="/downloaded" v-slot="{ href, route, navigate, isActive}" tag="">-->
+      <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
+      <!--            <b-icon icon="download"></b-icon>-->
+      <!--            Downloaded-->
+      <!--          </a>-->
+      <!--        </router-link>-->
+      <!--      </li>-->
+      <!--      <li>-->
+      <!--        <router-link to="/shared" v-slot="{ href, route, navigate, isActive}" tag="">-->
+      <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
+      <!--            <b-icon icon="share"></b-icon>-->
+      <!--            Shared-->
+      <!--          </a>-->
+      <!--        </router-link>-->
+      <!--      </li>-->
       <li>
         <router-link to="/collection-groups" v-slot="{ href, route, navigate, isActive}" tag="">
           <a :class="{active: isActive}" :href="href" @click="navigate">
@@ -42,14 +42,14 @@
           </a>
         </router-link>
       </li>
-      <li>
-        <router-link to="/archived" v-slot="{ href, route, navigate, isActive}" tag="">
-          <a :class="{active: isActive}" :href="href" @click="navigate">
-            <b-icon icon="archive"></b-icon>
-            Archived
-          </a>
-        </router-link>
-      </li>
+      <!--      <li>-->
+      <!--        <router-link to="/archived" v-slot="{ href, route, navigate, isActive}" tag="">-->
+      <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
+      <!--            <b-icon icon="archive"></b-icon>-->
+      <!--            Archived-->
+      <!--          </a>-->
+      <!--        </router-link>-->
+      <!--      </li>-->
       <li>
         <router-link to="/groups" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
           <a :class="{active: isExactActive}" :href="href" @click="navigate">
@@ -66,22 +66,22 @@
           </a>
         </router-link>
       </li>
-      <li>
-        <router-link to="/notifications" v-slot="{ href, route, navigate, isActive}" tag="">
-          <a :class="{active: isActive}" :href="href" @click="navigate">
-            <b-icon icon="bell"></b-icon>
-            Notifications
-          </a>
-        </router-link>
-      </li>
-      <li>
-        <router-link to="/profile" v-slot="{ href, route, navigate, isActive}" tag="">
-          <a :class="{active: isActive}" :href="href" @click="navigate">
-            <b-icon icon="person"></b-icon>
-            Profile
-          </a>
-        </router-link>
-      </li>
+      <!--      <li>-->
+      <!--        <router-link to="/notifications" v-slot="{ href, route, navigate, isActive}" tag="">-->
+      <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
+      <!--            <b-icon icon="bell"></b-icon>-->
+      <!--            Notifications-->
+      <!--          </a>-->
+      <!--        </router-link>-->
+      <!--      </li>-->
+      <!--      <li>-->
+      <!--        <router-link to="/profile" v-slot="{ href, route, navigate, isActive}" tag="">-->
+      <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
+      <!--            <b-icon icon="person"></b-icon>-->
+      <!--            Profile-->
+      <!--          </a>-->
+      <!--        </router-link>-->
+      <!--      </li>-->
       <!--    <li v-for="group in groups" :key="group.groupId">-->
       <!--      <router-link :to="`/data?groupId=${group.groupId}`" v-slot="{ href, route, navigate, isActive, isExactActive}"-->
       <!--                   tag="">-->
@@ -105,7 +105,7 @@ import svgGear from "../assets/gear.svg";
 import CollectionToastQueue from "@/components/CollectionToastQueue";
 
 
-import {custosService} from "custos-demo-gateway/src/lib/store/util/custos.util";
+import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import {custosStore} from "../store";
 
 export default {

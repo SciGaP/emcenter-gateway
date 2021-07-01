@@ -15,7 +15,7 @@ import emcCollectionGroup from "./modules/emc/emc-collection-group.store";
 import emcStorageSettings from "./modules/emc/emc-storage-settings.store";
 
 
-import {createCustosStore} from "custos-demo-gateway/src/lib/store/util";
+import {createCustosStore} from "airavata-custos-portal/src/lib/store/util";
 
 
 Vue.use(Vuex);

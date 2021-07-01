@@ -3,7 +3,7 @@ import http from "http";
 import https from "https";
 import EmcFiles from "./custos-service-files";
 import EmcFolders from "./custos-service-folders";
-import {custosService} from "custos-demo-gateway/src/lib/store/util/custos.util";
+import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import config from "../../config";
 
 const httpAgent = new http.Agent({keepAlive: true});

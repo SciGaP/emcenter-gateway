@@ -440,7 +440,7 @@ import FilePreviewModal from "@/components/modals/file-preview-modal";
 import ShareModal from "@/components/modals/share-modal";
 import CopyModal from "@/components/modals/copy-modal";
 import NotesModal from "@/components/modals/notes-modal";
-import ModalShareEntity from "custos-demo-gateway/src/lib/components/modals/modal-share-entity";
+import ModalShareEntity from "airavata-custos-portal/src/lib/components/modals/modal-share-entity";
 
 export default {
   name: "GroupDataPage",

@@ -4,8 +4,8 @@
 
 <script>
 
-import store from "custos-demo-gateway/src/lib/store";
-// import {custosService} from "custos-demo-gateway/src/lib/store/util/custos.util";
+import store from "airavata-custos-portal/src/lib/store";
+// import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 
 export default {
   name: "Callback",

@@ -1,10 +1,15 @@
 <template>
   <div class="v-100" style="background-color: white;padding-left: 50px;padding-bottom: 20px;">
-    <div class="mb-1 w-100">
-      <div class="w-100" style="min-height: 25px;">
-        <Breadcrumb v-if="breadcrumbLinks && breadcrumbLinks.length > 0" class="mb-2 mt-2" :links="breadcrumbLinks"/>
+    <div class="w-100" style="min-height: 25px;">
+      <Breadcrumb v-if="breadcrumbLinks && breadcrumbLinks.length > 0" class="mb-2 mt-2" :links="breadcrumbLinks"/>
+    </div>
+    <div class="mb-1 w-100" style="display: flex; flex-direction: row;">
+      <div style="flex: 1;">
+        <h1 v-if="title" style="font-size: 2rem;font-weight: 300;color: black;">{{ title }}</h1>
       </div>
-      <h1 v-if="title" style="font-size: 2rem;font-weight: 300;color: black;">{{ title }}</h1>
+      <div class="pr-4">
+        <slot name="header-right"/>
+      </div>
     </div>
     <div class="w-100" style="">
       <slot></slot>
@@ -27,6 +32,11 @@ export default {
     breadcrumbLinks: {
       type: [Array],
       required: false
+    },
+    errors: {
+      default() {
+        return [];
+      }
     }
   }
 }

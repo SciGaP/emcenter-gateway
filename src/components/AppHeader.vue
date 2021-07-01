@@ -58,7 +58,7 @@
 
 <script>
 
-import {custosService} from "custos-demo-gateway/src/lib/store/util/custos.util";
+import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import {custosStore} from "../store";
 
 export default {
