@@ -1,29 +1,35 @@
 <template>
-  <b-modal :id="modalId" :title="file.name" size="lg">
+  <b-modal :id="modalId" :title="resource.name" size="lg">
     <div>
       <div>
-        <b-button variant="link">
-          <b-icon icon="download"></b-icon>
-          Download
-        </b-button>
-
-        <b-button variant="link">
-          <b-icon icon="cloud"></b-icon>
-          Copy to
-        </b-button>
-
-        <b-button variant="link">
+        <b-button variant="link" size="sm" v-b-modal="`share-modal`"
+                  v-b-tooltip.hover="`Share`">
           <b-icon icon="share"></b-icon>
           Share
         </b-button>
+        <ModalShareEntity :modal-id="`share-modal`"
+                          :entity-id="resource.resourceId"/>
+
 
         <b-button variant="link" v-b-modal="`map-to-collection-groups-modal`">
           <b-icon icon="folder"></b-icon>
           Group Collections
         </b-button>
         <MapSelectedFilesAndFoldersToCollectionGroupsModal modal-id="map-to-collection-groups-modal"
-                                                           :folder-ids="[]"
-                                                           :file-ids="[fileId]"/>
+                                                           :resource-ids="[resourceId]"/>
+
+        <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`">
+          <b-icon icon="trash"></b-icon>
+          Delete
+        </b-button>
+
+        <b-button variant="link" size="sm" v-b-tooltip.hover="`Notes`"
+                  v-b-modal="`file-notes-modal`">
+          <b-icon icon="chat-square-text"></b-icon>
+          Notes
+        </b-button>
+        <NotesModal :modal-id="`file-notes-modal`" :file-id="resourceId"/>
+
       </div>
       <div style="display: flex; flex-direction: row;">
         <!--        <div>{{ file }}</div>-->
@@ -31,7 +37,7 @@
           <b-icon icon="arrow-left"></b-icon>
         </b-button>
         <b-icon icon="image" style="width: 100%;height: 300px;"></b-icon>
-        <b-button variant="link"  v-on:click="$emit('right')">
+        <b-button variant="link" v-on:click="$emit('right')">
           <b-icon icon="arrow-right"></b-icon>
         </b-button>
       </div>
@@ -49,26 +55,26 @@ import store from "../../store";
 
 import MapSelectedFilesAndFoldersToCollectionGroupsModal
   from "@/components/modals/map-selected-files-and-folders-to-collection-groups-modal";
+import ModalShareEntity from "airavata-custos-portal/src/lib/components/modals/modal-share-entity";
+import NotesModal from "@/components/modals/notes-modal";
+
 
 export default {
   name: "file-preview-modal",
   store: store,
-  components: {MapSelectedFilesAndFoldersToCollectionGroupsModal},
+  components: {
+    ModalShareEntity, NotesModal, MapSelectedFilesAndFoldersToCollectionGroupsModal
+  },
   props: {
     modalId: {default: ""},
-    fileId: {default: ""},
-    fileIds: {
-      default() {
-        return []
-      }
-    }
+    resourceId: {default: ""}
   },
   data() {
     return {}
   },
   computed: {
-    file() {
-      return this.$store.getters["emcFile/getFile"]({fileId: this.fileId});
+    resource() {
+      return this.$store.getters["emcResource/getResource"]({resourceId: this.resourceId});
     }
   }
 }

@@ -70,7 +70,8 @@
                     <!--                                v-on:change="toggleAllSelection()"/>-->
                     <!--                    <label for="all">Select all</label>-->
                   </b-th>
-                  <b-th>Collection</b-th>
+                  <b-th></b-th>
+                  <b-th>Name</b-th>
                   <b-th>size</b-th>
                   <b-th>Created On</b-th>
                   <b-th>Last Updated</b-th>
@@ -93,28 +94,28 @@
                     <!--                    <label :for="getFileSelectionCheckboxId(file)">{{ file.name }}</label>-->
                   </b-td>
                   <b-td>
-                    <div v-if="resource.type === 'FILE'" v-b-tooltip.hover="`Dataset`">
-                      <b-icon style="height: 100%;" icon="card-image" aria-hidden="true"></b-icon>
-                      <a href="#" style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
-                         v-b-modal="`file-preview-modal-${resource.resourceId}`">
-                        {{ resource.name }}
-                      </a>
-                      <FilePreviewModal :modal-id="`file-preview-modal-${resource.resourceId}`"
-                                        :file-id="resource.resourceId"/>
+                    <div style="font-size: 25px;line-height: 25px;">
+                      <b-icon v-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"
+                              v-b-tooltip.hover="`Dataset`"></b-icon>
+                      <b-icon v-else-if="resource.type === 'COLLECTION'" icon="folder" aria-hidden="true"
+                              v-b-tooltip.hover="`Collection`"></b-icon>
+                      <b-icon v-else-if="resource.type === 'COLLECTION_GROUP'" icon="folder-symlink"
+                              aria-hidden="true" v-b-tooltip.hover="`Collection Group`"></b-icon>
                     </div>
-                    <div v-else-if="resource.type === 'COLLECTION'" v-b-tooltip.hover="`Collection`">
-                      <b-icon style="height: 100%;" icon="folder" aria-hidden="true"></b-icon>
-                      <router-link :to="`/collections?parentResourceId=${resource.resourceId}`"
-                                   v-slot="{ href, route, navigate, isActive,isExactActive }">
-                        <a style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
-                           :class="{active: isExactActive}" :href="href" @click="navigate">
+                  </b-td>
+                  <b-td>
+                    <div style="flex: 1;">
+                      <div v-if="resource.type === 'FILE'">
+                        <a href="#"
+                           style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
+                           v-b-modal="`file-preview-modal-${resource.resourceId}`"
+                           v-on:click.prevent="$bvModal.show(`file-preview-modal-${resource.resourceId}`)">
                           {{ resource.name }}
                         </a>
-                      </router-link>
-                    </div>
-                    <div v-else-if="resource.type === 'COLLECTION_GROUP'" v-b-tooltip.hover="`Collection Group`">
-                      <b-icon style="height: 100%;" icon="folder-symlink" aria-hidden="true"></b-icon>
-                      <router-link :to="`/collections?parentResourceId=${resource.resourceId}`"
+                        <FilePreviewModal :modal-id="`file-preview-modal-${resource.resourceId}`"
+                                          :resource-id="resource.resourceId"/>
+                      </div>
+                      <router-link v-else :to="`/collections?parentResourceId=${resource.resourceId}`"
                                    v-slot="{ href, route, navigate, isActive,isExactActive }">
                         <a style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
                            :class="{active: isExactActive}" :href="href" @click="navigate">
@@ -151,6 +152,7 @@
                               v-b-tooltip.hover="`Group Collections`">
                       <b-icon icon="folder"></b-icon>
                     </b-button>
+
                     <MapSelectedFilesAndFoldersToCollectionGroupsModal
                         :modal-id="`map-to-collection-groups-modal-${resource.resourceId}`"
                         :resource-ids="[resource.resourceId]"/>
