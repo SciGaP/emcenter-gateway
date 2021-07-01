@@ -167,7 +167,7 @@
                               v-b-modal="`file-notes-modal-${resource.resourceId}`">
                       <b-icon icon="chat-square-text"></b-icon>
                     </b-button>
-                    <NotesModal :modal-id="`file-notes-modal-${resource.resourceID}`" :file-id="resource.resourceId"/>
+                    <NotesModal :modal-id="`file-notes-modal-${resource.resourceId}`" :file-id="resource.resourceId"/>
 
                   </b-td>
                 </b-tr>
