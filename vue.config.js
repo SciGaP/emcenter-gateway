@@ -4,7 +4,7 @@ module.exports = {
             './src/main.js',
         ]
     },
-    transpileDependencies: ["custos-demo-gateway"],
+    transpileDependencies: ["airavata-custos-portal"],
     pluginOptions: {
         i18n: {
             locale: 'en',
