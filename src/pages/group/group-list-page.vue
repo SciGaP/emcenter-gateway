@@ -19,7 +19,7 @@
         <b-tbody>
           <b-tr v-for="group in groups" :key="group.groupId">
             <b-td>
-              <router-link :to="`/tenants/${clientId}/groups/${group.groupId}`" v-slot="{href, navigate}">
+              <router-link :to="`/groups/${group.groupId}`" v-slot="{href, navigate}">
                 <b-link :href="href" v-on:click="navigate">{{ group.groupId }}</b-link>
               </router-link>
               <button-copy :value="group.groupId"/>
