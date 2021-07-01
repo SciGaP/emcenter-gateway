@@ -11,6 +11,7 @@ import createLogger from 'vuex/dist/logger';
 
 import emcFile from "./modules/emc/emc-file.store";
 import emcFolder from "./modules/emc/emc-folder.store";
+import emcResource from "./modules/emc/emc-resource.store";
 import emcCollectionGroup from "./modules/emc/emc-collection-group.store";
 import emcStorageSettings from "./modules/emc/emc-storage-settings.store";
 
@@ -34,6 +35,7 @@ export default new Vuex.Store({
         // ciLogon,
         "emcFile": emcFile,
         "emcFolder": emcFolder,
+        "emcResource": emcResource,
         "emcCollectionGroup": emcCollectionGroup,
         "emcStorageSettings": emcStorageSettings
     },

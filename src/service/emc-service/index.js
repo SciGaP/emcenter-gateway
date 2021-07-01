@@ -3,6 +3,7 @@ import http from "http";
 import https from "https";
 import EmcFiles from "./custos-service-files";
 import EmcFolders from "./custos-service-folders";
+import EmcResources from "./emc-service-resource";
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import config from "../../config";
 
@@ -14,14 +15,20 @@ export default class EmcService {
     static baseURL = config.value('datalakeDrmsUrl');
 
     static ENDPOINTS = {
+        RESOURCE: "/drms/resource",
+        RESOURCE_SEARCH: "/drms/resource/searchResource",
+        RESOURCE_CHILDREN: "/drms/resource/child",
+
         COLLECTIONS: "/drms/resource/searchResource",
         CHILDREN: "/drms/resource/child",
-        DATASETS: "/drms/resource/searchPreference"
+        DATASETS: "/drms/resource/searchPreference",
+        COLLECTION_GROUPS: "/drms/resource/searchResource",
     };
 
     constructor() {
         this._files = new EmcFiles(this);
         this._folders = new EmcFolders(this);
+        this._resources = new EmcResources(this);
     }
 
     get files() {
@@ -30,6 +37,10 @@ export default class EmcService {
 
     get folders() {
         return this._folders;
+    }
+
+    get resources() {
+        return this._resources;
     }
 
     //
