@@ -4,30 +4,30 @@
       <div class="container">
         <a class="navbar-brand" href="#"><img src="../assets/images/trident-large.png" height="30"
                                               class="d-inline-block align-top" alt=""> Electron Microscopy Center </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-          </ul>
-          <form class="form-inline my-2 my-lg-0">
-            <ul class="navbar-nav mr-2">
-              <li class="nav-item">
-                <a class="nav-link" href="#">How it Works</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Equipments</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Resources</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Contact</a>
-              </li>
-            </ul>
-          </form>
-        </div>
+        <!--        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"-->
+        <!--                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">-->
+        <!--          <span class="navbar-toggler-icon"></span>-->
+        <!--        </button>-->
+        <!--        <div class="collapse navbar-collapse" id="navbarSupportedContent">-->
+        <!--          <ul class="navbar-nav mr-auto">-->
+        <!--          </ul>-->
+        <!--          <form class="form-inline my-2 my-lg-0">-->
+        <!--            <ul class="navbar-nav mr-2">-->
+        <!--              <li class="nav-item">-->
+        <!--                <a class="nav-link" href="#">How it Works</a>-->
+        <!--              </li>-->
+        <!--              <li class="nav-item">-->
+        <!--                <a class="nav-link" href="#">Equipments</a>-->
+        <!--              </li>-->
+        <!--              <li class="nav-item">-->
+        <!--                <a class="nav-link" href="#">Resources</a>-->
+        <!--              </li>-->
+        <!--              <li class="nav-item">-->
+        <!--                <a class="nav-link" href="#">Contact</a>-->
+        <!--              </li>-->
+        <!--            </ul>-->
+        <!--          </form>-->
+        <!--        </div>-->
       </div>
     </nav>
 
