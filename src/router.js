@@ -3,7 +3,7 @@ import Router from "vue-router";
 import Home from "./pages/HomePage";
 import Login from "./pages/LoginPage";
 
-import {custosService} from "custos-demo-gateway/src/lib/store/util/custos.util";
+import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import {custosStore} from "./store";
 
 Vue.use(Router)
@@ -98,14 +98,21 @@ export default new Router({
             name: "groups",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
-                import("./pages/GroupsPage")
+                import("./pages/group/group-list-page")
+        },
+        {
+            path: "/groups/new",
+            name: "groups",
+            beforeEnter: _validateAuthenticationBeforeEnter,
+            component: () =>
+                import("./pages/group/group-new-page")
         },
         {
             path: "/groups/:groupId",
             name: "settings",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
-                import("./pages/GroupPage")
+                import("./pages/group/group-page")
         },
         {
             path: "/callback",
