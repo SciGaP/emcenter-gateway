@@ -60,134 +60,123 @@
       <!--        </div>-->
       <!--      </div>-->
 
-      <div class="w-100">
-
-        <div class="w-100">
-          <div class="w-100">
-            <table-overlay-info :rows="5" :columns="6"
-                                :data="!folders || !files || !collectionGroups ? null : resources">
-              <template #empty>
-                <div  class="w-100 p-4 text-center">
-                  No Collections to show. It's empty.
-                </div>
-              </template>
-              <b-table-simple class="w-100">
-                <b-thead>
-                  <b-tr>
-                    <b-th>
-                      <!--                    <b-checkbox type="checkbox" name="all" id="all" :checked="isAllSelected()"-->
-                      <!--                                v-on:change="toggleAllSelection()"/>-->
-                      <!--                    <label for="all">Select all</label>-->
-                    </b-th>
-                    <b-th></b-th>
-                    <b-th>Name</b-th>
-                    <b-th>size</b-th>
-                    <b-th>Created On</b-th>
-                    <b-th>Last Updated</b-th>
-                    <b-th>Owner</b-th>
-                    <b-th></b-th>
-                  </b-tr>
-                </b-thead>
-                <b-tbody>
-                  <b-tr v-for="(resource) in resources" :key="resource.resourceId" :class="{selected: false}">
-                    <b-td>
-                      <!--                    <b-checkbox type="checkbox" :checked="isFileSelected(file)"-->
-                      <!--                                v-on:change="toggleFileSelection(file)"-->
-                      <!--                                :name="getFileSelectionCheckboxId(file)" :id="getFileSelectionCheckboxId(file)"/>-->
-                      <!--                    <label :for="getFileSelectionCheckboxId(file)">{{ file.name }}</label>-->
-                    </b-td>
-                    <b-td>
-                      <div style="font-size: 25px;line-height: 25px;">
-                        <b-icon v-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"
-                                v-b-tooltip.hover="`Dataset`"></b-icon>
-                        <b-icon v-else-if="resource.type === 'COLLECTION'" icon="folder" aria-hidden="true"
-                                v-b-tooltip.hover="`Collection`"></b-icon>
-                        <b-icon v-else-if="resource.type === 'COLLECTION_GROUP'" icon="folder-symlink"
-                                aria-hidden="true" v-b-tooltip.hover="`Collection Group`"></b-icon>
-                      </div>
-                    </b-td>
-                    <b-td>
-                      <div style="flex: 1;">
-                        <div v-if="resource.type === 'FILE'">
-                          <a href="#"
-                             style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
-                             v-b-modal="`file-preview-modal-${resource.resourceId}`"
-                             v-on:click.prevent="$bvModal.show(`file-preview-modal-${resource.resourceId}`)">
-                            {{ resource.name }}
-                          </a>
-                          <FilePreviewModal :modal-id="`file-preview-modal-${resource.resourceId}`"
-                                            :resource-id="resource.resourceId"/>
-                        </div>
-                        <router-link v-else :to="`/collections?parentResourceId=${resource.resourceId}`"
-                                     v-slot="{ href, route, navigate, isActive,isExactActive }">
-                          <a style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
-                             :class="{active: isExactActive}" :href="href" @click="navigate">
-                            {{ resource.name }}
-                          </a>
-                        </router-link>
-                      </div>
-                    </b-td>
-                    <b-td>{{ resource.size }}</b-td>
-                    <b-td>{{ resource.createdAt }}</b-td>
-                    <b-td>{{ resource.lastUpdatedAt }}</b-td>
-                    <b-td>{{ resource.createdBy }}</b-td>
-                    <b-td>
-                      <!--                    <b-button variant="link" size="sm" @click="downloadEverythingSelected()"-->
-                      <!--                              v-b-tooltip.hover="`Download`">-->
-                      <!--                      <b-icon icon="download"></b-icon>-->
-                      <!--                    </b-button>-->
-
-                      <!--                    <b-button variant="link" size="sm" v-b-modal="`copy-modal-${file.fileId}`"-->
-                      <!--                              v-b-tooltip.hover="`Copy to`">-->
-                      <!--                      <b-icon icon="cloud"></b-icon>-->
-                      <!--                    </b-button>-->
-                      <!--                    <CopyModal :modal-id="`copy-modal-${file.fileId}`" :file-ids="[file.fileId]"/>-->
-
-                      <b-button variant="link" size="sm" v-b-modal="`share-modal-${resource.resourceId}`"
-                                v-b-tooltip.hover="`Share`">
-                        <b-icon icon="share"></b-icon>
-                      </b-button>
-                      <ModalShareEntity :modal-id="`share-modal-${resource.resourceId}`"
-                                        :entity-id="resource.resourceId"/>
-
-                      <b-button variant="link" size="sm"
-                                v-b-modal="`map-to-collection-groups-modal-${resource.resourceId}`"
-                                v-b-tooltip.hover="`Group Collections`">
-                        <b-icon icon="folder"></b-icon>
-                      </b-button>
-
-                      <MapSelectedFilesAndFoldersToCollectionGroupsModal
-                          :modal-id="`map-to-collection-groups-modal-${resource.resourceId}`"
-                          :resource-ids="[resource.resourceId]"/>
-
-                      <!--                    <b-button variant="link" size="sm" v-b-tooltip.hover="`Archive`">-->
-                      <!--                      <b-icon icon="archive"></b-icon>-->
-                      <!--                    </b-button>-->
-
-                      <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`">
-                        <b-icon icon="trash"></b-icon>
-                      </b-button>
-
-                      <b-button variant="link" size="sm" v-b-tooltip.hover="`Notes`"
-                                v-b-modal="`file-notes-modal-${resource.resourceId}`">
-                        <b-icon icon="chat-square-text"></b-icon>
-                      </b-button>
-                      <NotesModal :modal-id="`file-notes-modal-${resource.resourceId}`" :file-id="resource.resourceId"/>
-
-                    </b-td>
-                  </b-tr>
-
-                </b-tbody>
-              </b-table-simple>
-            </table-overlay-info>
+      <table-overlay-info :rows="5" :columns="6"
+                          :data="!folders || !files || !collectionGroups ? null : resources">
+        <template #empty>
+          <div class="w-100 p-4 text-center">
+            No Collections to show. It's empty.
           </div>
-        </div>
+        </template>
+        <b-table-simple class="w-100">
+          <b-thead>
+            <b-tr>
+              <b-th>
+                <!--                    <b-checkbox type="checkbox" name="all" id="all" :checked="isAllSelected()"-->
+                <!--                                v-on:change="toggleAllSelection()"/>-->
+                <!--                    <label for="all">Select all</label>-->
+              </b-th>
+              <b-th></b-th>
+              <b-th>Name</b-th>
+              <b-th>size</b-th>
+              <b-th>Created On</b-th>
+              <b-th>Last Updated</b-th>
+              <b-th>Owner</b-th>
+              <b-th></b-th>
+            </b-tr>
+          </b-thead>
+          <b-tbody>
+            <b-tr v-for="(resource) in resources" :key="resource.resourceId" :class="{selected: false}">
+              <b-td>
+                <!--                    <b-checkbox type="checkbox" :checked="isFileSelected(file)"-->
+                <!--                                v-on:change="toggleFileSelection(file)"-->
+                <!--                                :name="getFileSelectionCheckboxId(file)" :id="getFileSelectionCheckboxId(file)"/>-->
+                <!--                    <label :for="getFileSelectionCheckboxId(file)">{{ file.name }}</label>-->
+              </b-td>
+              <b-td>
+                <div style="font-size: 25px;line-height: 25px;">
+                  <b-icon v-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"
+                          v-b-tooltip.hover="`Dataset`"></b-icon>
+                  <b-icon v-else-if="resource.type === 'COLLECTION'" icon="folder" aria-hidden="true"
+                          v-b-tooltip.hover="`Collection`"></b-icon>
+                  <b-icon v-else-if="resource.type === 'COLLECTION_GROUP'" icon="folder-symlink"
+                          aria-hidden="true" v-b-tooltip.hover="`Collection Group`"></b-icon>
+                </div>
+              </b-td>
+              <b-td>
+                <div style="flex: 1;">
+                  <div v-if="resource.type === 'FILE'">
+                    <a href="#"
+                       style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
+                       v-b-modal="`file-preview-modal-${resource.resourceId}`"
+                       v-on:click.prevent="$bvModal.show(`file-preview-modal-${resource.resourceId}`)">
+                      {{ resource.name }}
+                    </a>
+                    <FilePreviewModal :modal-id="`file-preview-modal-${resource.resourceId}`"
+                                      :resource-id="resource.resourceId"/>
+                  </div>
+                  <router-link v-else :to="`/collections?parentResourceId=${resource.resourceId}`"
+                               v-slot="{ href, route, navigate, isActive,isExactActive }">
+                    <a style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
+                       :class="{active: isExactActive}" :href="href" @click="navigate">
+                      {{ resource.name }}
+                    </a>
+                  </router-link>
+                </div>
+              </b-td>
+              <b-td>{{ resource.size }}</b-td>
+              <b-td>{{ resource.createdAt }}</b-td>
+              <b-td>{{ resource.lastUpdatedAt }}</b-td>
+              <b-td>{{ resource.createdBy }}</b-td>
+              <b-td>
+                <!--                    <b-button variant="link" size="sm" @click="downloadEverythingSelected()"-->
+                <!--                              v-b-tooltip.hover="`Download`">-->
+                <!--                      <b-icon icon="download"></b-icon>-->
+                <!--                    </b-button>-->
 
-        <!--        <div style="padding: 10px;" class="text-left">-->
-        <!--          <Pagination/>-->
-        <!--        </div>-->
+                <!--                    <b-button variant="link" size="sm" v-b-modal="`copy-modal-${file.fileId}`"-->
+                <!--                              v-b-tooltip.hover="`Copy to`">-->
+                <!--                      <b-icon icon="cloud"></b-icon>-->
+                <!--                    </b-button>-->
+                <!--                    <CopyModal :modal-id="`copy-modal-${file.fileId}`" :file-ids="[file.fileId]"/>-->
 
-      </div>
+                <b-button variant="link" size="sm" v-b-modal="`share-modal-${resource.resourceId}`"
+                          v-b-tooltip.hover="`Share`">
+                  <b-icon icon="share"></b-icon>
+                </b-button>
+                <ModalShareEntity :modal-id="`share-modal-${resource.resourceId}`"
+                                  :entity-id="resource.resourceId"/>
+
+                <b-button variant="link" size="sm"
+                          v-b-modal="`map-to-collection-groups-modal-${resource.resourceId}`"
+                          v-b-tooltip.hover="`Group Collections`">
+                  <b-icon icon="folder"></b-icon>
+                </b-button>
+
+                <MapSelectedFilesAndFoldersToCollectionGroupsModal
+                    :modal-id="`map-to-collection-groups-modal-${resource.resourceId}`"
+                    :resource-ids="[resource.resourceId]"/>
+
+                <!--                    <b-button variant="link" size="sm" v-b-tooltip.hover="`Archive`">-->
+                <!--                      <b-icon icon="archive"></b-icon>-->
+                <!--                    </b-button>-->
+
+                <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`">
+                  <b-icon icon="trash"></b-icon>
+                </b-button>
+
+                <b-button variant="link" size="sm" v-b-tooltip.hover="`Notes`"
+                          v-b-modal="`file-notes-modal-${resource.resourceId}`">
+                  <b-icon icon="chat-square-text"></b-icon>
+                </b-button>
+                <NotesModal :modal-id="`file-notes-modal-${resource.resourceId}`" :file-id="resource.resourceId"/>
+
+              </b-td>
+            </b-tr>
+
+          </b-tbody>
+        </b-table-simple>
+      </table-overlay-info>
+
     </div>
   </Page>
 </template>
