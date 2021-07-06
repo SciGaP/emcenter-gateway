@@ -1,13 +1,16 @@
 <template>
-  <b-modal :id="modalId" size="sm" hide-footer title="Add to collection groups">
-    <ul>
-      <li v-for="collectionGroup in collectionGroups" :key="collectionGroup.resourceId">
-        <b-checkbox type="checkbox" :checked="isCollectionGroupMapped[collectionGroup.resourceId] === true"
-                    v-on:change="mapChildResource(collectionGroup)"
-                    name="collectionGroup" :id="`collectionGroup-${collectionGroup.resourceId}`"/>
-        <label :for="collectionGroup.resourceId">{{ collectionGroup.name }}</label>
-      </li>
-    </ul>
+  <b-modal :id="modalId" size="sm" hide-footer title="Add to collection groups" v-on:show="refreshData">
+    <table-overlay-info :columns="1" :rows="5" :data="processing ? null : collectionGroups">
+      <template #empty>No collection groups to be mapped. Please create one.</template>
+      <ul>
+        <li v-for="collectionGroup in collectionGroups" :key="collectionGroup.resourceId">
+          <b-checkbox type="checkbox" :checked="isCollectionGroupMapped[collectionGroup.resourceId]"
+                      v-on:change="mapChildResource(collectionGroup)"
+                      name="collectionGroup" :id="`collectionGroup-${collectionGroup.resourceId}`"/>
+          <label :for="collectionGroup.resourceId">{{ collectionGroup.name }}</label>
+        </li>
+      </ul>
+    </table-overlay-info>
     <!--    <template #modal-footer="{close}">-->
     <!--      <b-button size="sm" variant="outline-primary" v-on:click="close()">-->
     <!--        Cancel-->
@@ -22,9 +25,12 @@
 <script>
 import store from "../../store";
 import EmcResource from "@/service/emc-service/emc-service-resource";
+import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
+// import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
 
 export default {
   name: "map-selected-files-and-folders-to-collection-groups-modal",
+  components: {TableOverlayInfo},
   store: store,
   props: {
     modalId: {
@@ -39,6 +45,7 @@ export default {
   data() {
     return {
       errors: [],
+      processing: false,
       processingMapChild: {},
 
       isCollectionGroupMapped: {}
@@ -50,38 +57,86 @@ export default {
         type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
       });
     },
-    childResources() {
+    resources() {
       return this.resourceIds.map(resourceId => {
         return this.$store.getters["emcResource/getResource"]({resourceId});
       });
     }
   },
   methods: {
-    async mapChildResource({resourceId, type}) {
-      this.processingMapChild = {...this.processingMapChild, [resourceId]: true};
+    async mapChildResource(collectionGroup) {
+      this.processingMapChild = {...this.processingMapChild, [collectionGroup.resourceId]: true};
 
       try {
-        await Promise.all(this.childResources.map(childResource => {
-          return this.$store.dispatch("emcResource/mapChildResource", {
-            parentResourceId: resourceId, parentResourceType: type,
-            childResourceId: childResource.resourceId, childResourceType: childResource.type
-          });
-        }));
-        this.isCollectionGroupMapped[resourceId] = true;
+        if (this.isCollectionGroupMapped[collectionGroup.resourceId]) {
+          await Promise.all(this.resources.map(childResource => {
+            return this.$store.dispatch("emcResource/unmapChildResource", {
+              parentResourceId: collectionGroup.resourceId, parentResourceType: collectionGroup.type,
+              childResourceId: childResource.resourceId, childResourceType: childResource.type
+            });
+          }));
+        } else {
+          await Promise.all(this.resources.map(childResource => {
+            return this.$store.dispatch("emcResource/mapChildResource", {
+              parentResourceId: collectionGroup.resourceId, parentResourceType: collectionGroup.type,
+              childResourceId: childResource.resourceId, childResourceType: childResource.type
+            });
+          }));
+        }
+
       } catch (error) {
+
+        // Rollback the state if the saving causes any error.
+        this.isCollectionGroupMapped = {
+          ...this.isCollectionGroupMapped,
+          [collectionGroup.resourceId]: !this.isCollectionGroupMapped[collectionGroup.resourceId]
+        };
+
         this.errors.push({
           title: `Unknown error when mapping to the collection group.`,
           source: error, variant: "danger"
         });
       }
 
-      this.processingMapChild = {...this.processingMapChild, [resourceId]: false};
+      this.processingMapChild = {...this.processingMapChild, [collectionGroup.resourceId]: false};
+    },
+    async refreshData() {
+      this.processing = true;
+
+      await this.$store.dispatch("emcResource/fetchResources", {
+        type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
+      });
+
+      for (let j = 0; j < this.collectionGroups.length; j++) {
+        const collectionGroup = this.collectionGroups[j];
+        let mapped = this.resources.length > 0;
+
+        for (let i = 0; i < this.resources.length; i++) {
+          const resource = this.resources[i];
+          const response = await this.$store.dispatch("emcResource/fetchResourcePath", {
+            resourceId: resource.resourceId,
+            type: resource.type
+          });
+
+          const {data: {properties}} = response;
+
+          let hasChildMapped = false;
+          for (let key in properties) {
+            hasChildMapped = hasChildMapped || properties[key].resourceId === collectionGroup.resourceId;
+          }
+
+          mapped = mapped && hasChildMapped;
+        }
+
+        this.isCollectionGroupMapped = {
+          ...this.isCollectionGroupMapped,
+          [collectionGroup.resourceId]: mapped
+        };
+
+      }
+
+      this.processing = false;
     }
-  },
-  beforeMount() {
-    this.$store.dispatch("emcResource/fetchResources", {
-      type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
-    });
   }
 }
 </script>

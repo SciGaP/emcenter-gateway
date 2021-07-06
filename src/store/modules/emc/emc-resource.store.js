@@ -36,12 +36,18 @@ const actions = {
         commit("SET_RESOURCE_LIST", {queryString, resourceIds});
     },
 
-    // async fetchResource(obj, {resourceId}) {
-    //
-    // },
+    async fetchResourcePath(obj, {resourceId, type}) {
+        return await emcService.resources.fetchResourcePath({resourceId, type});
+    },
 
     async mapChildResource(obj, {parentResourceId, parentResourceType, childResourceId, childResourceType}) {
         await emcService.resources.mapChildResource({
+            parentResourceId, parentResourceType, childResourceId, childResourceType
+        });
+    },
+
+    async unmapChildResource(obj, {parentResourceId, parentResourceType, childResourceId, childResourceType}) {
+        await emcService.resources.unmapChildResource({
             parentResourceId, parentResourceType, childResourceId, childResourceType
         });
     },
