@@ -87,6 +87,13 @@ export default new Router({
                 import("./pages/GroupDataPage")
         },
         {
+            path: "/collections/new",
+            name: "data",
+            beforeEnter: _validateAuthenticationBeforeEnter,
+            component: () =>
+                import("./pages/resource/resource-new")
+        },
+        {
             path: "/collection-groups",
             name: "data",
             beforeEnter: _validateAuthenticationBeforeEnter,

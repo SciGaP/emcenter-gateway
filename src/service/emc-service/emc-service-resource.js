@@ -36,7 +36,6 @@ export default class EmcResource {
                         "resourceId": childResourceId,
                         "type": childResourceType
                     }
-
                 ]
             }
         );
@@ -59,7 +58,6 @@ export default class EmcResource {
                             "resourceId": childResourceId,
                             "type": childResourceType
                         }
-
                     ]
                 }
             }
@@ -104,10 +102,20 @@ export default class EmcResource {
         );
     }
 
-    async createResource({type, name}) {
+    async createResource({type, name, description}) {
         await this.emcService.axiosInstanceWithTokenAuthorization.post(
             EmcService.ENDPOINTS.RESOURCE,
-            {resourceId: `emc-resource-${window.performance.now()}`, type, name}
+            {
+                resource: {
+                    resourceId: `emc-resource-${window.performance.now()}`,
+                    type,
+                    resourceName: name,
+                    properties: {
+                        // entityType, tenantId,
+                        name, description, createdTime: new Date().getTime().toString()
+                    }
+                }
+            }
         );
     }
 

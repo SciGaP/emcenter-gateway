@@ -1,7 +1,9 @@
 <template>
   <Page :title="title" :breadcrumb-links="breadcrumbLinks">
     <template #header-right>
-      <b-button variant="primary">Create New Collection Group</b-button>
+      <router-link :to="createNewCollectionGroupLink" v-slot="{navigate}">
+        <b-button variant="primary" @click="navigate">Create New Collection Group</b-button>
+      </router-link>
     </template>
     <div class="w-100">
       <!--      <div class="w-100"-->
@@ -214,6 +216,9 @@ export default {
   },
   store: store,
   computed: {
+    createNewCollectionGroupLink() {
+      return `/collections/new?type=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP}`;
+    },
     title() {
       return "Collections";
     },

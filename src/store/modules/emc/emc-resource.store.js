@@ -40,6 +40,10 @@ const actions = {
         return await emcService.resources.fetchResourcePath({resourceId, type});
     },
 
+    async createResource(obj, {type, name}) {
+        return await emcService.resources.createResource({type, name});
+    },
+
     async mapChildResource(obj, {parentResourceId, parentResourceType, childResourceId, childResourceType}) {
         await emcService.resources.mapChildResource({
             parentResourceId, parentResourceType, childResourceId, childResourceType
