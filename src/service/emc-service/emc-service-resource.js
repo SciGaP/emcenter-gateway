@@ -66,7 +66,7 @@ export default class EmcResource {
         return response;
     }
 
-    async fetchResourcePath({resourceId, type}) {
+    async fetchParentResources({resourceId, type}) {
 
         // TODO
         console.log(`[FETCH] /emc/path?resourceId=${resourceId}`);
@@ -82,7 +82,36 @@ export default class EmcResource {
             }
         );
 
-        return response;
+
+        const resourceMap = response.data.properties;
+        const resources = [];
+
+        for (let key in resourceMap) {
+            const {
+                // resourceId, resourcePath,
+                properties: {
+                    // entityType, tenantId,
+                    name, description, createdTime, entityId
+                },
+                type,
+                // parentResourcePath, resourceName
+            } = resourceMap[key];
+
+            resources.push({
+                resourceId: entityId,
+                entityId,
+                name: name,
+                description: description,
+                createdAt: new Date(parseInt(createdTime)).toLocaleString(),
+                createdBy: "",
+                lastUpdatedAt: new Date(parseInt(createdTime)).toLocaleString(),
+                lastUpdatedBy: "",
+                status: "",
+                type
+            });
+        }
+
+        return resources;
     }
 
     downloadResource({resourceId}) {
@@ -93,13 +122,30 @@ export default class EmcResource {
         })
     }
 
-    async fetchResource({resourceId, type}) {
-        await this.emcService.axiosInstanceWithTokenAuthorization.get(
+    async fetchResource({resourceId}) {
+        const response = await this.emcService.axiosInstanceWithTokenAuthorization.get(
             EmcService.ENDPOINTS.RESOURCE,
             {
-                params: {resourceId, type}
+                params: {resourceId}
             }
         );
+
+
+        console.log("@@@@@@@ fetchResource : ", response)
+        const {data: {resource: {properties: {name, description, createdTime, entityId}}, type}} = response;
+
+        return {
+            resourceId: entityId,
+            entityId,
+            name: name,
+            description: description,
+            createdAt: new Date(parseInt(createdTime)).toLocaleString(),
+            createdBy: "",
+            lastUpdatedAt: new Date(parseInt(createdTime)).toLocaleString(),
+            lastUpdatedBy: "",
+            status: "",
+            type
+        };
     }
 
     async createResource({type, name, description}) {

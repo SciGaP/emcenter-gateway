@@ -218,17 +218,21 @@ export default {
     breadcrumbLinks() {
       let _breadcrumbLinks = [{to: '/collections', name: 'Collections'}]
 
-      const folderPath = this.$store.getters["emcFolder/getFolderPath"]({resourceId: this.parentResourceId});
-      if (folderPath) {
-        for (let i = 0; i < folderPath.length; i++) {
-          const folder = folderPath[i];
-          if (folder) {
-            const {folderId, name} = folder;
+      if (this.parentResourceId) {
+        if (this.parentResourcePath) {
+          for (let i = 0; i < this.parentResourcePath.length; i++) {
             _breadcrumbLinks.push({
-              to: this.getFolderLink({folderId}),
-              name: name
+              to: `/collections?parentResourceId=${this.parentResourcePath[i].resourceId}`,
+              name: this.parentResourcePath[i].name
             });
           }
+        }
+
+        if (this.parentResource) {
+          _breadcrumbLinks.push({
+            to: `/collections?parentResourceId=${this.parentResource.resourceId}`,
+            name: this.parentResource.name
+          });
         }
       }
 
@@ -240,6 +244,12 @@ export default {
       } else {
         return null;
       }
+    },
+    parentResource() {
+      return this.$store.getters["emcResource/getResource"]({resourceId: this.parentResourceId});
+    },
+    parentResourcePath() {
+      return this.$store.getters["emcResource/getResourcePath"]({resourceId: this.parentResourceId});
     },
     resources() {
       let _resources = [];
@@ -312,18 +322,27 @@ export default {
       return _dataLink;
     },
     async refreshData() {
-      await this.$store.dispatch("emcResource/fetchResources", {
-        parentResourceId: this.parentResourceId,
-        type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION
-      });
-      await this.$store.dispatch("emcResource/fetchResources", {
-        parentResourceId: this.parentResourceId,
-        type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
-      });
-      await this.$store.dispatch("emcResource/fetchResources", {
-        parentResourceId: this.parentResourceId,
-        type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET
-      });
+      if (this.parentResourceId) {
+        await Promise.all([
+          this.$store.dispatch("emcResource/fetchResource", {resourceId: this.parentResourceId}),
+          this.$store.dispatch("emcResource/fetchParentResources", {resourceId: this.parentResourceId})
+        ]);
+      }
+
+      await Promise.all([
+        this.$store.dispatch("emcResource/fetchResources", {
+          parentResourceId: this.parentResourceId,
+          type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION
+        }),
+        this.$store.dispatch("emcResource/fetchResources", {
+          parentResourceId: this.parentResourceId,
+          type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
+        }),
+        this.$store.dispatch("emcResource/fetchResources", {
+          parentResourceId: this.parentResourceId,
+          type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET
+        })
+      ]);
     }
   },
   watch: {

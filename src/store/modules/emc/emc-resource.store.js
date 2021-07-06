@@ -1,8 +1,10 @@
 import {emcService} from "@/store/util/emc.util";
+import EmcResource from "@/service/emc-service/emc-service-resource";
 
 const state = {
     resourceMap: {},
     resourceListMap: {},
+    parentResourcesListMap: {},
     resourceDownloadMap: {}
 };
 
@@ -36,8 +38,43 @@ const actions = {
         commit("SET_RESOURCE_LIST", {queryString, resourceIds});
     },
 
-    async fetchResourcePath(obj, {resourceId, type}) {
-        return await emcService.resources.fetchResourcePath({resourceId, type});
+    async fetchResource({commit}, {resourceId} = {}) {
+        const resource = await emcService.resources.fetchResource({resourceId});
+        const {entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type} = resource;
+        commit("SET_RESOURCE", {
+            resourceId,
+            entityId,
+            name,
+            description,
+            createdAt,
+            createdBy,
+            lastUpdatedAt,
+            lastUpdatedBy,
+            status,
+            type
+        });
+    },
+
+    async fetchParentResources({commit}, {resourceId}) {
+        const resources = await emcService.resources.fetchParentResources({resourceId});
+        const parentResourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type}) => {
+            commit("SET_RESOURCE", {
+                resourceId,
+                entityId,
+                name,
+                description,
+                createdAt,
+                createdBy,
+                lastUpdatedAt,
+                lastUpdatedBy,
+                status,
+                type
+            });
+
+            return resourceId;
+        });
+
+        commit("SET_RESOURCE_PARENTS", {resourceId, parentResourceIds});
     },
 
     async createResource(obj, {type, name}) {
@@ -85,6 +122,12 @@ const actions = {
 
 
 const mutations = {
+    SET_RESOURCE_PARENTS(state, {resourceId, parentResourceIds}) {
+        state.parentResourcesListMap = {
+            ...state.parentResourcesListMap,
+            [resourceId]: parentResourceIds
+        }
+    },
     SET_RESOURCE(state, {resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type}) {
         state.resourceMap = {
             ...state.resourceMap,
@@ -123,6 +166,17 @@ const mutations = {
 
 const getters = {
 
+    getParentResources: (state, getters) => {
+        return ({resourceId} = {}) => {
+            const parentResourceIds = state.parentResourcesListMap[resourceId];
+            if (parentResourceIds) {
+                return parentResourceIds.map(resourceId => getters.getResource({resourceId}));
+            } else {
+                return null;
+            }
+        }
+    },
+
     getResources: (state, getters) => {
         return ({parentResourceId, type} = {}) => {
             const queryString = JSON.stringify({parentResourceId, type});
@@ -130,6 +184,25 @@ const getters = {
             const resourceIds = state.resourceListMap[queryString];
             if (resourceIds) {
                 return resourceIds.map(resourceId => getters.getResource({resourceId}));
+            } else {
+                return null;
+            }
+        }
+    },
+
+    getResourcePath: (state, getters) => {
+        return ({resourceId}) => {
+            if (state.parentResourcesListMap[resourceId]) {
+                const path = [];
+                for (let i = 0; i < state.parentResourcesListMap[resourceId].length; i++) {
+                    const parentResourceId = state.parentResourcesListMap[resourceId][i];
+                    const parentResource = getters.getResource({resourceId: parentResourceId});
+                    if (parentResource.type === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION) {
+                        path.push(parentResourceId);
+                    }
+                }
+
+                return path;
             } else {
                 return null;
             }
