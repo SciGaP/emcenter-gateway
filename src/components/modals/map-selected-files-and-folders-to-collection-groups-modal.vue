@@ -61,6 +61,32 @@ export default {
       return this.resourceIds.map(resourceId => {
         return this.$store.getters["emcResource/getResource"]({resourceId});
       });
+    },
+    savedMappings() {
+      const _savedMappings = {};
+
+      for (let j = 0; j < this.collectionGroups.length; j++) {
+        const collectionGroup = this.collectionGroups[j];
+        let mapped = this.resourceIds.length > 0;
+
+        for (let i = 0; i < this.resourceIds.length; i++) {
+          const parentResources = this.$store.getters["emcResource/getParentResources"]({resourceId: this.resourceIds[i]})
+
+          let hasChildMapped = false;
+          for (let j = 0; parentResources && j < parentResources.length; j++) {
+            if (parentResources[j].resourceId === collectionGroup.resourceId) {
+              hasChildMapped = true;
+              break;
+            }
+          }
+
+          mapped = mapped && hasChildMapped;
+        }
+
+        _savedMappings[collectionGroup.resourceId] = mapped;
+      }
+
+      return _savedMappings;
     }
   },
   methods: {
@@ -85,6 +111,7 @@ export default {
         }
 
       } catch (error) {
+        console.log("error : ", error);
 
         // Rollback the state if the saving causes any error.
         this.isCollectionGroupMapped = {
@@ -107,33 +134,23 @@ export default {
         type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
       });
 
-      for (let j = 0; j < this.collectionGroups.length; j++) {
-        const collectionGroup = this.collectionGroups[j];
-        let mapped = this.resources.length > 0;
+      await Promise.all(this.resourceIds.map(resourceId => {
+        this.$store.dispatch("emcResource/fetchParentResources", {
+          resourceId: resourceId
+        });
+      }));
 
-        for (let i = 0; i < this.resources.length; i++) {
-          const resource = this.resources[i];
-          const response = await this.$store.dispatch("emcResource/fetchResourcePath", {
-            resourceId: resource.resourceId,
-            type: resource.type
-          });
+      this.processing = false;
+    }
+  },
+  watch: {
+    savedMappings() {
+      this.processing = true;
 
-          const {data: {properties}} = response;
-
-          let hasChildMapped = false;
-          for (let key in properties) {
-            hasChildMapped = hasChildMapped || properties[key].resourceId === collectionGroup.resourceId;
-          }
-
-          mapped = mapped && hasChildMapped;
-        }
-
-        this.isCollectionGroupMapped = {
-          ...this.isCollectionGroupMapped,
-          [collectionGroup.resourceId]: mapped
-        };
-
-      }
+      this.isCollectionGroupMapped = {
+        ...this.isCollectionGroupMapped,
+        ...this.savedMappings,
+      };
 
       this.processing = false;
     }
