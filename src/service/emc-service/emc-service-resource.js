@@ -90,17 +90,18 @@ export default class EmcResource {
             const {
                 // resourceId, resourcePath,
                 properties: {
-                    // entityType, tenantId,
-                    name, description, createdTime, entityId, lastModifiedTime, owner
+                    // entityType, tenantId, name,
+                    description, createdTime, entityId, lastModifiedTime, owner
                 },
                 type,
-                // parentResourcePath, resourceName
+                // parentResourcePath,
+                resourceName
             } = resourceMap[key];
 
             resources.push({
                 resourceId: entityId,
                 entityId,
-                name: name,
+                name: resourceName,
                 description: description,
                 createdAt: new Date(parseInt(createdTime)).toLocaleString(),
                 createdBy: owner,
@@ -144,12 +145,25 @@ export default class EmcResource {
 
 
         console.log("@@@@@@@ fetchResource : ", response)
-        const {data: {resource: {properties: {name, description, createdTime, entityId, lastModifiedTime, owner}}, type}} = response;
+        const {
+            data: {
+                resource: {
+                    // resourceId, resourcePath,
+                    properties: {
+                        // entityType, tenantId, name,
+                        description, createdTime, entityId, lastModifiedTime, owner
+                    },
+                    type,
+                    // parentResourcePath,
+                    resourceName
+                }
+            }
+        } = response;
 
         return {
             resourceId: entityId,
             entityId,
-            name: name,
+            name: resourceName,
             description: description,
             createdAt: new Date(parseInt(createdTime)).toLocaleString(),
             createdBy: owner,
@@ -211,17 +225,18 @@ export default class EmcResource {
             {
                 // resourceId, resourcePath,
                 properties: {
-                    // entityType, tenantId,
-                    name, description, createdTime, entityId, lastModifiedTime, owner
+                    // entityType, tenantId, name,
+                    description, createdTime, entityId, lastModifiedTime, owner
                 },
                 type,
-                // parentResourcePath, resourceName
+                // parentResourcePath,
+                resourceName
             }
         ) => {
             return {
                 resourceId: entityId,
                 entityId,
-                name: name,
+                name: resourceName,
                 description: description,
                 createdAt: new Date(parseInt(createdTime)).toLocaleString(),
                 createdBy: owner,
