@@ -191,7 +191,23 @@ export default class EmcResource {
         );
     }
 
-    async fetchResources({parentResourceId, type}) {
+    async updateResource({resourceId, type, name, description, note}) {
+        await this.emcService.axiosInstanceWithTokenAuthorization.put(
+            EmcService.ENDPOINTS.RESOURCE,
+            {
+                resource: {
+                    resourceId,
+                    type,
+                    resourceName: name,
+                    properties: {
+                        name, description, note
+                    }
+                }
+            }
+        );
+    }
+
+    async fetchResources({parentResourceId, type, queries}) {
 
         // TODO
         console.log(`[FETCH] /emc/resources?parentResourceId=${parentResourceId}&type=${type}`);
@@ -201,7 +217,7 @@ export default class EmcResource {
             response = await this.emcService.axiosInstanceWithTokenAuthorization.post(
                 EmcService.ENDPOINTS.RESOURCE_SEARCH,
                 {
-                    "queries": [],
+                    "queries": queries,
                     "depth": 1,
                     "type": type
                 }
@@ -211,6 +227,7 @@ export default class EmcResource {
                 EmcService.ENDPOINTS.CHILDREN,
                 {
                     params: {
+                        "queries": queries,
                         "resourceId": parentResourceId,
                         "type": type,
                         "depth": 1
@@ -226,7 +243,7 @@ export default class EmcResource {
                 // resourceId, resourcePath,
                 properties: {
                     // entityType, tenantId, name,
-                    description, createdTime, entityId, lastModifiedTime, owner
+                    description, createdTime, entityId, lastModifiedTime, owner, note
                 },
                 type,
                 // parentResourcePath,
@@ -243,7 +260,8 @@ export default class EmcResource {
                 lastUpdatedAt: new Date(parseInt(lastModifiedTime)).toLocaleString(),
                 lastUpdatedBy: "",
                 status: "",
-                type
+                type,
+                note
             }
         });
     }

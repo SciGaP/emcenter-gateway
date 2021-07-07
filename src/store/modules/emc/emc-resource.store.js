@@ -11,15 +11,15 @@ const state = {
 
 const actions = {
 
-    async fetchResources({commit}, {parentResourceId, type} = {}) {
+    async fetchResources({commit}, {parentResourceId, type, queries} = {}) {
         const queryString = JSON.stringify({parentResourceId, type});
 
-        const resources = await emcService.resources.fetchResources({parentResourceId, type});
+        const resources = await emcService.resources.fetchResources({parentResourceId, type, queries});
 
         console.log("##### fetchResources ### queryString : ", queryString);
         console.log("##### fetchResources ### : ", resources);
 
-        const resourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type}) => {
+        const resourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note}) => {
             commit("SET_RESOURCE", {
                 resourceId,
                 entityId,
@@ -30,7 +30,8 @@ const actions = {
                 lastUpdatedAt,
                 lastUpdatedBy,
                 status,
-                type
+                type,
+                note
             });
 
             return resourceId;
@@ -41,7 +42,7 @@ const actions = {
 
     async fetchResource({commit}, {resourceId} = {}) {
         const resource = await emcService.resources.fetchResource({resourceId});
-        const {entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type} = resource;
+        const {entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note} = resource;
         commit("SET_RESOURCE", {
             resourceId,
             entityId,
@@ -52,7 +53,8 @@ const actions = {
             lastUpdatedAt,
             lastUpdatedBy,
             status,
-            type
+            type,
+            note
         });
     },
 
@@ -63,7 +65,7 @@ const actions = {
 
     async fetchParentResources({commit}, {resourceId}) {
         const resources = await emcService.resources.fetchParentResources({resourceId});
-        const parentResourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type}) => {
+        const parentResourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note}) => {
             commit("SET_RESOURCE", {
                 resourceId,
                 entityId,
@@ -74,7 +76,8 @@ const actions = {
                 lastUpdatedAt,
                 lastUpdatedBy,
                 status,
-                type
+                type,
+                note
             });
 
             return resourceId;
@@ -85,6 +88,10 @@ const actions = {
 
     async createResource(obj, {type, name}) {
         return await emcService.resources.createResource({type, name});
+    },
+
+    async updateResource(obj, {resourceId, type, name, description, note}) {
+        return await emcService.resources.updateResource({resourceId, type, name, description, note});
     },
 
     async mapChildResource(obj, {parentResourceId, parentResourceType, childResourceId, childResourceType}) {
@@ -140,7 +147,7 @@ const mutations = {
             [resourceId]: metadata
         }
     },
-    SET_RESOURCE(state, {resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type}) {
+    SET_RESOURCE(state, {resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note}) {
         state.resourceMap = {
             ...state.resourceMap,
             [resourceId]: {
@@ -154,7 +161,8 @@ const mutations = {
                 lastUpdatedAt,
                 lastUpdatedBy,
                 status,
-                type
+                type,
+                note
             }
         };
     },

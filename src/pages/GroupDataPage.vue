@@ -6,6 +6,13 @@
     <!--      </router-link>-->
     <!--    </template>-->
     <div class="w-100">
+      <div class="pr-3 pl-3">
+        <b-form-input v-model="search" v-on:keydown.enter="refreshData"/>
+        <b-form-text>
+          Metadata can be searched by inserting key values separated by commas. <br/>
+          Eg:- microscope=emc123, angle=35
+        </b-form-text>
+      </div>
       <!--      <div class="w-100"-->
       <!--           style="display: flex; flex-direction: row;min-height:45px; display: inline-flex;align-items: center;">-->
       <!--        <div style="flex: 1;">-->
@@ -216,8 +223,23 @@ export default {
     FilePreviewModal, MapSelectedFilesAndFoldersToCollectionGroupsModal, Page,
     TableOverlayInfo
   },
+  data() {
+    return {
+      search: ""
+    }
+  },
   store: store,
   computed: {
+    searchQuery() {
+      return this.search.split(",").map(queryText => {
+        const query = queryText.split("=");
+        if (query.length === 1) {
+          return {field: "resourceName", value: query[0].trim()};
+        } else {
+          return {field: query[0].trim(), value: query[1].trim()};
+        }
+      }).filter(({value}) => value && value.length > 0);
+    },
     createNewCollectionGroupLink() {
       return `/collections/new?type=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP}`;
     },
@@ -343,11 +365,13 @@ export default {
       await Promise.all([
         this.$store.dispatch("emcResource/fetchResources", {
           parentResourceId: this.parentResourceId,
-          type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION
+          type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION,
+          queries: this.searchQuery
         }),
         this.$store.dispatch("emcResource/fetchResources", {
           parentResourceId: this.parentResourceId,
-          type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET
+          type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET,
+          queries: this.searchQuery
         }),
         // this.$store.dispatch("emcResource/fetchResources", {
         //   parentResourceId: this.parentResourceId,
