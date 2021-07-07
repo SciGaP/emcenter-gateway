@@ -1,10 +1,10 @@
 <template>
   <Page :title="title" :breadcrumb-links="breadcrumbLinks">
-    <template #header-right>
-      <router-link :to="createNewCollectionGroupLink" v-slot="{navigate}">
-        <b-button variant="primary" @click="navigate">Create New Collection Group</b-button>
-      </router-link>
-    </template>
+    <!--    <template #header-right>-->
+    <!--      <router-link :to="createNewCollectionGroupLink" v-slot="{navigate}">-->
+    <!--        <b-button variant="primary" @click="navigate">Create New Collection Group</b-button>-->
+    <!--      </router-link>-->
+    <!--    </template>-->
     <div class="w-100">
       <!--      <div class="w-100"-->
       <!--           style="display: flex; flex-direction: row;min-height:45px; display: inline-flex;align-items: center;">-->
@@ -278,18 +278,20 @@ export default {
       return _resources;
     },
     collectionGroups() {
-      const _resources = this.$store.getters["emcResource/getResources"]({
-        parentResourceId: this.parentResourceId,
-        type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
-      })
+      return [];
 
-      if (_resources) {
-        return _resources.map(file => {
-          return {fileId: file.resourceId, ...file};
-        });
-      } else {
-        return null;
-      }
+      // const _resources = this.$store.getters["emcResource/getResources"]({
+      //   parentResourceId: this.parentResourceId,
+      //   type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
+      // })
+      //
+      // if (_resources) {
+      //   return _resources.map(file => {
+      //     return {fileId: file.resourceId, ...file};
+      //   });
+      // } else {
+      //   return null;
+      // }
     },
     files() {
       const _files = this.$store.getters["emcResource/getResources"]({
@@ -345,12 +347,12 @@ export default {
         }),
         this.$store.dispatch("emcResource/fetchResources", {
           parentResourceId: this.parentResourceId,
-          type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
-        }),
-        this.$store.dispatch("emcResource/fetchResources", {
-          parentResourceId: this.parentResourceId,
           type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET
-        })
+        }),
+        // this.$store.dispatch("emcResource/fetchResources", {
+        //   parentResourceId: this.parentResourceId,
+        //   type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
+        // })
       ]);
     }
   },

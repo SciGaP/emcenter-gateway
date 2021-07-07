@@ -34,14 +34,14 @@
       <!--          </a>-->
       <!--        </router-link>-->
       <!--      </li>-->
-      <!--      <li>-->
-      <!--        <router-link to="/collection-groups" v-slot="{ href, route, navigate, isActive}" tag="">-->
-      <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
-      <!--            <b-icon icon="folder"></b-icon>-->
-      <!--            Collection Groups-->
-      <!--          </a>-->
-      <!--        </router-link>-->
-      <!--      </li>-->
+      <li>
+        <router-link to="/collection-groups" v-slot="{ href, route, navigate, isActive}" tag="">
+          <a :class="{active: isActive}" :href="href" @click="navigate">
+            <b-icon icon="folder"></b-icon>
+            Collection Groups
+          </a>
+        </router-link>
+      </li>
       <!--      <li>-->
       <!--        <router-link to="/archived" v-slot="{ href, route, navigate, isActive}" tag="">-->
       <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
