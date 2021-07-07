@@ -5,7 +5,8 @@ const state = {
     resourceMap: {},
     resourceListMap: {},
     parentResourcesListMap: {},
-    resourceDownloadMap: {}
+    resourceDownloadMap: {},
+    resourceMetadataMap: {},
 };
 
 const actions = {
@@ -53,6 +54,11 @@ const actions = {
             status,
             type
         });
+    },
+
+    async fetchResourceMetadata({commit}, {resourceId, type}) {
+        const metadata = await emcService.resources.fetchResourceMetadata({resourceId, type});
+        commit("SET_RESOURCE_METADATA", {resourceId, metadata});
     },
 
     async fetchParentResources({commit}, {resourceId}) {
@@ -128,6 +134,12 @@ const mutations = {
             [resourceId]: parentResourceIds
         }
     },
+    SET_RESOURCE_METADATA(state, {resourceId, metadata}) {
+        state.resourceMetadataMap = {
+            ...state.resourceMetadataMap,
+            [resourceId]: metadata
+        }
+    },
     SET_RESOURCE(state, {resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type}) {
         state.resourceMap = {
             ...state.resourceMap,
@@ -176,7 +188,15 @@ const getters = {
             }
         }
     },
-
+    getResourceMetadata: (state) => {
+        return ({resourceId} = {}) => {
+            if (state.resourceMetadataMap[resourceId]) {
+                return state.resourceMetadataMap[resourceId];
+            } else {
+                return null;
+            }
+        }
+    },
     getResources: (state, getters) => {
         return ({parentResourceId, type} = {}) => {
             const queryString = JSON.stringify({parentResourceId, type});

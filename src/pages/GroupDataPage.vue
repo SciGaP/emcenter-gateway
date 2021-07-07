@@ -170,6 +170,13 @@
                 </b-button>
                 <NotesModal :modal-id="`file-notes-modal-${resource.resourceId}`" :file-id="resource.resourceId"/>
 
+                <b-button variant="link" size="sm" v-b-tooltip.hover="`Metadata`"
+                          v-b-modal="`resource-metadata-modal-${resource.resourceId}`">
+                  <b-icon icon="info-circle"></b-icon>
+                </b-button>
+                <ResourceMetadataModal :modal-id="`resource-metadata-modal-${resource.resourceId}`"
+                                       :resource-id="resource.resourceId"/>
+
               </b-td>
             </b-tr>
 
@@ -194,12 +201,14 @@ import NotesModal from "@/components/modals/notes-modal";
 import ModalShareEntity from "airavata-custos-portal/src/lib/components/modals/modal-share-entity";
 import EmcResource from "@/service/emc-service/emc-service-resource";
 import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
+import ResourceMetadataModal from "@/components/modals/resource-metadata-modal";
 // import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
 // import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
 
 export default {
   name: "GroupDataPage",
   components: {
+    ResourceMetadataModal,
     ModalShareEntity,
     NotesModal,
     // CopyModal,
@@ -255,15 +264,15 @@ export default {
       let _resources = [];
 
       if (this.collectionGroups) {
-        _resources = [..._resources, ...this.collectionGroups];
+        _resources = _resources.concat(this.collectionGroups);
       }
 
       if (this.folders) {
-        _resources = [..._resources, ...this.folders];
+        _resources = _resources.concat(this.folders);
       }
 
       if (this.files) {
-        _resources = [..._resources, ...this.files];
+        _resources = _resources.concat(this.files);
       }
 
       return _resources;

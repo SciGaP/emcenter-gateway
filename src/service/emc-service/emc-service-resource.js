@@ -91,7 +91,7 @@ export default class EmcResource {
                 // resourceId, resourcePath,
                 properties: {
                     // entityType, tenantId,
-                    name, description, createdTime, entityId
+                    name, description, createdTime, entityId, lastModifiedTime, owner
                 },
                 type,
                 // parentResourcePath, resourceName
@@ -103,8 +103,8 @@ export default class EmcResource {
                 name: name,
                 description: description,
                 createdAt: new Date(parseInt(createdTime)).toLocaleString(),
-                createdBy: "",
-                lastUpdatedAt: new Date(parseInt(createdTime)).toLocaleString(),
+                createdBy: owner,
+                lastUpdatedAt: new Date(parseInt(lastModifiedTime)).toLocaleString(),
                 lastUpdatedBy: "",
                 status: "",
                 type
@@ -114,12 +114,24 @@ export default class EmcResource {
         return resources;
     }
 
+
     downloadResource({resourceId}) {
         return new Promise((resolve) => {
             setTimeout(() => {
                 resolve(`resource-content-${resourceId}`);
             }, 2000);
         })
+    }
+
+    async fetchResourceMetadata({resourceId, type}) {
+        const {data: {metadata}} = await this.emcService.axiosInstanceWithTokenAuthorization.get(
+            EmcService.ENDPOINTS.RESOURCE_METADATA,
+            {
+                params: {resourceId, type}
+            }
+        );
+
+        return metadata;
     }
 
     async fetchResource({resourceId}) {
@@ -132,7 +144,7 @@ export default class EmcResource {
 
 
         console.log("@@@@@@@ fetchResource : ", response)
-        const {data: {resource: {properties: {name, description, createdTime, entityId}}, type}} = response;
+        const {data: {resource: {properties: {name, description, createdTime, entityId, lastModifiedTime, owner}}, type}} = response;
 
         return {
             resourceId: entityId,
@@ -140,8 +152,8 @@ export default class EmcResource {
             name: name,
             description: description,
             createdAt: new Date(parseInt(createdTime)).toLocaleString(),
-            createdBy: "",
-            lastUpdatedAt: new Date(parseInt(createdTime)).toLocaleString(),
+            createdBy: owner,
+            lastUpdatedAt: new Date(parseInt(lastModifiedTime)).toLocaleString(),
             lastUpdatedBy: "",
             status: "",
             type
@@ -200,7 +212,7 @@ export default class EmcResource {
                 // resourceId, resourcePath,
                 properties: {
                     // entityType, tenantId,
-                    name, description, createdTime, entityId
+                    name, description, createdTime, entityId, lastModifiedTime, owner
                 },
                 type,
                 // parentResourcePath, resourceName
@@ -212,8 +224,8 @@ export default class EmcResource {
                 name: name,
                 description: description,
                 createdAt: new Date(parseInt(createdTime)).toLocaleString(),
-                createdBy: "",
-                lastUpdatedAt: new Date(parseInt(createdTime)).toLocaleString(),
+                createdBy: owner,
+                lastUpdatedAt: new Date(parseInt(lastModifiedTime)).toLocaleString(),
                 lastUpdatedBy: "",
                 status: "",
                 type
