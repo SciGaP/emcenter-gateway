@@ -6,30 +6,46 @@
         <template #aside>
           <b-icon icon="folder"/>
         </template>
-        <b>Collection-1</b>
+        <b>Bio Collection Group 1</b>
         <div contenteditable="true">
           <p>Some notes</p>
         </div>
 
-        <b-media>
-          <template #aside>
-            <b-icon icon="folder"/>
-          </template>
-            <b>Dataset-1</b>
-          <div contenteditable="true">
-            <p>Some notes</p>
-          </div>
-        </b-media>
+        <b>Bio Collection Group 1/ Protein Dataset 1</b>
+        <div contenteditable="true">
+          <p>Some notes</p>
+        </div>
 
-        <b-media>
-          <template #aside>
-            <b-icon icon="folder"/>
-          </template>
-            <b>Dataset-2</b>
-          <div contenteditable="true">
-            <p>Some notes</p>
-          </div>
-        </b-media>
+
+        <b>Bio Collection Group 1/ Collection 1</b>
+        <div contenteditable="true">
+          <p>Some notes</p>
+        </div>
+
+        <b>Bio Collection Group 1/ Collection 1 / Dataset 1</b>
+        <div contenteditable="true">
+          <p>Some notes</p>
+        </div>
+
+        <!--        <b-media>-->
+        <!--          <template #aside>-->
+        <!--            <b-icon icon="folder"/>-->
+        <!--          </template>-->
+        <!--            <b>Dataset-1</b>-->
+        <!--          <div contenteditable="true">-->
+        <!--            <p>Some notes</p>-->
+        <!--          </div>-->
+        <!--        </b-media>-->
+
+        <!--        <b-media>-->
+        <!--          <template #aside>-->
+        <!--            <b-icon icon="folder"/>-->
+        <!--          </template>-->
+        <!--            <b>Dataset-2</b>-->
+        <!--          <div contenteditable="true">-->
+        <!--            <p>Some notes</p>-->
+        <!--          </div>-->
+        <!--        </b-media>-->
       </b-media>
     </div>
 
