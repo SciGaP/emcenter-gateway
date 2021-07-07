@@ -65,7 +65,7 @@ export default {
     savedMappings() {
       const _savedMappings = {};
 
-      for (let j = 0; j < this.collectionGroups.length; j++) {
+      for (let j = 0; this.collectionGroups && j < this.collectionGroups.length; j++) {
         const collectionGroup = this.collectionGroups[j];
         let mapped = this.resourceIds.length > 0;
 
