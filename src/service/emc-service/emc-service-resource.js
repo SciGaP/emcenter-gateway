@@ -151,7 +151,7 @@ export default class EmcResource {
                     // resourceId, resourcePath,
                     properties: {
                         // entityType, tenantId, name,
-                        description, createdTime, entityId, lastModifiedTime, owner
+                        description, createdTime, entityId, lastModifiedTime, owner, note
                     },
                     type,
                     // parentResourcePath,
@@ -170,7 +170,8 @@ export default class EmcResource {
             lastUpdatedAt: new Date(parseInt(lastModifiedTime)).toLocaleString(),
             lastUpdatedBy: "",
             status: "",
-            type
+            type,
+            note
         };
     }
 
@@ -192,7 +193,7 @@ export default class EmcResource {
     }
 
     async updateResource({resourceId, type, name, description, note}) {
-        await this.emcService.axiosInstanceWithTokenAuthorization.post(
+        await this.emcService.axiosInstanceWithTokenAuthorization.put(
             EmcService.ENDPOINTS.RESOURCE,
             {
                 resource: {

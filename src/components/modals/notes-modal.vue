@@ -92,9 +92,16 @@ export default {
         description: this.resource.description,
         note: this.note
       });
+      this.$bvModal.hide(this.modalId);
       this.processing = false;
     },
     async refreshData() {
+      await this.$store.dispatch("emcResource/fetchResource", {resourceId: this.resourceId});
+      this.note = this.resource.note;
+    }
+  },
+  watch: {
+    resource() {
       this.note = this.resource.note;
     }
   }
