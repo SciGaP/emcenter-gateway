@@ -170,7 +170,8 @@
                 <!--                    </b-button>-->
 
                 <button-overlay :show="processingDelete[resource.resourceId]">
-                  <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`" v-on:click="onClickDelete(resource)">
+                  <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`" v-on:click="onClickDelete(resource)"
+                            disabled>
                     <b-icon icon="trash"></b-icon>
                   </b-button>
                 </button-overlay>
