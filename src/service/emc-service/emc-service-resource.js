@@ -192,7 +192,7 @@ export default class EmcResource {
     }
 
     async updateResource({resourceId, type, name, description, note}) {
-        await this.emcService.axiosInstanceWithTokenAuthorization.put(
+        await this.emcService.axiosInstanceWithTokenAuthorization.post(
             EmcService.ENDPOINTS.RESOURCE,
             {
                 resource: {

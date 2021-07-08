@@ -175,7 +175,7 @@
                           v-b-modal="`file-notes-modal-${resource.resourceId}`">
                   <b-icon icon="chat-square-text"></b-icon>
                 </b-button>
-                <NotesModal :modal-id="`file-notes-modal-${resource.resourceId}`" :file-id="resource.resourceId"/>
+                <NotesModal :modal-id="`file-notes-modal-${resource.resourceId}`" :resource-id="resource.resourceId"/>
 
                 <b-button variant="link" size="sm" v-b-tooltip.hover="`Metadata`"
                           v-b-modal="`resource-metadata-modal-${resource.resourceId}`">

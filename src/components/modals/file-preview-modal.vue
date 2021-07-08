@@ -28,7 +28,7 @@
           <b-icon icon="chat-square-text"></b-icon>
           Notes
         </b-button>
-        <NotesModal :modal-id="`file-notes-modal`" :file-id="resourceId"/>
+        <NotesModal :modal-id="`file-notes-modal`" :resource-id="resourceId"/>
 
       </div>
       <div style="display: flex; flex-direction: row;">
