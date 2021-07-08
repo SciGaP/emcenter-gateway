@@ -48,7 +48,9 @@
               <div><small>{{ currentUsername }}</small></div>
             </div>
           </template>
-          <b-dropdown-item href="#">Profile</b-dropdown-item>
+          <router-link to="/profile" v-slot="{href, navigate}" tag="">
+            <b-dropdown-item :href="href" @click="navigate">Profile</b-dropdown-item>
+          </router-link>
           <b-dropdown-item href="#" v-on:click="logout">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
