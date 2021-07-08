@@ -62,9 +62,14 @@ export default {
         await this.$store.dispatch("emcResource/createResource", {
           type: this.resourceType,
           name: this.name
-        })
+        });
 
-        await this.$router.push(`/collections`);
+        if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
+          await this.$router.push(`/collection-groups`);
+        } else {
+          await this.$router.push(`/collections`);
+        }
+
       } catch (error) {
         this.errors.push({
           title: `Unknown error when mapping to the collection group.`,
