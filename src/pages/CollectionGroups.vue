@@ -169,9 +169,11 @@
                 <!--                      <b-icon icon="archive"></b-icon>-->
                 <!--                    </b-button>-->
 
-                <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`">
-                  <b-icon icon="trash"></b-icon>
-                </b-button>
+                <button-overlay :show="processingDelete[resource.resourceId]">
+                  <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`" v-on:click="onClickDelete(resource)">
+                    <b-icon icon="trash"></b-icon>
+                  </b-button>
+                </button-overlay>
 
                 <b-button variant="link" size="sm" v-b-tooltip.hover="`Notes`"
                           v-b-modal="`file-notes-modal-${resource.resourceId}`">
@@ -212,7 +214,9 @@ import EmcResource from "@/service/emc-service/emc-service-resource";
 import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
 import ResourceMetadataModal from "@/components/modals/resource-metadata-modal";
 // import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
-// import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
+import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
+
+import custosStore from "airavata-custos-portal/src/lib/store";
 
 export default {
   name: "GroupDataPage",
@@ -223,9 +227,15 @@ export default {
     // CopyModal,
     // ShareModal,
     FilePreviewModal, MapSelectedFilesAndFoldersToCollectionGroupsModal, Page,
-    TableOverlayInfo
+    TableOverlayInfo, ButtonOverlay
   },
   store: store,
+  data() {
+    return {
+      processingDelete: {},
+      errors: []
+    }
+  },
   computed: {
     createNewCollectionGroupLink() {
       return `/collections/new?type=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP}`;
@@ -334,6 +344,24 @@ export default {
     }
   },
   methods: {
+    async onClickDelete({resourceId}) {
+      this.processingDelete = {...this.processingDelete, [resourceId]: true};
+
+      try {
+        await custosStore.dispatch("entity/deleteEntity", {
+          clientId: this.clientId,
+          entityId: resourceId
+        });
+        await this.refreshData();
+      } catch (error) {
+        this.errors.push({
+          title: `Unknown error when deleting the collection group '${resourceId}'.`,
+          source: error, variant: "danger"
+        });
+      }
+
+      this.processingDelete = {...this.processingDelete, [resourceId]: false};
+    },
     getDataLink({folderId} = {}) {
       let _dataLink = "/collection-groups?";
 
