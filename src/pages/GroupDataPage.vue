@@ -167,7 +167,7 @@
                 <!--                      <b-icon icon="archive"></b-icon>-->
                 <!--                    </b-button>-->
 
-                <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`">
+                <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`" disabled>
                   <b-icon icon="trash"></b-icon>
                 </b-button>
 
