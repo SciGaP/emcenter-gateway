@@ -6,7 +6,7 @@
     <!--      </router-link>-->
     <!--    </template>-->
     <div class="w-100">
-      <div class="pr-3 pl-3">
+      <div class="pr-3 pl-3" v-if="!parentResourceId">
         <b-form-input v-model="search" v-on:keydown.enter="refreshData"/>
         <b-form-text>
           Metadata can be searched by inserting key values separated by commas. <br/>
