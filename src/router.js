@@ -73,11 +73,18 @@ export default new Router({
                 import("./pages/ProfilePage")
         },
         {
-            path: "/settings",
-            name: "settings",
+            path: "/storage-preferences/new",
+            name: "storage-preferences",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
-                import("./pages/SettingsPage")
+                import("./pages/storage/storage-preference-new")
+        },
+        {
+            path: "/storage-preferences",
+            name: "storage-preferences-new",
+            beforeEnter: _validateAuthenticationBeforeEnter,
+            component: () =>
+                import("./pages/storage/storage-preference-list")
         },
         {
             path: "/collections",
