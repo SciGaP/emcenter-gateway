@@ -12,7 +12,7 @@ const state = {
 const actions = {
 
     async fetchResources({commit}, {parentResourceId, type, queries} = {}) {
-        const queryString = JSON.stringify({parentResourceId, type});
+        const queryString = JSON.stringify({parentResourceId, type, queries});
 
         const resources = await emcService.resources.fetchResources({parentResourceId, type, queries});
 
@@ -206,8 +206,8 @@ const getters = {
         }
     },
     getResources: (state, getters) => {
-        return ({parentResourceId, type} = {}) => {
-            const queryString = JSON.stringify({parentResourceId, type});
+        return ({parentResourceId, type, queries} = {}) => {
+            const queryString = JSON.stringify({parentResourceId, type, queries});
             console.log("========== getResources : ", queryString);
             const resourceIds = state.resourceListMap[queryString];
             if (resourceIds) {

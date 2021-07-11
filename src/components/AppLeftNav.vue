@@ -11,10 +11,26 @@
       <!--        </router-link>-->
       <!--      </li>-->
       <li>
-        <router-link to="/collections" v-slot="{ href, route, navigate, isActive}" tag="">
-          <a :class="{active: isActive}" :href="href" @click="navigate">
+        <router-link to="/collections" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+          <a :class="{active: isExactActive}" :href="href" @click="navigate">
             <img :src="svgFileRuled" style="width: 16px;height: 16px;"/>
             My Collections
+          </a>
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/collections?sharedByMe=true" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+          <a :class="{active: isExactActive}" :href="href" @click="navigate">
+            <img :src="svgFileRuled" style="width: 16px;height: 16px;"/>
+            Shared By Me
+          </a>
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/collections?sharedWithMe=true" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+          <a :class="{active: isExactActive}" :href="href" @click="navigate">
+            <img :src="svgFileRuled" style="width: 16px;height: 16px;"/>
+            Shared With Me
           </a>
         </router-link>
       </li>

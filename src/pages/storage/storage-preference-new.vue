@@ -106,9 +106,9 @@ export default {
         await this.$store.dispatch("emcStoragePreference/createSSHStoragePreference", {
           storagePreferenceId: `storagePreference-${performance.now()}`,
           authType: this.authType,
-          username: this.username,
+          userName: this.username,
           credentialToken: this.credentialToken,
-          storageId: `storage-${performance.now()}`,
+          storageId: `storage-${this.hostName}-${this.port}`,
           hostName: this.hostName,
           port: this.port
         });

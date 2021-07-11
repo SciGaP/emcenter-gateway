@@ -91,7 +91,7 @@ export default new Router({
             name: "data",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
-                import("./pages/GroupDataPage")
+                import("./pages/resource/resource-list")
         },
         {
             path: "/collections/new",
