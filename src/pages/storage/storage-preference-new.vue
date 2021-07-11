@@ -5,26 +5,25 @@
         <b-button variant="primary" v-on:click="onCreateClick">Create</b-button>
       </button-overlay>
     </template>
-    currentUsername:{{ currentUsername }}
-    <div>
-      <div>
-        <label>Auth Type</label>
+    <div class="pr-3">
+      <div class="pt-3">
+        <label class="form-label">Auth Type</label>
         <b-form-input v-model="authType"/>
       </div>
 
-      <div>
-        <label>Username</label>
+      <div class="pt-3">
+        <label class="form-label">Username</label>
         <b-form-input v-model="username"/>
       </div>
 
-      <div>
-        <label>Credential Token</label>
+      <div class="pt-3">
+        <label class="form-label">Credential Token</label>
         <div style="display: flex; flex-direction: row;">
           <b-form-select v-model="credentialToken" :options="availableSecretEntities" style="flex: 1;"
                          :disabled="processingCredentialToken"/>
           <div class="pl-3">
             <button-overlay :show="processingCredentialToken">
-              <b-button variant="primary" size="sm" v-on:click="onClickCreateNewCredentialToken">
+              <b-button variant="outline-secondary" v-on:click="onClickCreateNewCredentialToken">
                 Create New Credential Token
               </b-button>
             </button-overlay>
@@ -32,13 +31,13 @@
         </div>
       </div>
 
-      <div>
-        <label>Hostname</label>
+      <div class="pt-3">
+        <label class="form-label">Hostname</label>
         <b-form-input v-model="hostName"/>
       </div>
 
-      <div>
-        <label>Port</label>
+      <div class="pt-3">
+        <label class="form-label">Port</label>
         <b-form-input v-model="port"/>
       </div>
     </div>

@@ -51,10 +51,8 @@ $table-border-color: $light !default;
 //$table-border-level: -6 !default;
 
 
-
-
 // Padding applied to the modal body
-$modal-inner-padding:               2rem !default;
+$modal-inner-padding: 2rem !default;
 
 // Margin between elements in footer, must be lower than or equal to 2 * $modal-inner-padding
 //$modal-footer-margin-between:       .5rem !default;
@@ -67,8 +65,8 @@ $modal-inner-padding:               2rem !default;
 //$modal-content-color:               null !default;
 //$modal-content-bg:                  $white !default;
 //$modal-content-border-color:        rgba($black, .2) !default;
-$modal-content-border-width:        0px !default;
-$modal-content-border-radius:       0px !default;
+$modal-content-border-width: 0px !default;
+$modal-content-border-radius: 0px !default;
 $modal-content-inner-border-radius: 0px !default;
 //$modal-content-box-shadow-xs:       0 .25rem .5rem rgba($black, .5) !default;
 //$modal-content-box-shadow-sm-up:    0 .5rem 1rem rgba($black, .5) !default;
@@ -80,7 +78,7 @@ $modal-content-inner-border-radius: 0px !default;
 //$modal-header-border-width:         $modal-content-border-width !default;
 //$modal-footer-border-width:         $modal-header-border-width !default;
 //$modal-header-padding-y:            1rem !default;
-$modal-header-padding-x:            2rem !default;
+$modal-header-padding-x: 2rem !default;
 //$modal-header-padding:              $modal-header-padding-y $modal-header-padding-x !default; // Keep this for backwards compatibility
 //
 //$modal-xl:                          1140px !default;
@@ -94,33 +92,32 @@ $modal-header-padding-x:            2rem !default;
 //$modal-scale-transform:             scale(1.02) !default;
 
 
-
-$alert-padding-y:                   .75rem !default;
-$alert-padding-x:                   1.25rem !default;
-$alert-margin-bottom:               1rem !default;
-$alert-border-radius:               0px !default;
+$alert-padding-y: .75rem !default;
+$alert-padding-x: 1.25rem !default;
+$alert-margin-bottom: 1rem !default;
+$alert-border-radius: 0px !default;
 //$alert-link-font-weight:            $font-weight-bold !default;
-$alert-border-width:                5px !default;
+$alert-border-width: 5px !default;
 
-$alert-bg-level:                    -10 !default;
-$alert-border-level:                0 !default;
-$alert-color-level:                 6 !default;
+$alert-bg-level: -10 !default;
+$alert-border-level: 0 !default;
+$alert-color-level: 6 !default;
 
 
 //$toast-max-width:                   350px !default;
 //$toast-padding-x:                   .75rem !default;
 //$toast-padding-y:                   .25rem !default;
 //$toast-font-size:                   .875rem !default;
-$toast-color:                       secondary !default;
-$toast-background-color:            white !default;
-$toast-border-width:                0px !default;
-$toast-border-color:                none !default;
-$toast-border-radius:               0rem !default;
+$toast-color: secondary !default;
+$toast-background-color: white !default;
+$toast-border-width: 0px !default;
+$toast-border-color: none !default;
+$toast-border-radius: 0rem !default;
 //$toast-box-shadow:                  0 .25rem .75rem rgba($black, .1) !default;
 
-$toast-header-color:                white !default;
-$toast-header-background-color:     $primary !default;
-$toast-header-border-color:         none !default;
+$toast-header-color: white !default;
+$toast-header-background-color: $primary !default;
+$toast-header-border-color: none !default;
 
 
 // Bootstrap and its default variables
@@ -148,4 +145,9 @@ $toast-header-border-color:         none !default;
   border-right-width: 0px;
   border-top-width: 0px;
   border-bottom-width: 0px;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 500;
 }

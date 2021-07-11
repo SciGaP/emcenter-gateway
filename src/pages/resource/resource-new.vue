@@ -6,8 +6,8 @@
       </button-overlay>
     </template>
     <div>
-      <div>
-        <label>Name</label>
+      <div class="pt-3">
+        <label class="form-label">Name</label>
         <b-form-input v-model="name"/>
       </div>
     </div>
