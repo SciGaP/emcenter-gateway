@@ -137,6 +137,7 @@ export default {
           type: "SECRET",
           ownerId: this.currentUsername
         });
+        console.log("#### onClickCreateNewCredentialToken  : entityId : ", entityId);
         await this.refreshData();
         this.credentialToken = entityId;
       } catch (error) {
