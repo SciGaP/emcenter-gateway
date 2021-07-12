@@ -7,7 +7,7 @@
     <!--    </template>-->
     <div class="w-100">
       <div class="pr-3 pl-3" v-if="!parentResourceId">
-        <b-form-input v-model="search" v-on:keydown.enter="refreshData"/>
+        <b-form-input v-model="searchTyping" v-on:keydown.enter="onSearchEnter"/>
         <b-form-text>
           Metadata can be searched by inserting key values separated by commas. <br/>
           Eg:- microscope=emc123, angle=35
@@ -226,6 +226,7 @@ export default {
   },
   data() {
     return {
+      searchTyping: "",
       search: ""
     }
   },
@@ -241,13 +242,27 @@ export default {
         }
       }).filter(({value}) => value && value.length > 0);
 
-      if (this.$route.query.sharedByMe) {
-        _searchQuery.push({field: "sharedBy", value: this.currentUsername});
-      } else if (this.$route.query.sharedWithMe) {
-        _searchQuery.push({field: "sharedWith", value: this.currentUsername});
+      if (this.sharedBy) {
+        _searchQuery.push({field: "sharedBy", value: this.sharedBy});
+      } else if (this.sharedWith) {
+        _searchQuery.push({field: "sharedWith", value: this.sharedWith});
       }
 
       return _searchQuery;
+    },
+    sharedWith() {
+      if (this.$route.query.sharedWithMe) {
+        return this.currentUsername;
+      } else {
+        return null;
+      }
+    },
+    sharedBy() {
+      if (this.$route.query.sharedByMe) {
+        return this.currentUsername;
+      } else {
+        return null;
+      }
     },
     currentUsername() {
       return custosStore.getters["auth/currentUsername"];
@@ -256,9 +271,9 @@ export default {
       return `/collections/new?type=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP}`;
     },
     title() {
-      if (this.$route.query.sharedByMe) {
+      if (this.sharedBy) {
         return "Shared By Me"
-      } else if (this.$route.query.sharedWithMe) {
+      } else if (this.sharedWith) {
         return "Shared With Me"
       } else {
         return "Collections";
@@ -366,6 +381,9 @@ export default {
     }
   },
   methods: {
+    onSearchEnter() {
+      this.search = this.searchTyping;
+    },
     getDataLink({folderId} = {}) {
       let _dataLink = "/collections?";
 
@@ -376,6 +394,8 @@ export default {
       return _dataLink;
     },
     async refreshData() {
+      console.log("$$$$$$ this.searchQuery ", JSON.stringify(this.searchQuery));
+
       if (this.parentResourceId) {
         await Promise.all([
           this.$store.dispatch("emcResource/fetchResource", {resourceId: this.parentResourceId}),
