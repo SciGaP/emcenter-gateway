@@ -100,13 +100,13 @@ export default new Router({
             component: () =>
                 import("./pages/resource/resource-new")
         },
-        {
-            path: "/collection-groups",
-            name: "data",
-            beforeEnter: _validateAuthenticationBeforeEnter,
-            component: () =>
-                import("./pages/CollectionGroups")
-        },
+        // {
+        //     path: "/collection-groups",
+        //     name: "data",
+        //     beforeEnter: _validateAuthenticationBeforeEnter,
+        //     component: () =>
+        //         import("./pages/CollectionGroups")
+        // },
         {
             path: "/groups",
             name: "groups",

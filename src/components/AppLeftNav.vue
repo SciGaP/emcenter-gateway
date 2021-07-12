@@ -19,7 +19,8 @@
         </router-link>
       </li>
       <li>
-        <router-link to="/collections?sharedByMe=true" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+        <router-link to="/collections?sharedByMe=true" v-slot="{ href, route, navigate, isActive, isExactActive}"
+                     tag="">
           <a :class="{active: isExactActive}" :href="href" @click="navigate">
             <img :src="svgFileRuled" style="width: 16px;height: 16px;"/>
             Shared By Me
@@ -27,7 +28,8 @@
         </router-link>
       </li>
       <li>
-        <router-link to="/collections?sharedWithMe=true" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+        <router-link to="/collections?sharedWithMe=true" v-slot="{ href, route, navigate, isActive, isExactActive}"
+                     tag="">
           <a :class="{active: isExactActive}" :href="href" @click="navigate">
             <img :src="svgFileRuled" style="width: 16px;height: 16px;"/>
             Shared With Me
@@ -51,7 +53,9 @@
       <!--        </router-link>-->
       <!--      </li>-->
       <li>
-        <router-link to="/collection-groups" v-slot="{ href, route, navigate, isActive}" tag="">
+        <router-link :to="
+`/collections?types=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP}`"
+                     v-slot="{ href, route, navigate, isActive}" tag="">
           <a :class="{active: isActive}" :href="href" @click="navigate">
             <b-icon icon="folder"></b-icon>
             Collection Groups
@@ -119,7 +123,7 @@ import svgDashboard from "../assets/dashboard.svg";
 import svgFileRuled from "../assets/file-ruled.svg";
 import svgGear from "../assets/gear.svg";
 import CollectionToastQueue from "@/components/CollectionToastQueue";
-
+import EmcResource from '@/service/emc-service/emc-service-resource';
 
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import {custosStore} from "../store";
@@ -130,6 +134,8 @@ export default {
   store: custosStore,
   data: () => {
     return {
+      EmcResource,
+
       svgPeople: svgPeople,
       svgDashboard: svgDashboard,
       svgFileRuled: svgFileRuled,

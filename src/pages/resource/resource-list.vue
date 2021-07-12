@@ -67,8 +67,7 @@
       <!--        </div>-->
       <!--      </div>-->
 
-      <table-overlay-info :rows="5" :columns="6"
-                          :data="!folders || !files || !collectionGroups ? null : resources">
+      <table-overlay-info :rows="5" :columns="6" :data="resources">
         <template #empty>
           <div class="w-100 p-4 text-center">
             No Collections to show. It's empty.
@@ -227,7 +226,11 @@ export default {
   data() {
     return {
       searchTyping: "",
-      search: ""
+      search: "",
+      defaultTypes: [
+        EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION,
+        EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET
+      ]
     }
   },
   store: store,
@@ -250,6 +253,13 @@ export default {
 
       return _searchQuery;
     },
+    types() {
+      if (this.$route.query.types) {
+        return this.$route.query.types.split(",").map(type => type.trim());
+      } else {
+        return this.defaultTypes
+      }
+    },
     sharedWith() {
       if (this.$route.query.sharedWithMe) {
         return this.currentUsername;
@@ -271,16 +281,38 @@ export default {
       return `/collections/new?type=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP}`;
     },
     title() {
-      if (this.sharedBy) {
-        return "Shared By Me"
-      } else if (this.sharedWith) {
-        return "Shared With Me"
-      } else {
-        return "Collections";
+      let _title = "Collections";
+      if (this.types.length === 1 && this.types[0] === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
+        _title = "Collection Groups";
       }
+
+      if (this.sharedBy) {
+        _title = "Shared By Me"
+      } else if (this.sharedWith) {
+        _title = "Shared With Me"
+      }
+
+      return _title;
     },
     breadcrumbLinks() {
-      let _breadcrumbLinks = [{to: '/collections', name: this.title}]
+      let collectionsLink = '/collections';
+
+      let queryParams = [];
+      if (this.sharedBy) {
+        queryParams.push("sharedByMe=true");
+      } else if (this.sharedWith) {
+        queryParams.push("sharedWithMe=true");
+      }
+
+      if (this.types !== this.defaultTypes) {
+        queryParams.push(`types=${this.types.join(",")}`);
+      }
+
+      if (queryParams.length > 0) {
+        collectionsLink += `?${queryParams.join("&")}`
+      }
+
+      let _breadcrumbLinks = [{to: collectionsLink, name: this.title}]
 
       if (this.parentResourceId) {
         if (this.parentResourcePath) {
@@ -318,66 +350,22 @@ export default {
     resources() {
       let _resources = [];
 
-      if (this.collectionGroups) {
-        _resources = _resources.concat(this.collectionGroups);
-      }
+      for (let i = 0; i < this.types.length; i++) {
+        const type = this.types[i];
+        const list = this.$store.getters["emcResource/getResources"]({
+          parentResourceId: this.parentResourceId,
+          type: type,
+          queries: this.searchQuery
+        });
 
-      if (this.folders) {
-        _resources = _resources.concat(this.folders);
-      }
-
-      if (this.files) {
-        _resources = _resources.concat(this.files);
+        if (list) {
+          _resources = _resources.concat(list);
+        } else {
+          _resources = null;
+        }
       }
 
       return _resources;
-    },
-    collectionGroups() {
-      return [];
-
-      // const _resources = this.$store.getters["emcResource/getResources"]({
-      //   parentResourceId: this.parentResourceId,
-      //   type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP,
-      //     queries: this.searchQuery
-      // })
-      //
-      // if (_resources) {
-      //   return _resources.map(file => {
-      //     return {fileId: file.resourceId, ...file};
-      //   });
-      // } else {
-      //   return null;
-      // }
-    },
-    files() {
-      const _files = this.$store.getters["emcResource/getResources"]({
-        parentResourceId: this.parentResourceId,
-        type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET,
-        queries: this.searchQuery
-      })
-
-      if (_files) {
-        return _files.map(file => {
-          return {fileId: file.resourceId, ...file};
-        });
-      } else {
-        return null;
-      }
-    },
-    folders() {
-      const _folders = this.$store.getters["emcResource/getResources"]({
-        parentResourceId: this.parentResourceId,
-        type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION,
-        queries: this.searchQuery
-      })
-
-      if (_folders) {
-        return _folders.map(folder => {
-          return {folderId: folder.resourceId, ...folder};
-        });
-      } else {
-        return null
-      }
     }
   },
   methods: {
@@ -394,8 +382,6 @@ export default {
       return _dataLink;
     },
     async refreshData() {
-      console.log("$$$$$$ this.searchQuery ", JSON.stringify(this.searchQuery));
-
       if (this.parentResourceId) {
         await Promise.all([
           this.$store.dispatch("emcResource/fetchResource", {resourceId: this.parentResourceId}),
@@ -403,22 +389,11 @@ export default {
         ]);
       }
 
-      await Promise.all([
-        this.$store.dispatch("emcResource/fetchResources", {
-          parentResourceId: this.parentResourceId,
-          type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION,
-          queries: this.searchQuery
-        }),
-        this.$store.dispatch("emcResource/fetchResources", {
-          parentResourceId: this.parentResourceId,
-          type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET,
-          queries: this.searchQuery
-        }),
-        // this.$store.dispatch("emcResource/fetchResources", {
-        //   parentResourceId: this.parentResourceId,
-        //   type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
-        // })
-      ]);
+      await Promise.all(this.types.map(type => this.$store.dispatch("emcResource/fetchResources", {
+        parentResourceId: this.parentResourceId,
+        type: type,
+        queries: this.searchQuery
+      })));
     }
   },
   watch: {
