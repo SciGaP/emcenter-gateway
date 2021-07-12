@@ -59,13 +59,6 @@ export default new Router({
             component: Login
         },
         {
-            path: "/dashboard",
-            name: "dashboard",
-            beforeEnter: _validateAuthenticationBeforeEnter,
-            component: () =>
-                import("./pages/DashboardPage")
-        },
-        {
             path: "/profile",
             name: "profile",
             beforeEnter: _validateAuthenticationBeforeEnter,
@@ -100,13 +93,6 @@ export default new Router({
             component: () =>
                 import("./pages/resource/resource-new")
         },
-        // {
-        //     path: "/collection-groups",
-        //     name: "data",
-        //     beforeEnter: _validateAuthenticationBeforeEnter,
-        //     component: () =>
-        //         import("./pages/CollectionGroups")
-        // },
         {
             path: "/groups",
             name: "groups",
