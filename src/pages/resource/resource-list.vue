@@ -362,6 +362,7 @@ export default {
           _resources = _resources.concat(list);
         } else {
           _resources = null;
+          break;
         }
       }
 
