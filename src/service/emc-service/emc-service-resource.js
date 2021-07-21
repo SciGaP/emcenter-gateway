@@ -1,4 +1,5 @@
 import EmcService from "@/service/emc-service/index";
+import axios from "axios";
 
 export default class EmcResource {
 
@@ -116,12 +117,17 @@ export default class EmcResource {
     }
 
 
-    downloadResource({resourceId}) {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(`resource-content-${resourceId}`);
-            }, 2000);
-        })
+    async downloadResource({resourceId}) {
+        return await axios.create({
+            baseURL: `http://149.165.157.235:8899/mftdownlaod/${resourceId}`,
+            withCredentials: false,
+            headers: {
+                'Accept': '*/*',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': "*",
+                'Origin': '*'
+            }
+        }).get("", {});
     }
 
     async fetchResourceMetadata({resourceId, type}) {

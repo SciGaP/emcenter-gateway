@@ -106,26 +106,20 @@ const actions = {
         });
     },
 
-    async downloadFile({commit, state}, {resourceId}) {
+    async downloadResource({commit, state}, {resourceId}) {
         if (!state.resourceDownloadMap[resourceId] || !state.resourceDownloadMap[resourceId].processing) {
             const resourceDownload = {content: null, processing: true, errors: null, progress: 20};
             commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
 
-            await new Promise((resolve => setTimeout(resolve, 1000)));
-            resourceDownload.progress = 30;
-            commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
+            try {
+                resourceDownload.content = await emcService.resources.downloadResource({resourceId});
+            } catch (error) {
+                resourceDownload.errors.push({
+                    title: "Unknown error when downloading.",
+                    source: error, variant: "danger"
+                });
+            }
 
-
-            await new Promise((resolve => setTimeout(resolve, 1000)));
-            resourceDownload.progress = 70;
-            commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
-
-
-            await new Promise((resolve => setTimeout(resolve, 1000)));
-            resourceDownload.progress = 99;
-            commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
-
-            resourceDownload.content = await emcService.resources.downloadResource({resourceId});
             resourceDownload.processing = false;
             resourceDownload.progress = 100;
             commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
@@ -166,12 +160,12 @@ const mutations = {
             }
         };
     },
-    SET_FILE_DOWNLOAD(state, {resourceId, content, processing, progress}) {
+    SET_FILE_DOWNLOAD(state, {resourceId, content, processing, progress, errors}) {
         state.resourceDownloadMap = {
             ...state.resourceDownloadMap,
             [resourceId]: {
                 ...state.resourceDownloadMap[resourceId],
-                resourceId, content, processing, progress
+                resourceId, content, processing, progress, errors
             }
         };
     },
@@ -264,16 +258,16 @@ const getters = {
         }
     },
 
-    getDownloadProcessingFiles: (state, getters) => {
+    getDownloadProcessingResources: (state, getters) => {
         return () => {
-            const processingFiles = [];
+            const processingResources = [];
             for (let resourceId in state.resourceDownloadMap) {
                 if (state.resourceDownloadMap[resourceId].processing) {
-                    processingFiles.push(getters.getFile({resourceId}))
+                    processingResources.push(getters.getResource({resourceId}))
                 }
             }
 
-            return processingFiles
+            return processingResources;
         }
     }
 }
