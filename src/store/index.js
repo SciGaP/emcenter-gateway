@@ -15,6 +15,7 @@ import emcResource from "./modules/emc/emc-resource.store";
 import emcCollectionGroup from "./modules/emc/emc-collection-group.store";
 // import emcStorageSettings from "./modules/emc/emc-storage-settings.store";
 import emcStoragePreference from "./modules/emc/emc-storage-preference.store";
+import emcStorage from "./modules/emc/emc-storage.store";
 
 
 import {createCustosStore} from "airavata-custos-portal/src/lib/store/util";
@@ -39,7 +40,8 @@ export default new Vuex.Store({
         "emcResource": emcResource,
         "emcCollectionGroup": emcCollectionGroup,
         // "emcStorageSettings": emcStorageSettings,
-        "emcStoragePreference": emcStoragePreference
+        "emcStoragePreference": emcStoragePreference,
+        "emcStorage": emcStorage
     },
     strict: debug,
     plugins: debug ? [createLogger()] : [],

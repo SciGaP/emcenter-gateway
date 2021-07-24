@@ -31,12 +31,20 @@
         </div>
       </div>
 
-      <div class="pt-3">
+      <div class="pt-3" v-if="this.storageId">
+        <label class="form-label">StorageId</label>
+        <b-form-input
+          v-model="this.storageId"
+          :readonly="true"
+        />
+      </div>
+
+      <div class="pt-3" v-if="!this.storageId">
         <label class="form-label">Hostname</label>
         <b-form-input v-model="hostName"/>
       </div>
 
-      <div class="pt-3">
+      <div class="pt-3" v-if="!this.storageId">
         <label class="form-label">Port</label>
         <b-form-input v-model="port"/>
       </div>
@@ -73,6 +81,9 @@ export default {
     title() {
       return "New Storage Preference"
     },
+    storageId() {
+      return this.$route.query.storageId;
+    },
     breadcrumbLinks() {
       return [
         {to: '/storage-preferences', name: 'Storage Preferences'},
@@ -102,18 +113,26 @@ export default {
     async onCreateClick() {
       this.processing = true;
 
+      let storage = this.$store.getters["emcStorage/getStorage"]({storageId:this.storageId});
+      console.log(storage);
+
       try {
         await this.$store.dispatch("emcStoragePreference/createSSHStoragePreference", {
           storagePreferenceId: `storagePreference-${performance.now()}`,
           authType: this.authType,
           userName: this.username,
           credentialToken: this.credentialToken,
-          storageId: `storage-${this.hostName}-${this.port}`,
-          hostName: this.hostName,
-          port: this.port
+          storageId: this.storageId?storage.storageId:`storage-${this.hostName}-${this.port}`,
+          hostName: this.storageId?storage.hostName:this.hostName,
+          port: this.storageId?storage.port:this.port
         });
 
-        await this.$router.push(`/storage-preferences`);
+        if(this.storageId){
+          await this.$router.push(`/storages`);
+        }else{
+          await this.$router.push(`/storage-preferences`);
+        }
+        
 
       } catch (error) {
         this.errors.push({

@@ -17,17 +17,33 @@ export default class EmcStorage {
 
     async createSSHStorage({storageId, hostName, port}) {
         await this.emcService.axiosInstanceWithTokenAuthorization.post(
-            EmcService.ENDPOINTS.RESOURCE,
+            EmcService.ENDPOINTS.STORAGE,
             {
                 "storage": {
-                    "sshStorage": {
+                    "ssh_storage": {
                         "storageId": storageId,
-                        "hostName":  hostName,
+                        "host_name":  hostName,
                         "port": port
                     }
                 }
             }
         );
+    }
+
+    async fetchStorages() {
+        return await this.emcService.axiosInstanceWithTokenAuthorization.post(
+            `${EmcService.ENDPOINTS.STORAGE}/search`
+        ).then(({data: {storages}}) => {
+            return storages.map((
+                {
+                    sshStorage: {
+                        storageId, hostName, port
+                    }
+                }
+            ) => {
+                return {storageId, hostName, port};
+            });
+        });
     }
 
 }
