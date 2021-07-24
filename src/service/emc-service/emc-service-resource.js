@@ -184,7 +184,7 @@ export default class EmcResource {
         };
     }
 
-    async createResource({type, name, description}) {
+    async createResource({type, name /*, description*/}) {
         await this.emcService.axiosInstanceWithTokenAuthorization.post(
             EmcService.ENDPOINTS.RESOURCE,
             {
@@ -192,10 +192,10 @@ export default class EmcResource {
                     resourceId: `emc-resource-${window.performance.now()}`,
                     type,
                     resourceName: name,
-                    properties: {
-                        // entityType, tenantId,
-                        name, description, createdTime: new Date().getTime().toString()
-                    }
+                    // properties: {
+                    //     // entityType, tenantId,
+                    //     name, description, createdTime: new Date().getTime().toString()
+                    // }
                 }
             }
         );

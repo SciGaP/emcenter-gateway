@@ -1,10 +1,10 @@
 <template>
   <Page :title="title" :breadcrumb-links="breadcrumbLinks">
-    <!--    <template #header-right>-->
-    <!--      <router-link :to="createNewCollectionGroupLink" v-slot="{navigate}">-->
-    <!--        <b-button variant="primary" @click="navigate">Create New Collection Group</b-button>-->
-    <!--      </router-link>-->
-    <!--    </template>-->
+    <template #header-right>
+      <router-link v-if="hasCollectionGroups" :to="createNewCollectionGroupLink" v-slot="{navigate}">
+        <b-button variant="primary" @click="navigate">Create New Collection Group</b-button>
+      </router-link>
+    </template>
     <div class="w-100">
       <div class="pr-3 pl-3" v-if="!parentResourceId">
         <b-form-input v-model="searchTyping" v-on:keydown.enter="onSearchEnter"/>
@@ -235,6 +235,9 @@ export default {
   },
   store: store,
   computed: {
+    hasCollectionGroups() {
+      return this.types.indexOf(EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) >= 0;
+    },
     searchQuery() {
       const _searchQuery = this.search.split(",").map(queryText => {
         const query = queryText.split("=");

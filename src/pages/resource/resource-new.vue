@@ -64,8 +64,8 @@ export default {
           name: this.name
         });
 
-        if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
-          await this.$router.push(`/collection-groups`);
+        if (this.resourceType) {
+          await this.$router.push(`/collections?type=${this.resourceType}`);
         } else {
           await this.$router.push(`/collections`);
         }
