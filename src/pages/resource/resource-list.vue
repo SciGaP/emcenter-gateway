@@ -1,10 +1,10 @@
 <template>
   <Page :title="title" :breadcrumb-links="breadcrumbLinks">
-    <!--    <template #header-right>-->
-    <!--      <router-link :to="createNewCollectionGroupLink" v-slot="{navigate}">-->
-    <!--        <b-button variant="primary" @click="navigate">Create New Collection Group</b-button>-->
-    <!--      </router-link>-->
-    <!--    </template>-->
+    <template #header-right>
+      <router-link v-if="hasCollectionGroups" :to="createNewCollectionGroupLink" v-slot="{navigate}">
+        <b-button variant="primary" @click="navigate">Create New Collection Group</b-button>
+      </router-link>
+    </template>
     <div class="w-100">
       <div class="pr-3 pl-3" v-if="!parentResourceId">
         <b-form-input v-model="searchTyping" v-on:keydown.enter="onSearchEnter"/>
@@ -134,10 +134,10 @@
               <b-td>{{ resource.lastUpdatedAt }}</b-td>
               <b-td>{{ resource.createdBy }}</b-td>
               <b-td>
-                <!--                    <b-button variant="link" size="sm" @click="downloadEverythingSelected()"-->
-                <!--                              v-b-tooltip.hover="`Download`">-->
-                <!--                      <b-icon icon="download"></b-icon>-->
-                <!--                    </b-button>-->
+                <b-button variant="link" size="sm" v-on:click="downloadResource(resource)"
+                          v-b-tooltip.hover="`Download`">
+                  <b-icon icon="download"></b-icon>
+                </b-button>
 
                 <!--                    <b-button variant="link" size="sm" v-b-modal="`copy-modal-${file.fileId}`"-->
                 <!--                              v-b-tooltip.hover="`Copy to`">-->
@@ -235,6 +235,9 @@ export default {
   },
   store: store,
   computed: {
+    hasCollectionGroups() {
+      return this.types.indexOf(EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) >= 0;
+    },
     searchQuery() {
       const _searchQuery = this.search.split(",").map(queryText => {
         const query = queryText.split("=");
@@ -395,6 +398,9 @@ export default {
         type: type,
         queries: this.searchQuery
       })));
+    },
+    downloadResource({resourceId}) {
+      this.$store.dispatch("emcResource/downloadResource", {resourceId});
     }
   },
   watch: {

@@ -57,7 +57,7 @@
       <template #toast-title>
         <div class="w-100" style="display: flex; flex-direction: row;">
           <div style="flex: 1;font-size: 15px;line-height: 35px;">
-            Downloading Datasets ({{files.length}})
+            Downloading Datasets ({{ resources.length }})
           </div>
 
           <div>
@@ -72,10 +72,10 @@
       </template>
       <div style="max-height: 200px; overflow: auto;">
         <ul class="w-100">
-          <li v-for="file in files" :key="file.fileId">
-            <div>{{ file.name }}</div>
+          <li v-for="(resource, resourceIndex) in resources" :key="resourceIndex">
+            <div>{{ resource.name }}</div>
             <div>
-              <ProgressCircle :value="file.download.progress" :min="0" :max="100"/>
+              <ProgressCircle :value="resource.download.progress" :min="0" :max="100"/>
               <b-button variant="link-secondary">
                 <b-icon icon="x"></b-icon>
               </b-button>
@@ -96,8 +96,8 @@ export default {
   components: {ProgressCircle},
   store: store,
   computed: {
-    files() {
-      return this.$store.getters["emcFile/getDownloadProcessingFiles"]()
+    resources() {
+      return this.$store.getters["emcResource/getDownloadProcessingResources"]();
     }
   }
 }
