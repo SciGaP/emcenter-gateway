@@ -118,7 +118,8 @@ export default class EmcResource {
 
 
     async downloadResource({resourceId}) {
-        return await axios.create({
+        const {data: {url}} =
+            await axios.create({
             baseURL: `http://149.165.157.235:8899/mftdownlaod/${resourceId}`,
             withCredentials: false,
             headers: {
@@ -128,6 +129,8 @@ export default class EmcResource {
                 'Origin': '*'
             }
         }).get("", {});
+
+        return url;
     }
 
     async fetchResourceMetadata({resourceId, type}) {

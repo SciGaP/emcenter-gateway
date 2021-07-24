@@ -1,5 +1,6 @@
 import {emcService} from "@/store/util/emc.util";
 import EmcResource from "@/service/emc-service/emc-service-resource";
+import axios from "axios";
 
 const state = {
     resourceMap: {},
@@ -108,11 +109,37 @@ const actions = {
 
     async downloadResource({commit, state}, {resourceId}) {
         if (!state.resourceDownloadMap[resourceId] || !state.resourceDownloadMap[resourceId].processing) {
-            const resourceDownload = {content: null, processing: true, errors: null, progress: 20};
+            const resourceDownload = {content: null, processing: true, errors: [], progress: 20};
+            commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
+
+            resourceDownload.processing = true;
+            resourceDownload.progress = 0;
             commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
 
             try {
-                resourceDownload.content = await emcService.resources.downloadResource({resourceId});
+                const url = await emcService.resources.downloadResource({resourceId});
+                await axios.get(url, { responseType: 'blob' }).then(resp => {
+                    console.log("resp : ", resp)
+                    resourceDownload.content = resp;
+                    return resp.data;
+                }).then(blob => {
+                    console.log("blob : ", blob)
+                    const dataUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = dataUrl;
+                    // the filename you want
+                    a.download = `${window.performance.now()}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(dataUrl);
+                    alert('your file has downloaded!'); // or you know, something with better UX...
+                }).catch((error) => {
+                    resourceDownload.errors.push({
+                        title: "Unknown error when downloading.",
+                        source: error, variant: "danger"
+                    });
+                });
             } catch (error) {
                 resourceDownload.errors.push({
                     title: "Unknown error when downloading.",
@@ -160,7 +187,7 @@ const mutations = {
             }
         };
     },
-    SET_FILE_DOWNLOAD(state, {resourceId, content, processing, progress, errors}) {
+    SET_RESOURCE_DOWNLOAD(state, {resourceId, content, processing, progress, errors}) {
         state.resourceDownloadMap = {
             ...state.resourceDownloadMap,
             [resourceId]: {
