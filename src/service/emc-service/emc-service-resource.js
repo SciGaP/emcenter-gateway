@@ -1,5 +1,4 @@
 import EmcService from "@/service/emc-service/index";
-import axios from "axios";
 
 export default class EmcResource {
 
@@ -118,17 +117,9 @@ export default class EmcResource {
 
 
     async downloadResource({resourceId}) {
-        const {data: {url}} =
-            await axios.create({
-            baseURL: `http://149.165.157.235:8899/mftdownlaod/${resourceId}`,
-            withCredentials: false,
-            headers: {
-                'Accept': '*/*',
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': "*",
-                'Origin': '*'
-            }
-        }).get("", {});
+        const {data: {url}} = await this.emcService.axiosInstanceWithTokenAuthorization.get(
+            `${EmcService.ENDPOINTS.RESOURCE_DOWNLOAD}/${resourceId}`
+        );
 
         return url;
     }
