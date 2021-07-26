@@ -1,10 +1,10 @@
 <template>
-  <Page :title="title" :breadcrumb-links="breadcrumbLinks">
-    <!--    <template #header-right>-->
-    <!--      <router-link :to="createNewCollectionGroupLink" v-slot="{navigate}">-->
-    <!--        <b-button variant="primary" @click="navigate">Create New Collection Group</b-button>-->
-    <!--      </router-link>-->
-    <!--    </template>-->
+  <Page :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
+    <template #header-right>
+      <router-link v-if="hasCollectionGroups" :to="createNewCollectionGroupLink" v-slot="{navigate}">
+        <b-button variant="primary" @click="navigate">Create New Collection Group</b-button>
+      </router-link>
+    </template>
     <div class="w-100">
       <div class="pr-3 pl-3" v-if="!parentResourceId">
         <b-form-input v-model="searchTyping" v-on:keydown.enter="onSearchEnter"/>
@@ -66,7 +66,6 @@
       <!--          </b-button>-->
       <!--        </div>-->
       <!--      </div>-->
-
       <table-overlay-info :rows="5" :columns="6" :data="resources">
         <template #empty>
           <div class="w-100 p-4 text-center">
@@ -134,10 +133,12 @@
               <b-td>{{ resource.lastUpdatedAt }}</b-td>
               <b-td>{{ resource.createdBy }}</b-td>
               <b-td>
-                <!--                    <b-button variant="link" size="sm" @click="downloadEverythingSelected()"-->
-                <!--                              v-b-tooltip.hover="`Download`">-->
-                <!--                      <b-icon icon="download"></b-icon>-->
-                <!--                    </b-button>-->
+                <button-overlay :show="processingDownload[resource.resourceId]">
+                  <b-button variant="link" size="sm" v-on:click="downloadResource(resource)"
+                            v-b-tooltip.hover="`Download`">
+                    <b-icon icon="download"></b-icon>
+                  </b-button>
+                </button-overlay>
 
                 <!--                    <b-button variant="link" size="sm" v-b-modal="`copy-modal-${file.fileId}`"-->
                 <!--                              v-b-tooltip.hover="`Copy to`">-->
@@ -210,7 +211,7 @@ import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/
 import ResourceMetadataModal from "@/components/modals/resource-metadata-modal";
 import custosStore from "airavata-custos-portal/src/lib/store";
 // import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
-// import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
+import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
 
 export default {
   name: "resource-list",
@@ -221,10 +222,14 @@ export default {
     // CopyModal,
     // ShareModal,
     FilePreviewModal, MapSelectedFilesAndFoldersToCollectionGroupsModal, Page,
-    TableOverlayInfo
+    TableOverlayInfo, ButtonOverlay
   },
   data() {
     return {
+      processingDelete: {},
+      processingDownload: {},
+      errors: [],
+
       searchTyping: "",
       search: "",
       defaultTypes: [
@@ -235,6 +240,9 @@ export default {
   },
   store: store,
   computed: {
+    hasCollectionGroups() {
+      return this.types.indexOf(EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) >= 0;
+    },
     searchQuery() {
       const _searchQuery = this.search.split(",").map(queryText => {
         const query = queryText.split("=");
@@ -370,6 +378,9 @@ export default {
     }
   },
   methods: {
+    isDownloadAllowed(resource) {
+      return resource.type === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET;
+    },
     onSearchEnter() {
       this.search = this.searchTyping;
     },
@@ -395,6 +406,18 @@ export default {
         type: type,
         queries: this.searchQuery
       })));
+    },
+    async downloadResource({resourceId}) {
+      this.processingDownload = {...this.processingDownload, [resourceId]: true};
+      try {
+        await this.$store.dispatch("emcResource/downloadResource", {resourceId});
+      } catch (error) {
+        this.errors.push({
+          title: "Unknown error when downloading.",
+          source: error, variant: "danger"
+        });
+      }
+      this.processingDownload = {...this.processingDownload, [resourceId]: false};
     }
   },
   watch: {

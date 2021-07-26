@@ -11,6 +11,11 @@
         <slot name="header-right"/>
       </div>
     </div>
+    <div class="w-100 p-2">
+      <b-alert v-for="(error, errorIndex) in errors" :key="errorIndex" show dismissible :variant="error.variant">
+        {{ error.title }}
+      </b-alert>
+    </div>
     <div class="w-100" style="">
       <slot></slot>
     </div>

@@ -116,12 +116,12 @@ export default class EmcResource {
     }
 
 
-    downloadResource({resourceId}) {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(`resource-content-${resourceId}`);
-            }, 2000);
-        })
+    async downloadResource({resourceId}) {
+        const {data: {url}} = await this.emcService.axiosInstanceWithTokenAuthorization.get(
+            `${EmcService.ENDPOINTS.RESOURCE_DOWNLOAD}/${resourceId}`
+        );
+
+        return url;
     }
 
     async fetchResourceMetadata({resourceId, type}) {
@@ -175,7 +175,7 @@ export default class EmcResource {
         };
     }
 
-    async createResource({type, name, description}) {
+    async createResource({type, name /*, description*/}) {
         await this.emcService.axiosInstanceWithTokenAuthorization.post(
             EmcService.ENDPOINTS.RESOURCE,
             {
@@ -183,10 +183,10 @@ export default class EmcResource {
                     resourceId: `emc-resource-${window.performance.now()}`,
                     type,
                     resourceName: name,
-                    properties: {
-                        // entityType, tenantId,
-                        name, description, createdTime: new Date().getTime().toString()
-                    }
+                    // properties: {
+                    //     // entityType, tenantId,
+                    //     name, description, createdTime: new Date().getTime().toString()
+                    // }
                 }
             }
         );

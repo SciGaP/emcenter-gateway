@@ -17,19 +17,20 @@ export default class EmcService {
     static baseURL = config.value('datalakeDrmsUrl');
 
     static ENDPOINTS = {
-        RESOURCE: "/drms/resource",
-        RESOURCE_SEARCH: "/drms/resource/searchResource",
-        RESOURCE_CHILDREN: "/drms/resource/child",
-        RESOURCE_PARENT: "/drms/resource/parent",
-        RESOURCE_METADATA: "/drms/resource/metadata",
+        RESOURCE: "/v1.0/api/drms/resource",
+        RESOURCE_SEARCH: "/v1.0/api/drms/resource/searchResource",
+        RESOURCE_CHILDREN: "/v1.0/api/drms/resource/child",
+        RESOURCE_PARENT: "/v1.0/api/drms/resource/parent",
+        RESOURCE_METADATA: "/v1.0/api/drms/resource/metadata",
+        RESOURCE_DOWNLOAD: "/dataorch/mftdownload",
 
-        COLLECTIONS: "/drms/resource/searchResource",
-        CHILDREN: "/drms/resource/child",
-        DATASETS: "/drms/resource/searchPreference",
-        COLLECTION_GROUPS: "/drms/resource/searchResource",
+        COLLECTIONS: "/v1.0/api/drms/resource/searchResource",
+        CHILDREN: "/v1.0/api/drms/resource/child",
+        DATASETS: "/v1.0/api/drms/resource/searchPreference",
+        COLLECTION_GROUPS: "/v1.0/api/drms/resource/searchResource",
 
-        STORAGE: "/drms/storage",
-        STORAGE_PREFERENCE: "/drms/storagePreference"
+        STORAGE: "/v1.0/api/drms/storage",
+        STORAGE_PREFERENCE: "/v1.0/api/drms/storagePreference"
     };
 
     constructor() {
