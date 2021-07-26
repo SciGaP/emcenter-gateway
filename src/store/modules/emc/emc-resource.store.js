@@ -115,47 +115,51 @@ const actions = {
             resourceDownload.progress = 0;
             commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
 
-            try {
-                const url = await emcService.resources.downloadResource({resourceId});
-                // await axios.get(url, {responseType: 'blob'}).then(resp => {
-                //     console.log("resp : ", resp)
-                //     resourceDownload.content = resp;
-                //     return resp.data;
-                // }).then(blob => {
-                //     console.log("blob : ", blob)
-                //     const dataUrl = window.URL.createObjectURL(blob);
-                //     return dataUrl;
-                // }).catch((error) => {
-                //     resourceDownload.errors.push({
-                //         title: "Unknown error when downloading.",
-                //         source: error, variant: "danger"
-                //     });
-                // });
+            // try {
 
-
-                // const a = document.createElement('iframe');
-                // a.src = url;
-
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.target = "_blank";
-                // // the filename you want
-                a.download = `${window.performance.now()}`;
-                document.body.appendChild(a);
-                a.click();
-
-                // window.URL.revokeObjectURL(url);
-            } catch (error) {
-                resourceDownload.errors.push({
-                    title: "Unknown error when downloading.",
-                    source: error, variant: "danger"
-                });
-            }
+            const url = await emcService.resources.downloadResource({resourceId});
 
             resourceDownload.processing = false;
             resourceDownload.progress = 100;
             commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
+
+            // await axios.get(url, {responseType: 'blob'}).then(resp => {
+            //     console.log("resp : ", resp)
+            //     resourceDownload.content = resp;
+            //     return resp.data;
+            // }).then(blob => {
+            //     console.log("blob : ", blob)
+            //     const dataUrl = window.URL.createObjectURL(blob);
+            //     return dataUrl;
+            // }).catch((error) => {
+            //     resourceDownload.errors.push({
+            //         title: "Unknown error when downloading.",
+            //         source: error, variant: "danger"
+            //     });
+            // });
+
+
+            // const a = document.createElement('iframe');
+            // a.src = url;
+
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.target = "_blank";
+            // // the filename you want
+            a.download = `${window.performance.now()}`;
+            document.body.appendChild(a);
+            a.click();
+
+            // window.URL.revokeObjectURL(url);
+            // } catch (error) {
+            //     resourceDownload.errors.push({
+            //         title: "Unknown error when downloading.",
+            //         source: error, variant: "danger"
+            //     });
+            // }
+
+
         }
     }
 }

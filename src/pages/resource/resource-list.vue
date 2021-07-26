@@ -1,5 +1,5 @@
 <template>
-  <Page :title="title" :breadcrumb-links="breadcrumbLinks">
+  <Page :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <router-link v-if="hasCollectionGroups" :to="createNewCollectionGroupLink" v-slot="{navigate}">
         <b-button variant="primary" @click="navigate">Create New Collection Group</b-button>
@@ -66,7 +66,6 @@
       <!--          </b-button>-->
       <!--        </div>-->
       <!--      </div>-->
-
       <table-overlay-info :rows="5" :columns="6" :data="resources">
         <template #empty>
           <div class="w-100 p-4 text-center">
@@ -134,10 +133,12 @@
               <b-td>{{ resource.lastUpdatedAt }}</b-td>
               <b-td>{{ resource.createdBy }}</b-td>
               <b-td>
-                <b-button variant="link" size="sm" v-on:click="downloadResource(resource)"
-                          v-b-tooltip.hover="`Download`" :disabled="!isDownloadAllowed(resource)">
-                  <b-icon icon="download"></b-icon>
-                </b-button>
+                <button-overlay :show="processingDownload[resource.resourceId]">
+                  <b-button variant="link" size="sm" v-on:click="downloadResource(resource)"
+                            v-b-tooltip.hover="`Download`">
+                    <b-icon icon="download"></b-icon>
+                  </b-button>
+                </button-overlay>
 
                 <!--                    <b-button variant="link" size="sm" v-b-modal="`copy-modal-${file.fileId}`"-->
                 <!--                              v-b-tooltip.hover="`Copy to`">-->
@@ -210,7 +211,7 @@ import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/
 import ResourceMetadataModal from "@/components/modals/resource-metadata-modal";
 import custosStore from "airavata-custos-portal/src/lib/store";
 // import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
-// import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
+import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
 
 export default {
   name: "resource-list",
@@ -221,10 +222,14 @@ export default {
     // CopyModal,
     // ShareModal,
     FilePreviewModal, MapSelectedFilesAndFoldersToCollectionGroupsModal, Page,
-    TableOverlayInfo
+    TableOverlayInfo, ButtonOverlay
   },
   data() {
     return {
+      processingDelete: {},
+      processingDownload: {},
+      errors: [],
+
       searchTyping: "",
       search: "",
       defaultTypes: [
@@ -402,8 +407,17 @@ export default {
         queries: this.searchQuery
       })));
     },
-    downloadResource({resourceId}) {
-      this.$store.dispatch("emcResource/downloadResource", {resourceId});
+    async downloadResource({resourceId}) {
+      this.processingDownload = {...this.processingDownload, [resourceId]: true};
+      try {
+        await this.$store.dispatch("emcResource/downloadResource", {resourceId});
+      } catch (error) {
+        this.errors.push({
+          title: "Unknown error when downloading.",
+          source: error, variant: "danger"
+        });
+      }
+      this.processingDownload = {...this.processingDownload, [resourceId]: false};
     }
   },
   watch: {

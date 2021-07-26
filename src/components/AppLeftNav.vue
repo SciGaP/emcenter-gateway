@@ -1,6 +1,6 @@
 <template>
   <div v-if="authenticated" class="p-3">
-    <CollectionToastQueue/>
+    <!--    <CollectionToastQueue/>-->
     <ul>
       <!--      <li>-->
       <!--        <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">-->
@@ -122,7 +122,7 @@ import svgPeople from "../assets/people.svg";
 import svgDashboard from "../assets/dashboard.svg";
 import svgFileRuled from "../assets/file-ruled.svg";
 import svgGear from "../assets/gear.svg";
-import CollectionToastQueue from "@/components/CollectionToastQueue";
+// import CollectionToastQueue from "@/components/CollectionToastQueue";
 import EmcResource from '@/service/emc-service/emc-service-resource';
 
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
@@ -130,7 +130,7 @@ import {custosStore} from "../store";
 
 export default {
   name: "AppLeftNav",
-  components: {CollectionToastQueue},
+  // components: {CollectionToastQueue},
   store: custosStore,
   data: () => {
     return {
