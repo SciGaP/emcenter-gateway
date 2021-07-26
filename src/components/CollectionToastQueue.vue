@@ -52,7 +52,7 @@
     <!--        </ul>-->
     <!--      </div>-->
     <!--    </b-toast>-->
-    <b-toast id="download-toast" v-if="files && files.length > 0" :visible="true" solid toaster="b-toaster-bottom-right"
+    <b-toast id="download-toast" v-if="resources && resources.length > 0" :visible="true" solid toaster="b-toaster-bottom-right"
              no-auto-hide no-close-button>
       <template #toast-title>
         <div class="w-100" style="display: flex; flex-direction: row;">
