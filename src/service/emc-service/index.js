@@ -21,7 +21,7 @@ export default class EmcService {
         RESOURCE_CHILDREN: "/v1.0/api/drms/resource/child",
         RESOURCE_PARENT: "/v1.0/api/drms/resource/parent",
         RESOURCE_METADATA: "/v1.0/api/drms/resource/metadata",
-        RESOURCE_DOWNLOAD: "/dataorch/mftdownlaod",
+        RESOURCE_DOWNLOAD: "/dataorch/mftdownload",
 
         COLLECTIONS: "/v1.0/api/drms/resource/searchResource",
         CHILDREN: "/v1.0/api/drms/resource/child",
