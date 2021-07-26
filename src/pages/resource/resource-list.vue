@@ -135,7 +135,7 @@
               <b-td>{{ resource.createdBy }}</b-td>
               <b-td>
                 <b-button variant="link" size="sm" v-on:click="downloadResource(resource)"
-                          v-b-tooltip.hover="`Download`">
+                          v-b-tooltip.hover="`Download`" :disabled="!isDownloadAllowed(resource)">
                   <b-icon icon="download"></b-icon>
                 </b-button>
 
@@ -373,6 +373,9 @@ export default {
     }
   },
   methods: {
+    isDownloadAllowed(resource) {
+      return resource.type === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET;
+    },
     onSearchEnter() {
       this.search = this.searchTyping;
     },
