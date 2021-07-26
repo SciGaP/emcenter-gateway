@@ -1,6 +1,5 @@
 import {emcService} from "@/store/util/emc.util";
 import EmcResource from "@/service/emc-service/emc-service-resource";
-import axios from "axios";
 
 const state = {
     resourceMap: {},
@@ -118,28 +117,30 @@ const actions = {
 
             try {
                 const url = await emcService.resources.downloadResource({resourceId});
-                await axios.get(url, { responseType: 'blob' }).then(resp => {
-                    console.log("resp : ", resp)
-                    resourceDownload.content = resp;
-                    return resp.data;
-                }).then(blob => {
-                    console.log("blob : ", blob)
-                    const dataUrl = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = dataUrl;
-                    // the filename you want
-                    a.download = `${window.performance.now()}`;
-                    document.body.appendChild(a);
-                    a.click();
-                    window.URL.revokeObjectURL(dataUrl);
-                    alert('your file has downloaded!'); // or you know, something with better UX...
-                }).catch((error) => {
-                    resourceDownload.errors.push({
-                        title: "Unknown error when downloading.",
-                        source: error, variant: "danger"
-                    });
-                });
+                // await axios.get(url, {responseType: 'blob'}).then(resp => {
+                //     console.log("resp : ", resp)
+                //     resourceDownload.content = resp;
+                //     return resp.data;
+                // }).then(blob => {
+                //     console.log("blob : ", blob)
+                //     const dataUrl = window.URL.createObjectURL(blob);
+                //     return dataUrl;
+                // }).catch((error) => {
+                //     resourceDownload.errors.push({
+                //         title: "Unknown error when downloading.",
+                //         source: error, variant: "danger"
+                //     });
+                // });
+
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                // the filename you want
+                a.download = `${window.performance.now()}`;
+                document.body.appendChild(a);
+                a.click();
+
+                // window.URL.revokeObjectURL(url);
             } catch (error) {
                 resourceDownload.errors.push({
                     title: "Unknown error when downloading.",
