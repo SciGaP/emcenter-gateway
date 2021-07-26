@@ -132,10 +132,15 @@ const actions = {
                 //     });
                 // });
 
+
+                // const a = document.createElement('iframe');
+                // a.src = url;
+
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
-                // the filename you want
+                a.target = "_blank";
+                // // the filename you want
                 a.download = `${window.performance.now()}`;
                 document.body.appendChild(a);
                 a.click();
