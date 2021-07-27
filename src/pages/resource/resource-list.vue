@@ -135,7 +135,7 @@
               <b-td>
                 <button-overlay :show="processingDownload[resource.resourceId]">
                   <b-button variant="link" size="sm" v-on:click="downloadResource(resource)"
-                            v-b-tooltip.hover="`Download`">
+                            :disabled="!isDownloadAllowed(resource)" v-b-tooltip.hover="`Download`">
                     <b-icon icon="download"></b-icon>
                   </b-button>
                 </button-overlay>
