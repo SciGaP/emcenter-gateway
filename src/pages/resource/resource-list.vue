@@ -147,7 +147,7 @@
                 <!--                    <CopyModal :modal-id="`copy-modal-${file.fileId}`" :file-ids="[file.fileId]"/>-->
 
                 <b-button variant="link" size="sm" v-b-modal="`share-modal-${resource.resourceId}`"
-                          v-b-tooltip.hover="`Share`">
+                          v-b-tooltip.hover="`Share`" :disabled="!resource.canShare">
                   <b-icon icon="share"></b-icon>
                 </b-button>
                 <ModalShareEntity :modal-id="`share-modal-${resource.resourceId}`"

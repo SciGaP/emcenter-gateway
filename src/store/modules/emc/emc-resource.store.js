@@ -19,7 +19,7 @@ const actions = {
         console.log("##### fetchResources ### queryString : ", queryString);
         console.log("##### fetchResources ### : ", resources);
 
-        const resourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note}) => {
+        const resourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, canShare, canDelete}) => {
             commit("SET_RESOURCE", {
                 resourceId,
                 entityId,
@@ -31,7 +31,8 @@ const actions = {
                 lastUpdatedBy,
                 status,
                 type,
-                note
+                note,
+                canShare, canDelete
             });
 
             return resourceId;
@@ -178,7 +179,7 @@ const mutations = {
             [resourceId]: metadata
         }
     },
-    SET_RESOURCE(state, {resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note}) {
+    SET_RESOURCE(state, {resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, canShare=false, canDelete=false}) {
         state.resourceMap = {
             ...state.resourceMap,
             [resourceId]: {
@@ -193,7 +194,8 @@ const mutations = {
                 lastUpdatedBy,
                 status,
                 type,
-                note
+                note,
+                canShare, canDelete
             }
         };
     },
