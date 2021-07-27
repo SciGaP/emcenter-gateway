@@ -5,53 +5,55 @@
         <b-button variant="primary" @click="navigate">Create New Storage</b-button>
       </router-link>
     </template>
-    <ul>
-      <li v-for="storage in storages" :key="storage.storageId">
-        <b-button v-if="storageExpanded[storage.storageId]" variant="link" size="sm" v-b-tooltip.hover title="Collapse" v-on:click="onClickExpandOrCollapse(storage.storageId)">
-          <b-icon icon="chevron-down"></b-icon>
-        </b-button>
-        <b-button v-else variant="link" size="sm" v-b-tooltip.hover title="View Storage Preferences" v-on:click="onClickExpandOrCollapse(storage.storageId)">
-          <b-icon icon="chevron-right"></b-icon>
-        </b-button>
-        <span>{{ storage.storageId }}
-          <router-link 
-            :to="{name: 'storage-preferences-new', query:{storageId: `${storage.storageId}`}}" 
-            v-slot="{ href, route, navigate}" tag="">
-            <b-button variant="link" size="sm" @click="navigate" v-b-tooltip.hover title="Create Storage Preferences">
-              <b-icon icon="folder-plus"></b-icon>
-            </b-button>
-          </router-link>
-        </span>
-        <div v-if="storageExpanded[storage.storageId]">
-          <table-overlay-info :rows="5" :columns="5" :data="storagePreferencesByStorageId[storage.storageId]">
-            <b-table-simple>
-              <b-thead>
-                <b-tr>
-                  <b-th>Storage Preference Id</b-th>
-                  <b-th>Auth Type</b-th>
-                  <b-th>Username</b-th>
-                  <b-th>CredentialToken</b-th>
-                  <b-th></b-th>
-                </b-tr>
-              </b-thead>
-              <b-tbody>
-                <b-tr v-for="storagePreference in storagePreferencesByStorageId[storage.storageId]" :key="storagePreference.storagePreferenceId">
-                  <b-td>{{ storagePreference.storagePreferenceId }}</b-td>
-                  <b-td>{{ storagePreference.authType }}</b-td>
-                  <b-td>{{ storagePreference.username }}</b-td>
-                  <b-td>{{ storagePreference.credentialToken }}</b-td>
-                  <b-td>
-                    <b-button variant="link" disabled>
-                      <b-icon icon="trash"></b-icon>
-                    </b-button>
-                  </b-td>
-                </b-tr>
-              </b-tbody>
-            </b-table-simple>
-          </table-overlay-info>
-        </div>
-      </li>
-    </ul>
+    <div class='w-100 p-3'>
+      <ul>
+        <li v-for="storage in storages" :key="storage.storageId">
+          <b-button v-if="storageExpanded[storage.storageId]" variant="link" size="sm" v-b-tooltip.hover title="Collapse" v-on:click="onClickExpandOrCollapse(storage.storageId)">
+            <b-icon icon="chevron-down"></b-icon>
+          </b-button>
+          <b-button v-else variant="link" size="sm" v-b-tooltip.hover title="View Storage Preferences" v-on:click="onClickExpandOrCollapse(storage.storageId)">
+            <b-icon icon="chevron-right"></b-icon>
+          </b-button>
+          <span>{{ storage.storageId }}
+            <router-link 
+              :to="{name: 'storage-preferences-new', query:{storageId: `${storage.storageId}`}}" 
+              v-slot="{ href, route, navigate}" tag="">
+              <b-button variant="link" size="sm" @click="navigate" v-b-tooltip.hover title="Create Storage Preferences">
+                <b-icon icon="folder-plus"></b-icon>
+              </b-button>
+            </router-link>
+          </span>
+          <div v-if="storageExpanded[storage.storageId]" class="w-100 p-2">
+            <table-overlay-info :rows="5" :columns="5" :data="storagePreferencesByStorageId[storage.storageId]">
+              <b-table-simple>
+                <b-thead>
+                  <b-tr>
+                    <b-th>Storage Preference Id</b-th>
+                    <b-th>Auth Type</b-th>
+                    <b-th>Username</b-th>
+                    <b-th>CredentialToken</b-th>
+                    <b-th></b-th>
+                  </b-tr>
+                </b-thead>
+                <b-tbody>
+                  <b-tr v-for="storagePreference in storagePreferencesByStorageId[storage.storageId]" :key="storagePreference.storagePreferenceId">
+                    <b-td>{{ storagePreference.storagePreferenceId }}</b-td>
+                    <b-td>{{ storagePreference.authType }}</b-td>
+                    <b-td>{{ storagePreference.username }}</b-td>
+                    <b-td>{{ storagePreference.credentialToken }}</b-td>
+                    <b-td>
+                      <b-button variant="link" disabled>
+                        <b-icon icon="trash"></b-icon>
+                      </b-button>
+                    </b-td>
+                  </b-tr>
+                </b-tbody>
+              </b-table-simple>
+            </table-overlay-info>
+          </div>
+        </li>
+      </ul>
+    </div>
   </Page>
 </template>
 
@@ -80,7 +82,7 @@ export default {
   },
   watch: {
     storagePreferences() {
-      if(this.storagePreferences){
+      if(this.storagePreferences && this.storagePreferences instanceof Array){
         this.storages.forEach( storage => {
           this.storagePreferencesByStorageId = { 
             ...this.storagePreferencesByStorageId, 
@@ -128,23 +130,4 @@ ul li > section div:nth-child(2) {
   line-height: 38px;
 }
 
-ul li ul li {
-  display: flex;
-  flex-direction: row;
-}
-
-ul li ul li div:nth-child(2) {
-  flex: 1;
-  line-height: 38px;
-}
-
-ul li ul li div:nth-child(4) {
-  flex: 1;
-  padding: 3px;
-  text-align: right;
-}
-
-ul li ul li div:nth-child(4) label {
-  padding-left: 10px;
-}
 </style>
