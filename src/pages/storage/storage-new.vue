@@ -1,5 +1,5 @@
 <template>
-  <page :title="title" :breadcrumb-links="breadcrumbLinks">
+  <page :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <button-overlay :show="processing">
         <b-button variant="primary" v-on:click="onCreateClick">Create</b-button>

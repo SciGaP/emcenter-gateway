@@ -1,5 +1,5 @@
 <template>
-  <Page title="Storage Settings" :breadcrumb-links="[]">
+  <Page title="Storage Settings" :breadcrumb-links="[]" :error=errors>
     <template #header-right>
       <router-link to="/storages/new" v-slot="{ href, route, navigate}" tag="">
         <b-button variant="primary" @click="navigate">Create New Storage</b-button>
@@ -75,6 +75,7 @@ export default {
   components: {Page, TableOverlayInfo},
   data() {
     return {
+      errors:[],
       storageExpanded: {},
       storagePreferencesByStorageId: {}
     }
@@ -100,9 +101,18 @@ export default {
     }
   },
   methods: {
-    refreshData() {
-      this.$store.dispatch("emcStoragePreference/fetchStoragePreferences");
-      this.$store.dispatch("emcStorage/fetchStorages");
+    async refreshData() {
+      try{
+        await this.$store.dispatch("emcStorage/fetchStorages");
+        await this.$store.dispatch("emcStoragePreference/fetchStoragePreferences");
+      } catch(error){
+        this.errors.push({
+          title: `Unknown error when mapping to the collection group.`,
+          source: error, variant: "danger"
+        });
+      }
+      
+      
     },
     onClickExpandOrCollapse(storageId) {
       this.storageExpanded = { ...this.storageExpanded, [storageId]: this.storageExpanded[storageId]^1 }
