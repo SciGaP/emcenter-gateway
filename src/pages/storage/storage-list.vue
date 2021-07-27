@@ -5,25 +5,32 @@
         <b-button variant="primary" @click="navigate">Create New Storage</b-button>
       </router-link>
     </template>
-    <div class='w-100 p-3'>
+    <div class='w-100 p-2'>
       <ul>
         <li v-for="storage in storages" :key="storage.storageId">
-          <b-button v-if="storageExpanded[storage.storageId]" variant="link" size="sm" v-b-tooltip.hover title="Collapse" v-on:click="onClickExpandOrCollapse(storage.storageId)">
-            <b-icon icon="chevron-down"></b-icon>
-          </b-button>
-          <b-button v-else variant="link" size="sm" v-b-tooltip.hover title="View Storage Preferences" v-on:click="onClickExpandOrCollapse(storage.storageId)">
-            <b-icon icon="chevron-right"></b-icon>
-          </b-button>
-          <span>{{ storage.storageId }}
-            <router-link 
-              :to="{name: 'storage-preferences-new', query:{storageId: `${storage.storageId}`}}" 
-              v-slot="{ href, route, navigate}" tag="">
-              <b-button variant="link" size="sm" @click="navigate" v-b-tooltip.hover title="Create Storage Preferences">
-                <b-icon icon="folder-plus"></b-icon>
+          <div style="display: flex; flex-direction: row;">
+            <div>
+              <b-button v-if="storageExpanded[storage.storageId]" variant="link" size="sm" v-b-tooltip.hover title="Collapse" v-on:click="onClickExpandOrCollapse(storage.storageId)">
+                <b-icon icon="chevron-down"></b-icon>
               </b-button>
-            </router-link>
-          </span>
-          <div v-if="storageExpanded[storage.storageId]" class="w-100 p-2">
+              <b-button v-else variant="link" size="sm" v-b-tooltip.hover title="View Storage Preferences" v-on:click="onClickExpandOrCollapse(storage.storageId)">
+                <b-icon icon="chevron-right"></b-icon>
+              </b-button>
+            </div>
+            <div style="flex: 1;">
+              <span>{{ storage.hostName}}:{{storage.port}} <span style="font-size:12px">({{ storage.storageId }})</span></span>
+            </div>
+            <div style="margin-right: 20rem">
+              <router-link 
+                :to="{name: 'storage-preferences-new', query:{storageId: `${storage.storageId}`}}" 
+                v-slot="{ href, route, navigate}" tag="">
+                <b-button variant="link" size="sm" @click="navigate" v-b-tooltip.hover title="Create Storage Preferences">
+                  <b-icon icon="folder-plus"></b-icon>
+                </b-button>
+              </router-link>
+            </div>
+          </div>
+          <div v-if="!storageExpanded[storage.storageId]" class="w-100 p-2">
             <table-overlay-info :rows="5" :columns="5" :data="storagePreferencesByStorageId[storage.storageId]">
               <b-table-simple>
                 <b-thead>

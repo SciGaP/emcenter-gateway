@@ -8,12 +8,12 @@
     <div class="pr-3">
       <div class="pt-3">
         <label class="form-label">Hostname</label>
-        <b-form-input v-model="hostName"/>
+        <b-form-input v-model="hostName" type="text" :state="hostnameValidation"/>
       </div>
 
       <div class="pt-3">
         <label class="form-label">Port</label>
-        <b-form-input v-model="port"/>
+        <b-form-input v-model="port" type="number" :state="portValidation"/>
       </div>
     </div>
 
@@ -42,6 +42,20 @@ export default {
   computed: {
     title() {
       return "New Storage"
+    },
+    hostnameValidation() {
+      if(this.hostName == null || this.hostName.length == 0)
+        return null;
+      if(this.hostName == 'localhost')
+        return true;
+      if(/^(?:(?:(?:[a-zA-z-]+):\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))(?::[0-9]{1,5})?$/.test(this.hostName))
+        return true;
+      return false;
+    },
+    portValidation() {
+      if(this.port == null || this.port.length == 0)
+        return null;
+      return this.port >= 1024 && this.port <= 65535? true: false;
     },
     breadcrumbLinks() {
       return [

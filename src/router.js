@@ -73,13 +73,6 @@ export default new Router({
                 import("./pages/storage/storage-preference-new")
         },
         {
-            path: "/storage-preferences",
-            name: "storage-preferences",
-            beforeEnter: _validateAuthenticationBeforeEnter,
-            component: () =>
-                import("./pages/storage/storage-preference-list")
-        },
-        {
             path: "/storages/new",
             name: "storage-new",
             beforeEnter: _validateAuthenticationBeforeEnter,

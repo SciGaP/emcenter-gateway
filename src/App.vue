@@ -2,7 +2,7 @@
   <div id="app" class="v-100 bg-light" style="height: 100%; display: flex; flex-direction: column;">
     <AppHeader/>
     <div class="v-100" style="flex:1;display: flex;">
-      <AppLeftNav style="width: 250px;"/>
+      <AppLeftNav style="width: 250px; background-color: #F7F7F7"/>
       <router-view style="flex: 1;"/>
     </div>
     <!--    <div class="h-100 p-3 page-body">-->
