@@ -1,6 +1,5 @@
 <template>
   <div v-if="authenticated" class="p-3">
-    {{user}}
     <!--    <CollectionToastQueue/>-->
     <ul>
       <!--      <li>-->
