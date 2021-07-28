@@ -2,24 +2,24 @@
   <page :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <button-overlay :show="processing">
-        <b-button variant="primary" v-on:click="onCreateClick">Create</b-button>
+        <b-button variant="primary" :disabled="!isValidData" v-on:click="onCreateClick">Create</b-button>
       </button-overlay>
     </template>
     <div class="pr-3">
       <div class="pt-3">
         <label class="form-label">Auth Type</label>
-        <b-form-input v-model="authType"/>
+        <b-form-input placeholder="Auth Type" v-model="authType" :state="inputState.authTypeValidation()"/>
       </div>
 
       <div class="pt-3">
         <label class="form-label">Username</label>
-        <b-form-input v-model="username"/>
+        <b-form-input placeholder="User Name" v-model="username" :state="inputState.userNameValidation()"/>
       </div>
 
       <div class="pt-3">
         <label class="form-label">Credential Token</label>
         <div style="display: flex; flex-direction: row;">
-          <b-form-select v-model="credentialToken" :options="availableSecretEntities" style="flex: 1;"
+          <b-form-select v-model="credentialToken" :options="availableSecretEntities" :state="inputState.credentialTokenValidation()" style="flex: 1;"
                          :disabled="processingCredentialToken"/>
           <div class="pl-3">
             <button-overlay :show="processingCredentialToken">
@@ -41,12 +41,12 @@
 
       <div class="pt-3" v-if="!this.storageId">
         <label class="form-label">Hostname</label>
-        <b-form-input v-model="hostName" type="text" :state="hostnameValidation"/>
+        <b-form-input placeholder="Host Name" v-model="hostName" type="text" :state="inputState.hostNameValidation()"/>
       </div>
 
       <div class="pt-3" v-if="!this.storageId">
         <label class="form-label">Port</label>
-        <b-form-input v-model="port" type="number" :state="portValidation"/>
+        <b-form-input placeholder="Port Number" v-model="port" type="number" :state="inputState.portValidation()"/>
       </div>
     </div>
 
@@ -81,22 +81,53 @@ export default {
     title() {
       return "New Storage Preference"
     },
-    hostnameValidation() {
-      if(this.hostName == null || this.hostName.length == 0)
-        return null;
-      if(this.hostName == 'localhost')
-        return true;
-      if(/^(?:(?:(?:[a-zA-z-]+):\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))(?::[0-9]{1,5})?$/.test(this.hostName))
-        return true;
-      return false;
-    },
-    portValidation() {
-      if(this.port == null || this.port.length == 0)
-        return null;
-      return this.port >= 1024 && this.port <= 65535? true: false;
+    inputState () {
+      return {
+        hostNameValidation: () => {
+          if(this.hostName == null || this.hostName.length == 0)
+            return null;
+          if(this.hostName == 'localhost')
+            return true;
+          if(/^(?:(?:(?:[a-zA-z-]+):\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))(?::[0-9]{1,5})?$/.test(this.hostName))
+            return true;
+          return false;
+        },
+        portValidation: () => {
+          if(this.port == null || this.port.length == 0)
+            return null;
+          return this.port >= 1024 && this.port <= 65535? true: false;
+        },
+        authTypeValidation: () => {
+          if(this.authType == null || this.authType.length == 0)
+            return null;
+          if(this.authType=="ssh")
+            return true;
+          return false;
+        },
+        userNameValidation: () => {
+          if(this.username == null || this.username.length == 0)
+            return null;
+          return true;
+        },
+        credentialTokenValidation: () => {
+          if(this.credentialToken == null) 
+            return null;
+          console.log(this.credentialToken.replaceAll('-',''));
+          if(this.credentialToken.replaceAll('-','').length === 32)
+            return true;
+          return false;
+        }
+      }
     },
     storageId() {
       return this.$route.query.storageId;
+    },
+    isValidData() {
+      return (this.inputState.authTypeValidation()==null? false:this.inputState.authTypeValidation()) && 
+        (this.inputState.userNameValidation()==null? true:this.inputState.userNameValidation()) && 
+        (this.inputState.credentialTokenValidation()==null? false:this.inputState.credentialTokenValidation()) &&
+        (this.storageId!=null? true:((this.inputState.hostNameValidation()==null? false:this.inputState.hostNameValidation()) && 
+          (this.inputState.portValidation()==null? false:this.inputState.portValidation())));
     },
     breadcrumbLinks() {
       return [

@@ -10,7 +10,7 @@
         <li v-for="storage in storages" :key="storage.storageId">
           <div style="display: flex; flex-direction: row;">
             <div>
-              <b-button v-if="storageExpanded[storage.storageId]" variant="link" size="sm" v-b-tooltip.hover title="Collapse" v-on:click="onClickExpandOrCollapse(storage.storageId)">
+              <b-button v-if="!storageExpanded[storage.storageId]" variant="link" size="sm" v-b-tooltip.hover title="Collapse" v-on:click="onClickExpandOrCollapse(storage.storageId)">
                 <b-icon icon="chevron-down"></b-icon>
               </b-button>
               <b-button v-else variant="link" size="sm" v-b-tooltip.hover title="View Storage Preferences" v-on:click="onClickExpandOrCollapse(storage.storageId)">
@@ -32,6 +32,11 @@
           </div>
           <div v-if="!storageExpanded[storage.storageId]" class="w-100 p-2">
             <table-overlay-info :rows="5" :columns="5" :data="storagePreferencesByStorageId[storage.storageId]">
+              <template #empty>
+                <div class="p-2" style="text-align: center">
+                  <span>No Storage Preferences for this particular storage.</span>
+                </div>
+              </template>
               <b-table-simple>
                 <b-thead>
                   <b-tr>
