@@ -20,7 +20,7 @@
             <div style="flex: 1;">
               <span>{{ storage.hostName}}:{{storage.port}} <span style="font-size:12px">({{ storage.storageId }})</span></span>
             </div>
-            <div style="margin-right: 20rem">
+            <div style="margin-right: 25rem">
               <router-link 
                 :to="{name: 'storage-preferences-new', query:{storageId: `${storage.storageId}`}}" 
                 v-slot="{ href, route, navigate}" tag="">
@@ -30,7 +30,7 @@
               </router-link>
             </div>
           </div>
-          <div v-if="!storageExpanded[storage.storageId]" class="w-100 p-2">
+          <div v-if="!storageExpanded[storage.storageId]" class="w-100 p-3">
             <table-overlay-info :rows="5" :columns="5" :data="storagePreferencesByStorageId[storage.storageId]">
               <template #empty>
                 <div class="p-2" style="text-align: center">

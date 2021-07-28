@@ -2,18 +2,24 @@
   <page :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <button-overlay :show="processing">
-        <b-button variant="primary" :disabled="!isValidData" v-on:click="onCreateClick">Create</b-button>
+        <b-button variant="primary" v-on:click="onCreateClick">Create</b-button>
       </button-overlay>
     </template>
     <div class="pr-3">
       <div class="pt-3">
         <label class="form-label">Hostname</label>
-        <b-form-input placeholder="Host Name" v-model="hostName" type="text" :state="inputState.hostNameValidation()"/>
+        <b-form-input id="hostName" v-model="hostName" type="text" :state="inputState.hostName"/>
+        <b-form-invalid-feedback>
+          Host name should be either localhost or in format of 192.168.23.45 or emc.portal.wsd
+        </b-form-invalid-feedback>
       </div>
 
       <div class="pt-3">
         <label class="form-label">Port</label>
-        <b-form-input placeholder="Port Number" v-model="port" type="number" :state="inputState.portValidation()"/>
+        <b-form-input id="port" v-model="port" type="text" :state="inputState.port"/>
+        <b-form-invalid-feedback>
+          Port should be number in range from 1024 to 65535
+        </b-form-invalid-feedback>
       </div>
     </div>
 
@@ -36,7 +42,8 @@ export default {
       errors: [],
       processing: false,
       hostName: null,
-      port: null
+      port: null,
+      inputFieldsList: ['hostName', 'port']
     };
   },
   computed: {
@@ -45,20 +52,8 @@ export default {
     },
     inputState () {
       return {
-        hostNameValidation: () => {
-          if(this.hostName == null || this.hostName.length == 0)
-            return null;
-          if(this.hostName == 'localhost')
-            return true;
-          if(/^(?:(?:(?:[a-zA-z-]+):\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))(?::[0-9]{1,5})?$/.test(this.hostName))
-            return true;
-          return false;
-        },
-        portValidation: () => {
-          if(this.port == null || this.port.length == 0)
-            return null;
-          return this.port >= 1024 && this.port <= 65535? true: false;
-        }
+        hostName: this.hostName == null? null: this.isValid.hostName,
+        port: this.port == null? null: this.isValid.port,
       }
     },
     breadcrumbLinks() {
@@ -70,32 +65,52 @@ export default {
     currentUsername() {
       return custosStore.getters["auth/currentUsername"];
     },
-    isValidData() {
-      return (this.inputState.hostNameValidation()==null? false:this.inputState.hostNameValidation()) && 
-        (this.inputState.portValidation()==null? false:this.inputState.portValidation());
-    }
+    isValid() {
+      return {
+        hostName: this.hostName == 'localhost'? true: 
+          /^(?:(?:(?:[a-zA-z-]+):\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))(?::[0-9]{1,5})?$/.test(this.hostName)? true: false,
+        port: this.port>=1024 && this.port <= 65535? true: false
+      }
+    },
+    isFormValid() {
+      let _isFormValid = true;
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        _isFormValid = _isFormValid && this.isValid[this.inputFieldsList[i]];
+      }
+      return _isFormValid;
+    },
   },
   methods: {
-    async onCreateClick() {
-      this.processing = true;
-
-      try {
-        await this.$store.dispatch("emcStorage/createSSHStorage", {
-          storageId: `storage-${this.hostName}-${this.port}`,
-          hostName: this.hostName,
-          port: this.port
-        });
-
-        await this.$router.push(`/storages`);
-
-      } catch (error) {
-        this.errors.push({
-          title: `Unknown error when mapping to the collection group.`,
-          source: error, variant: "danger"
-        });
+    makeFormVisited() {
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        if (this[this.inputFieldsList[i]] === null) this[this.inputFieldsList[i]] = "";
       }
+    },
+    async onCreateClick() {
 
-      this.processing = false;
+      this.makeFormVisited()
+
+      if (this.isFormValid) {
+        this.processing = true;
+
+        try {
+          await this.$store.dispatch("emcStorage/createSSHStorage", {
+            storageId: `storage-${this.hostName}-${this.port}`,
+            hostName: this.hostName,
+            port: this.port
+          });
+
+          await this.$router.push(`/storages`);
+
+        } catch (error) {
+          this.errors.push({
+            title: `Unknown error when mapping to the collection group.`,
+            source: error, variant: "danger"
+          });
+        }
+
+        this.processing = false;
+      }
     },
     async refreshData() {
       await custosStore.dispatch("entity/fetchEntities", {

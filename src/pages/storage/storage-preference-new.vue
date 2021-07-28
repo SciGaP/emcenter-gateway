@@ -2,25 +2,31 @@
   <page :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <button-overlay :show="processing">
-        <b-button variant="primary" :disabled="!isValidData" v-on:click="onCreateClick">Create</b-button>
+        <b-button variant="primary" v-on:click="onCreateClick">Create</b-button>
       </button-overlay>
     </template>
     <div class="pr-3">
       <div class="pt-3">
         <label class="form-label">Auth Type</label>
-        <b-form-input placeholder="Auth Type" v-model="authType" :state="inputState.authTypeValidation()"/>
+        <b-form-input placeholder="Auth Type" v-model="authType" :state="inputState.authType"/>
+        <b-form-invalid-feedback>
+          Auth type should be 'ssh'
+        </b-form-invalid-feedback>
       </div>
 
       <div class="pt-3">
         <label class="form-label">Username</label>
-        <b-form-input placeholder="User Name" v-model="username" :state="inputState.userNameValidation()"/>
+        <b-form-input placeholder="User Name" v-model="username" :state="inputState.username"/>
       </div>
 
       <div class="pt-3">
         <label class="form-label">Credential Token</label>
         <div style="display: flex; flex-direction: row;">
-          <b-form-select v-model="credentialToken" :options="availableSecretEntities" :state="inputState.credentialTokenValidation()" style="flex: 1;"
+          <b-form-select v-model="credentialToken" :options="availableSecretEntities" :state="inputState.credentialToken" style="flex: 1;"
                          :disabled="processingCredentialToken"/>
+          <b-form-invalid-feedback>
+            Select credentialToken from drop down or create new credentialToken
+          </b-form-invalid-feedback>
           <div class="pl-3">
             <button-overlay :show="processingCredentialToken">
               <b-button variant="outline-secondary" v-on:click="onClickCreateNewCredentialToken">
@@ -41,12 +47,18 @@
 
       <div class="pt-3" v-if="!this.storageId">
         <label class="form-label">Hostname</label>
-        <b-form-input placeholder="Host Name" v-model="hostName" type="text" :state="inputState.hostNameValidation()"/>
+        <b-form-input placeholder="Host Name" v-model="hostName" type="text" :state="inputState.hostName"/>
+        <b-form-invalid-feedback>
+          Host name should be either 'localhost' or in format of '192.168.23.45' or 'emc.portal.wsd'
+        </b-form-invalid-feedback>
       </div>
 
       <div class="pt-3" v-if="!this.storageId">
         <label class="form-label">Port</label>
-        <b-form-input placeholder="Port Number" v-model="port" type="number" :state="inputState.portValidation()"/>
+        <b-form-input placeholder="Port Number" v-model="port" type="number" :state="inputState.port"/>
+        <b-form-invalid-feedback>
+          Port should be number in range from 1024 to 65535
+        </b-form-invalid-feedback>
       </div>
     </div>
 
@@ -74,7 +86,8 @@ export default {
       username: null,
       credentialToken: null,
       hostName: null,
-      port: null
+      port: null,
+      inputFieldsList: ['authType','username','hostName','credentialToken','port']
     };
   },
   computed: {
@@ -83,51 +96,38 @@ export default {
     },
     inputState () {
       return {
-        hostNameValidation: () => {
-          if(this.hostName == null || this.hostName.length == 0)
-            return null;
-          if(this.hostName == 'localhost')
-            return true;
-          if(/^(?:(?:(?:[a-zA-z-]+):\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))(?::[0-9]{1,5})?$/.test(this.hostName))
-            return true;
-          return false;
-        },
-        portValidation: () => {
-          if(this.port == null || this.port.length == 0)
-            return null;
-          return this.port >= 1024 && this.port <= 65535? true: false;
-        },
-        authTypeValidation: () => {
-          if(this.authType == null || this.authType.length == 0)
-            return null;
-          if(this.authType=="ssh")
-            return true;
-          return false;
-        },
-        userNameValidation: () => {
-          if(this.username == null || this.username.length == 0)
-            return null;
-          return true;
-        },
-        credentialTokenValidation: () => {
-          if(this.credentialToken == null) 
-            return null;
-          console.log(this.credentialToken.replaceAll('-',''));
-          if(this.credentialToken.replaceAll('-','').length === 32)
-            return true;
-          return false;
-        }
+        hostName: this.hostName == null? null: this.isValid.hostName,
+        port: this.port == null? null: this.isValid.port,
+        authType: this.authType == null? null: this.isValid.authType,
+        username: this.username == null? null: this.isValid.username,
+        credentialToken: this.credentialToken == null? null: this.isValid.credentialToken,
       }
     },
     storageId() {
       return this.$route.query.storageId;
     },
-    isValidData() {
-      return (this.inputState.authTypeValidation()==null? false:this.inputState.authTypeValidation()) && 
-        (this.inputState.userNameValidation()==null? true:this.inputState.userNameValidation()) && 
-        (this.inputState.credentialTokenValidation()==null? false:this.inputState.credentialTokenValidation()) &&
-        (this.storageId!=null? true:((this.inputState.hostNameValidation()==null? false:this.inputState.hostNameValidation()) && 
-          (this.inputState.portValidation()==null? false:this.inputState.portValidation())));
+    isValid() {
+      return {
+        hostName: this.hostName == 'localhost'? true: 
+          /^(?:(?:(?:[a-zA-z-]+):\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))(?::[0-9]{1,5})?$/.test(this.hostName)? true: false,
+        port: this.port>=1024 && this.port <= 65535? true: false,
+        authType: this.authType == "ssh"? true: false,
+        username: true,
+        credentialToken: this.credentialToken.replaceAll('-','').length == 32? true: false,
+
+      }
+    },
+    isFormValid() {
+      let _isFormValid = true;
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        if(this.inputFieldsList[i] == 'hostName' || this.inputFieldsList[i] == 'port'){
+          if(this.storageId == null)
+            _isFormValid &= this.isValid[this.inputFieldsList[i]];
+        }else{
+          _isFormValid &= this.isValid[this.inputFieldsList[i]];
+        }
+      }
+      return _isFormValid;
     },
     breadcrumbLinks() {
       return [
@@ -155,38 +155,46 @@ export default {
     },
   },
   methods: {
-    async onCreateClick() {
-      this.processing = true;
-
-      let storage = this.$store.getters["emcStorage/getStorage"]({storageId:this.storageId});
-      console.log(storage);
-
-      try {
-        await this.$store.dispatch("emcStoragePreference/createSSHStoragePreference", {
-          storagePreferenceId: `storagePreference-${performance.now()}`,
-          authType: this.authType,
-          userName: this.username,
-          credentialToken: this.credentialToken,
-          storageId: this.storageId?storage.storageId:`storage-${this.hostName}-${this.port}`,
-          hostName: this.storageId?storage.hostName:this.hostName,
-          port: this.storageId?storage.port:this.port
-        });
-
-        if(this.storageId){
-          await this.$router.push(`/storages`);
-        }else{
-          await this.$router.push(`/storage-preferences`);
-        }
-        
-
-      } catch (error) {
-        this.errors.push({
-          title: `Unknown error when mapping to the collection group.`,
-          source: error, variant: "danger"
-        });
+    makeFormVisited() {
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        if (this[this.inputFieldsList[i]] === null) this[this.inputFieldsList[i]] = "";
       }
+    },
+    async onCreateClick() {
+      this.makeFormVisited();
+      
+      if(this.isFormValid()){
+        this.processing = true;
 
-      this.processing = false;
+        let storage = this.$store.getters["emcStorage/getStorage"]({storageId:this.storageId});
+
+        try {
+          await this.$store.dispatch("emcStoragePreference/createSSHStoragePreference", {
+            storagePreferenceId: `storagePreference-${performance.now()}`,
+            authType: this.authType,
+            userName: this.username,
+            credentialToken: this.credentialToken,
+            storageId: this.storageId?storage.storageId:`storage-${this.hostName}-${this.port}`,
+            hostName: this.storageId?storage.hostName:this.hostName,
+            port: this.storageId?storage.port:this.port
+          });
+
+          if(this.storageId){
+            await this.$router.push(`/storages`);
+          }else{
+            await this.$router.push(`/storage-preferences`);
+          }
+          
+
+        } catch (error) {
+          this.errors.push({
+            title: `Unknown error when mapping to the collection group.`,
+            source: error, variant: "danger"
+          });
+        }
+
+        this.processing = false;
+      }
     },
     async onClickCreateNewCredentialToken() {
       this.processingCredentialToken = true;
