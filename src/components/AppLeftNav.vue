@@ -1,5 +1,6 @@
 <template>
   <div v-if="authenticated" class="p-3">
+    {{user}}
     <!--    <CollectionToastQueue/>-->
     <ul>
       <!--      <li>-->
@@ -70,7 +71,7 @@
       <!--          </a>-->
       <!--        </router-link>-->
       <!--      </li>-->
-      <li>
+      <li v-if="hasEmcAdminRole">
         <router-link to="/groups" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
           <a :class="{active: isExactActive}" :href="href" @click="navigate">
             <b-icon icon="people"></b-icon>
@@ -149,6 +150,9 @@ export default {
     },
     isAdmin() {
       return this.$store.getters["auth/isAdmin"]
+    },
+    hasEmcAdminRole() {
+      return this.user.realmRoles.indexOf("emc-admin") >= 0;
     },
     currentUsername() {
       return this.$store.getters["auth/currentUsername"]
