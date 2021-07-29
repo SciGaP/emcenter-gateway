@@ -1,5 +1,5 @@
 <template>
-  <div class="v-100" style="flex:1;display: flex;" v-if="true || hasEmcUserRole || hasEmcAdminRole">
+  <div class="v-100" style="flex:1;display: flex;" v-if="hasEmcUserRole || hasEmcAdminRole">
     <AppLeftNav style="width: 250px; background-color: #F7F7F7"/>
     <div class="v-100" style="flex: 1;background-color: white;padding-left: 50px;padding-bottom: 20px;">
       <div class="w-100" style="min-height: 25px;">
