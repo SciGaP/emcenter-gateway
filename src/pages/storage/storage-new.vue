@@ -72,6 +72,8 @@ export default {
         port: this.port>=1024 && this.port <= 65535? true: false
       }
     },
+  },
+  methods: {
     isFormValid() {
       let _isFormValid = true;
       for (let i = 0; i < this.inputFieldsList.length; i++) {
@@ -79,8 +81,6 @@ export default {
       }
       return _isFormValid;
     },
-  },
-  methods: {
     makeFormVisited() {
       for (let i = 0; i < this.inputFieldsList.length; i++) {
         if (this[this.inputFieldsList[i]] === null) this[this.inputFieldsList[i]] = "";

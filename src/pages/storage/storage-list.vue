@@ -1,5 +1,5 @@
 <template>
-  <Page title="Storage Settings" :breadcrumb-links="[]" :error=errors>
+  <Page title="Storage Settings" :breadcrumb-links="breadcrumbLinks" :error=errors>
     <template #header-right>
       <router-link to="/storages/new" v-slot="{ href, route, navigate}" tag="">
         <b-button variant="primary" @click="navigate">Create New Storage</b-button>
@@ -94,6 +94,9 @@ export default {
     },
     storagePreferences() {
       return this.$store.getters["emcStoragePreference/getStoragePreferences"]();
+    },
+    breadcrumbLinks() {
+      return [{to: `/storages`, name: "Storages"}];
     }
   },
   watch: {

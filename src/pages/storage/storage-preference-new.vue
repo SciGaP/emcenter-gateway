@@ -117,23 +117,10 @@ export default {
 
       }
     },
-    isFormValid() {
-      let _isFormValid = true;
-      console.log("form");
-      for (let i = 0; i < this.inputFieldsList.length; i++) {
-        if(this.inputFieldsList[i] == 'hostName' || this.inputFieldsList[i] == 'port'){
-          if(this.storageId == null)
-            _isFormValid &= this.isValid[this.inputFieldsList[i]];
-        }else{
-          _isFormValid &= this.isValid[this.inputFieldsList[i]];
-        }
-      }
-      return _isFormValid;
-    },
     breadcrumbLinks() {
       return [
-        {to: '/storage-preferences', name: 'Storage Preferences'},
-        {to: `/storage-preferences/new`, name: this.title}
+        {to: '/storages', name: 'Storages'},
+        {to: `/storage-preferences/new?storageId=${this.storageId}`, name: this.title}
       ];
     },
     currentUsername() {
@@ -156,12 +143,28 @@ export default {
     },
   },
   methods: {
+    isFormValid() {
+      let _isFormValid = true;
+      console.log("form");
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        if(this.inputFieldsList[i] == 'hostName' || this.inputFieldsList[i] == 'port'){
+          if(this.storageId == null)
+            _isFormValid = _isFormValid && this.isValid[this.inputFieldsList[i]];
+        }else{
+          _isFormValid = _isFormValid && this.isValid[this.inputFieldsList[i]];
+        }
+      }
+      console.log("end");
+      console.log(_isFormValid);
+      return _isFormValid;
+    },
     makeFormVisited() {
       for (let i = 0; i < this.inputFieldsList.length; i++) {
         if (this[this.inputFieldsList[i]] === null) this[this.inputFieldsList[i]] = "";
       }
     },
     async onCreateClick() {
+      
       this.makeFormVisited();
       
       if(this.isFormValid()){
@@ -179,17 +182,10 @@ export default {
             hostName: this.storageId?storage.hostName:this.hostName,
             port: this.storageId?storage.port:this.port
           });
-
-          if(this.storageId){
-            await this.$router.push(`/storages`);
-          }else{
-            await this.$router.push(`/storage-preferences`);
-          }
-          
-
+          await this.$router.push(`/storages`);
         } catch (error) {
           this.errors.push({
-            title: `Unknown error when mapping to the collection group.`,
+            title: `Unknown error while creating the storage preference.`,
             source: error, variant: "danger"
           });
         }
