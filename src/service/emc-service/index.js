@@ -7,6 +7,7 @@ import EmcResources from "./emc-service-resource";
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import config from "../../config";
 import EmcStoragePreference from "@/service/emc-service/emc-service-storage-preference";
+import EmcStorage from "@/service/emc-service/emc-service-storage";
 
 const httpAgent = new http.Agent({keepAlive: true});
 const httpsAgent = new https.Agent({keepAlive: true});
@@ -37,6 +38,7 @@ export default class EmcService {
         this._folders = new EmcFolders(this);
         this._resources = new EmcResources(this);
         this._storagePreference = new EmcStoragePreference(this);
+        this._storage = new EmcStorage(this);
     }
 
     get files() {
@@ -53,6 +55,10 @@ export default class EmcService {
 
     get storagePreference() {
         return this._storagePreference;
+    }
+
+    get storage() {
+        return this._storage;
     }
 
     //

@@ -79,7 +79,7 @@
         </router-link>
       </li>
       <li>
-        <router-link to="/storage-preferences" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+        <router-link to="/storages" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
           <a :class="{active: isExactActive}" :href="href" @click="navigate">
             <b-icon icon="gear"></b-icon>
             Storage Settings

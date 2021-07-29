@@ -67,17 +67,24 @@ export default new Router({
         },
         {
             path: "/storage-preferences/new",
-            name: "storage-preferences",
+            name: "storage-preferences-new",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
                 import("./pages/storage/storage-preference-new")
         },
         {
-            path: "/storage-preferences",
-            name: "storage-preferences-new",
+            path: "/storages/new",
+            name: "storage-new",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
-                import("./pages/storage/storage-preference-list")
+                import("./pages/storage/storage-new")
+        },
+        {
+            path: "/storages",
+            name: "storages-list",
+            beforeEnter: _validateAuthenticationBeforeEnter,
+            component: () =>
+                import("./pages/storage/storage-list")
         },
         {
             path: "/collections",
