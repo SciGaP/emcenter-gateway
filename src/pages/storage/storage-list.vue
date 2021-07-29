@@ -74,12 +74,13 @@
 <script>
 import Page from "@/components/Page";
 import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
+import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
 import store from "@/store";
 
 export default {
   name: "storage-list",
   store: store,
-  components: {Page, TableOverlayInfo},
+  components: {Page, TableOverlayInfo, ButtonOverlay},
   data() {
     return {
       errors:[],
