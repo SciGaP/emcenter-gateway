@@ -24,9 +24,6 @@
         <div style="display: flex; flex-direction: row;">
           <b-form-select v-model="credentialToken" :options="availableSecretEntities" :state="inputState.credentialToken" style="flex: 1;"
                          :disabled="processingCredentialToken"/>
-          <b-form-invalid-feedback>
-            Select credentialToken from drop down or create new credentialToken
-          </b-form-invalid-feedback>
           <div class="pl-3">
             <button-overlay :show="processingCredentialToken">
               <b-button variant="outline-secondary" v-on:click="onClickCreateNewCredentialToken">
@@ -35,6 +32,9 @@
             </button-overlay>
           </div>
         </div>
+        <b-form-invalid-feedback :state="inputState.credentialToken">
+          Select credentialToken from options or create new credentialToken
+        </b-form-invalid-feedback>
       </div>
 
       <div class="pt-3" v-if="this.storageId">
@@ -113,12 +113,13 @@ export default {
         port: this.port>=1024 && this.port <= 65535? true: false,
         authType: this.authType == "ssh"? true: false,
         username: true,
-        credentialToken: this.credentialToken.replaceAll('-','').length == 32? true: false,
+        credentialToken: this.credentialToken==null? false: (this.credentialToken.replaceAll('-','').length == 32? true: false),
 
       }
     },
     isFormValid() {
       let _isFormValid = true;
+      console.log("form");
       for (let i = 0; i < this.inputFieldsList.length; i++) {
         if(this.inputFieldsList[i] == 'hostName' || this.inputFieldsList[i] == 'port'){
           if(this.storageId == null)

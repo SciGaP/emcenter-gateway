@@ -54,9 +54,11 @@
                     <b-td>{{ storagePreference.username }}</b-td>
                     <b-td>{{ storagePreference.credentialToken }}</b-td>
                     <b-td>
-                      <b-button variant="link" disabled>
-                        <b-icon icon="trash"></b-icon>
-                      </b-button>
+                      <button-overlay :show="processingDelete[storagePreference.storagePreferenceId]">
+                        <b-button variant="link" size='sm' v-b-tooltip.hover title="Delete" v-on:click="OnClickDeleteStoragePreference(storagePreference.storagePreferenceId)">
+                          <b-icon icon="trash"></b-icon>
+                        </b-button>
+                      </button-overlay>
                     </b-td>
                   </b-tr>
                 </b-tbody>
@@ -82,7 +84,8 @@ export default {
     return {
       errors:[],
       storageExpanded: {},
-      storagePreferencesByStorageId: {}
+      storagePreferencesByStorageId: {},
+      processingDelete: {}
     }
   },
   computed: {
@@ -116,8 +119,24 @@ export default {
           source: error, variant: "danger"
         });
       }
-      
-      
+    },
+    async OnClickDeleteStoragePreference(storagePreferenceId) {
+
+      this.processingDelete = { ...this.processingDelete, [storagePreferenceId]: true}
+      try {
+        await this.$store.dispatch("emcStoragePreference/deleteStoragePreference", {
+          storagePreferenceId: storagePreferenceId
+        });
+        await this.$store.dispatch("emcStoragePreference/fetchStoragePreferences");
+
+      }catch (error){
+        this.errors.push({
+          title: `Unknown error when deleting the storage preference ${storagePreferenceId}.`,
+          source: error, variant: "danger"
+        });
+      }
+      this.processingDelete = { ...this.processingDelete, [storagePreferenceId]: false}
+
     },
     onClickExpandOrCollapse(storageId) {
       this.storageExpanded = { ...this.storageExpanded, [storageId]: this.storageExpanded[storageId]^1 }
