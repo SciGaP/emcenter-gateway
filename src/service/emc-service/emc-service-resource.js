@@ -244,7 +244,7 @@ export default class EmcResource {
                 // resourceId, resourcePath,
                 properties: {
                     // entityType, tenantId, name,
-                    description, createdTime, entityId, lastModifiedTime, owner, note
+                    description, createdTime, entityId, lastModifiedTime, owner, note, permission
                 },
                 type,
                 // parentResourcePath,
@@ -262,7 +262,9 @@ export default class EmcResource {
                 lastUpdatedBy: "",
                 status: "",
                 type,
-                note
+                note,
+                canShare: permission === "OWNER" || permission === "EDITOR",
+                canDelete: permission === "OWNER"
             }
         });
     }
