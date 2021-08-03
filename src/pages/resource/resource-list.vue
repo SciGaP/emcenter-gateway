@@ -4,6 +4,9 @@
       <router-link v-if="hasCollectionGroups" :to="createNewCollectionGroupLink" v-slot="{navigate}">
         <b-button variant="primary" @click="navigate">Create New Collection Group</b-button>
       </router-link>
+      <router-link v-if="hasLabs" :to="createNewLabLink" v-slot="{navigate}">
+        <b-button variant="primary" @click="navigate">Create New Lab</b-button>
+      </router-link>
     </template>
     <div class="w-100">
       <div class="pr-3 pl-3" v-if="!parentResourceId">
@@ -85,6 +88,7 @@
               <b-th>size</b-th>
               <b-th>Created On</b-th>
               <b-th>Last Updated</b-th>
+              <b-th>Lab</b-th>
               <b-th>Owner</b-th>
               <b-th></b-th>
             </b-tr>
@@ -105,6 +109,8 @@
                           v-b-tooltip.hover="`Collection`"></b-icon>
                   <b-icon v-else-if="resource.type === 'COLLECTION_GROUP'" icon="folder-symlink"
                           aria-hidden="true" v-b-tooltip.hover="`Collection Group`"></b-icon>
+                  <b-icon v-else-if="resource.type === 'LAB'" icon="box-seam"
+                          aria-hidden="true" v-b-tooltip.hover="`Lab`"></b-icon>
                 </div>
               </b-td>
               <b-td>
@@ -131,6 +137,7 @@
               <b-td>{{ resource.size }}</b-td>
               <b-td>{{ resource.createdAt }}</b-td>
               <b-td>{{ resource.lastUpdatedAt }}</b-td>
+              <b-td>-- --</b-td>
               <b-td>{{ resource.createdBy }}</b-td>
               <b-td>
                 <button-overlay :show="processingDownload[resource.resourceId]">
@@ -243,6 +250,9 @@ export default {
     hasCollectionGroups() {
       return this.types.indexOf(EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) >= 0;
     },
+    hasLabs() {
+      return this.types.indexOf(EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_LAB) >= 0;
+    },
     searchQuery() {
       const _searchQuery = this.search.split(",").map(queryText => {
         const query = queryText.split("=");
@@ -288,10 +298,17 @@ export default {
     createNewCollectionGroupLink() {
       return `/collections/new?type=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP}`;
     },
+    createNewLabLink() {
+      return `/collections/new?type=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_LAB}`;
+    },
     title() {
       let _title = "Collections";
-      if (this.types.length === 1 && this.types[0] === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
-        _title = "Collection Groups";
+      if (this.types.length === 1) {
+        if (this.types[0] === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
+          _title = "Collection Groups";
+        } else if (this.types[0] === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_LAB) {
+          _title = "Labs";
+        }
       }
 
       if (this.sharedBy) {

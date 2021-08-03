@@ -53,12 +53,20 @@
       <!--        </router-link>-->
       <!--      </li>-->
       <li>
-        <router-link :to="
-`/collections?types=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP}`"
-                     v-slot="{ href, route, navigate, isActive}" tag="">
-          <a :class="{active: isActive}" :href="href" @click="navigate">
-            <b-icon icon="folder"></b-icon>
+        <router-link :to="`/collections?types=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP}`"
+                     v-slot="{ href, route, navigate, isExactActive}" tag="">
+          <a :class="{active: isExactActive}" :href="href" @click="navigate">
+            <b-icon icon="folder-symlink"></b-icon>
             Collection Groups
+          </a>
+        </router-link>
+      </li>
+      <li v-if="hasEmcAdminRole">
+        <router-link :to="`/collections?types=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_LAB}`"
+                     v-slot="{ href, route, navigate, isExactActive}" tag="">
+          <a :class="{active: isExactActive}" :href="href" @click="navigate">
+            <b-icon icon="box-seam"></b-icon>
+            Labs
           </a>
         </router-link>
       </li>
@@ -151,7 +159,7 @@ export default {
       return this.$store.getters["auth/isAdmin"]
     },
     hasEmcAdminRole() {
-      return this.user.realmRoles.indexOf("emc-admin") >= 0;
+      return this.user && this.user.realmRoles.indexOf("emc-admin") >= 0;
     },
     currentUsername() {
       return this.$store.getters["auth/currentUsername"]

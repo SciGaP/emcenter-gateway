@@ -36,6 +36,8 @@ export default {
     title() {
       if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
         return "New Collection Group";
+      } else if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_LAB) {
+        return "New Lab";
       } else if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION) {
         return "New Collection";
       } else if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET) {
@@ -80,7 +82,18 @@ export default {
       this.processing = false;
     },
     refreshData() {
-      this.name = `new-collection-group-${window.performance.now()}`;
+      let name = "resource";
+      if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
+        name = "collection-group";
+      } else if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_LAB) {
+        name = "lab";
+      } else if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION) {
+        name = "collection";
+      } else if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET) {
+        name = "dataset";
+      }
+
+      this.name = `new-${name}-${window.performance.now()}`;
     }
   },
   mounted() {

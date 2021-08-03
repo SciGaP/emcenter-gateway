@@ -3,6 +3,7 @@ import EmcService from "@/service/emc-service/index";
 export default class EmcResource {
 
     static EMC_RESOURCE_TYPE = {
+        EMC_RESOURCE_TYPE_LAB: "LAB",
         EMC_RESOURCE_TYPE_COLLECTION: "COLLECTION",
         EMC_RESOURCE_TYPE_DATASET: "FILE",
         EMC_RESOURCE_TYPE_COLLECTION_GROUP: "COLLECTION_GROUP"

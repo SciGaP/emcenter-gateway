@@ -64,7 +64,7 @@ export default {
       return this.user.realmRoles.indexOf("emc-admin") >= 0;
     },
     hasEmcUserRole() {
-      return this.user.realmRoles.indexOf("emc-user") >= 0;
+      return true; // this.user.realmRoles.indexOf("emc-user") >= 0;
     },
     currentUsername() {
       return this.$store.getters["auth/currentUsername"]
