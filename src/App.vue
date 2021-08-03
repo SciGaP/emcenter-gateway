@@ -1,9 +1,8 @@
 <template>
   <div id="app" class="v-100 bg-light" style="height: 100%; display: flex; flex-direction: column;">
     <AppHeader/>
-    <div class="v-100" style="flex:1;display: flex;">
-      <AppLeftNav style="width: 250px;"/>
-      <router-view style="flex: 1;"/>
+    <div class="v-100">
+      <router-view/>
     </div>
     <!--    <div class="h-100 p-3 page-body">-->
 
@@ -23,12 +22,11 @@ import exampleProfilePicture from "./assets/120493210_1443413932520618_634706708
 import "./styles.scss";
 import AppHeader from "./components/AppHeader";
 import AppFooter from "./components/AppFooter";
-import AppLeftNav from "@/components/AppLeftNav";
 import {custosStore} from "./store";
 
 export default {
   name: 'App',
-  components: {AppLeftNav, AppFooter, AppHeader},
+  components: {AppFooter, AppHeader},
   store: custosStore,
   data: () => {
     return {exampleProfilePicture: exampleProfilePicture}

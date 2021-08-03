@@ -33,6 +33,12 @@ const actions = {
             hostName,
             port
         });
+    },
+
+    async deleteStoragePreference(obj, {storagePreferenceId}) {
+        return await emcService.storagePreference.deleteStoragePreference({
+            storagePreferenceId
+        });
     }
 }
 

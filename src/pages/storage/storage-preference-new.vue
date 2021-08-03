@@ -1,5 +1,5 @@
 <template>
-  <page :title="title" :breadcrumb-links="breadcrumbLinks">
+  <page :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <button-overlay :show="processing">
         <b-button variant="primary" v-on:click="onCreateClick">Create</b-button>
@@ -8,18 +8,21 @@
     <div class="pr-3">
       <div class="pt-3">
         <label class="form-label">Auth Type</label>
-        <b-form-input v-model="authType"/>
+        <b-form-input placeholder="Auth Type" v-model="authType" :state="inputState.authType"/>
+        <b-form-invalid-feedback>
+          Auth type should be 'ssh'
+        </b-form-invalid-feedback>
       </div>
 
       <div class="pt-3">
         <label class="form-label">Username</label>
-        <b-form-input v-model="username"/>
+        <b-form-input placeholder="User Name" v-model="username" :state="inputState.username"/>
       </div>
 
       <div class="pt-3">
         <label class="form-label">Credential Token</label>
         <div style="display: flex; flex-direction: row;">
-          <b-form-select v-model="credentialToken" :options="availableSecretEntities" style="flex: 1;"
+          <b-form-select v-model="credentialToken" :options="availableSecretEntities" :state="inputState.credentialToken" style="flex: 1;"
                          :disabled="processingCredentialToken"/>
           <div class="pl-3">
             <button-overlay :show="processingCredentialToken">
@@ -29,16 +32,33 @@
             </button-overlay>
           </div>
         </div>
+        <b-form-invalid-feedback :state="inputState.credentialToken">
+          Select credentialToken from options or create new credentialToken
+        </b-form-invalid-feedback>
       </div>
 
-      <div class="pt-3">
+      <div class="pt-3" v-if="this.storageId">
+        <label class="form-label">StorageId</label>
+        <b-form-input
+          v-model="this.storageId"
+          :readonly="true"
+        />
+      </div>
+
+      <div class="pt-3" v-if="!this.storageId">
         <label class="form-label">Hostname</label>
-        <b-form-input v-model="hostName"/>
+        <b-form-input placeholder="Host Name" v-model="hostName" type="text" :state="inputState.hostName"/>
+        <b-form-invalid-feedback>
+          Host name should be either 'localhost' or in format of '192.168.23.45' or 'emc.portal.wsd'
+        </b-form-invalid-feedback>
       </div>
 
-      <div class="pt-3">
+      <div class="pt-3" v-if="!this.storageId">
         <label class="form-label">Port</label>
-        <b-form-input v-model="port"/>
+        <b-form-input placeholder="Port Number" v-model="port" type="number" :state="inputState.port"/>
+        <b-form-invalid-feedback>
+          Port should be number in range from 1024 to 65535
+        </b-form-invalid-feedback>
       </div>
     </div>
 
@@ -66,17 +86,41 @@ export default {
       username: null,
       credentialToken: null,
       hostName: null,
-      port: null
+      port: null,
+      inputFieldsList: ['authType','username','hostName','credentialToken','port']
     };
   },
   computed: {
     title() {
       return "New Storage Preference"
     },
+    inputState () {
+      return {
+        hostName: this.hostName == null? null: this.isValid.hostName,
+        port: this.port == null? null: this.isValid.port,
+        authType: this.authType == null? null: this.isValid.authType,
+        username: this.username == null? null: this.isValid.username,
+        credentialToken: this.credentialToken == null? null: this.isValid.credentialToken,
+      }
+    },
+    storageId() {
+      return this.$route.query.storageId;
+    },
+    isValid() {
+      return {
+        hostName: this.hostName == 'localhost'? true: 
+          /^(?:(?:(?:[a-zA-z-]+):\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))(?::[0-9]{1,5})?$/.test(this.hostName)? true: false,
+        port: this.port>=1024 && this.port <= 65535? true: false,
+        authType: this.authType == "ssh"? true: false,
+        username: true,
+        credentialToken: this.credentialToken==null? false: (this.credentialToken.replaceAll('-','').length == 32? true: false),
+
+      }
+    },
     breadcrumbLinks() {
       return [
-        {to: '/storage-preferences', name: 'Storage Preferences'},
-        {to: `/storage-preferences/new`, name: this.title}
+        {to: '/storages', name: 'Storages'},
+        {to: `/storage-preferences/new?storageId=${this.storageId}`, name: this.title}
       ];
     },
     currentUsername() {
@@ -99,30 +143,55 @@ export default {
     },
   },
   methods: {
-    async onCreateClick() {
-      this.processing = true;
-
-      try {
-        await this.$store.dispatch("emcStoragePreference/createSSHStoragePreference", {
-          storagePreferenceId: `storagePreference-${performance.now()}`,
-          authType: this.authType,
-          userName: this.username,
-          credentialToken: this.credentialToken,
-          storageId: `storage-${this.hostName}-${this.port}`,
-          hostName: this.hostName,
-          port: this.port
-        });
-
-        await this.$router.push(`/storage-preferences`);
-
-      } catch (error) {
-        this.errors.push({
-          title: `Unknown error when mapping to the collection group.`,
-          source: error, variant: "danger"
-        });
+    isFormValid() {
+      let _isFormValid = true;
+      console.log("form");
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        if(this.inputFieldsList[i] == 'hostName' || this.inputFieldsList[i] == 'port'){
+          if(this.storageId == null)
+            _isFormValid = _isFormValid && this.isValid[this.inputFieldsList[i]];
+        }else{
+          _isFormValid = _isFormValid && this.isValid[this.inputFieldsList[i]];
+        }
       }
+      console.log("end");
+      console.log(_isFormValid);
+      return _isFormValid;
+    },
+    makeFormVisited() {
+      for (let i = 0; i < this.inputFieldsList.length; i++) {
+        if (this[this.inputFieldsList[i]] === null) this[this.inputFieldsList[i]] = "";
+      }
+    },
+    async onCreateClick() {
+      
+      this.makeFormVisited();
+      
+      if(this.isFormValid()){
+        this.processing = true;
 
-      this.processing = false;
+        let storage = this.$store.getters["emcStorage/getStorage"]({storageId:this.storageId});
+
+        try {
+          await this.$store.dispatch("emcStoragePreference/createSSHStoragePreference", {
+            storagePreferenceId: `storagePreference-${performance.now()}`,
+            authType: this.authType,
+            userName: this.username,
+            credentialToken: this.credentialToken,
+            storageId: this.storageId?storage.storageId:`storage-${this.hostName}-${this.port}`,
+            hostName: this.storageId?storage.hostName:this.hostName,
+            port: this.storageId?storage.port:this.port
+          });
+          await this.$router.push(`/storages`);
+        } catch (error) {
+          this.errors.push({
+            title: `Unknown error while creating the storage preference.`,
+            source: error, variant: "danger"
+          });
+        }
+
+        this.processing = false;
+      }
     },
     async onClickCreateNewCredentialToken() {
       this.processingCredentialToken = true;
