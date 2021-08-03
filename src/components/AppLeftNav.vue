@@ -158,6 +158,9 @@ export default {
     isAdmin() {
       return this.$store.getters["auth/isAdmin"]
     },
+    hasEmcAdminRole() {
+      return this.user && this.user.realmRoles.indexOf("emc-admin") >= 0;
+    },
     currentUsername() {
       return this.$store.getters["auth/currentUsername"]
     },
