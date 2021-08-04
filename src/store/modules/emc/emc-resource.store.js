@@ -19,7 +19,7 @@ const actions = {
         console.log("##### fetchResources ### queryString : ", queryString);
         console.log("##### fetchResources ### : ", resources);
 
-        const resourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, canShare, canDelete}) => {
+        const resourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete}) => {
             commit("SET_RESOURCE", {
                 resourceId,
                 entityId,
@@ -32,7 +32,7 @@ const actions = {
                 status,
                 type,
                 note,
-                canShare, canDelete
+                permission, canShare, canDelete
             });
 
             return resourceId;
@@ -43,7 +43,7 @@ const actions = {
 
     async fetchResource({commit}, {resourceId} = {}) {
         const resource = await emcService.resources.fetchResource({resourceId});
-        const {entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note} = resource;
+        const {entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete} = resource;
         commit("SET_RESOURCE", {
             resourceId,
             entityId,
@@ -55,7 +55,8 @@ const actions = {
             lastUpdatedBy,
             status,
             type,
-            note
+            note,
+            permission, canShare, canDelete
         });
     },
 
@@ -179,7 +180,7 @@ const mutations = {
             [resourceId]: metadata
         }
     },
-    SET_RESOURCE(state, {resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, canShare=false, canDelete=false}) {
+    SET_RESOURCE(state, {resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission = null, canShare = false, canDelete = false}) {
         state.resourceMap = {
             ...state.resourceMap,
             [resourceId]: {
@@ -195,7 +196,7 @@ const mutations = {
                 status,
                 type,
                 note,
-                canShare, canDelete
+                permission, canShare, canDelete
             }
         };
     },

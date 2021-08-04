@@ -66,8 +66,10 @@ export default {
           name: this.name
         });
 
-        if (this.resourceType) {
+        if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
           await this.$router.push(`/collections?type=${this.resourceType}`);
+        } else if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_LAB) {
+          await this.$router.push(`/labs`);
         } else {
           await this.$router.push(`/collections`);
         }

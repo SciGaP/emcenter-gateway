@@ -62,7 +62,7 @@
         </router-link>
       </li>
       <li v-if="hasEmcAdminRole">
-        <router-link :to="`/collections?types=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_LAB}`"
+        <router-link :to="`/labs`"
                      v-slot="{ href, route, navigate, isExactActive}" tag="">
           <a :class="{active: isExactActive}" :href="href" @click="navigate">
             <b-icon icon="box-seam"></b-icon>
