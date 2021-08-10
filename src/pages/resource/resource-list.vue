@@ -11,7 +11,7 @@
     <div class="w-100">
       <div class="pr-3 pl-3" v-if="!parentResourceId">
         <b-form-input v-model="searchTyping" v-on:keydown.enter="onSearchEnter"/>
-        <b-form-text>
+        <b-form-text v-if="!hasCollectionGroups">
           Metadata can be searched by inserting key values separated by commas. <br/>
           Eg:- microscope=emc123, angle=35
         </b-form-text>
