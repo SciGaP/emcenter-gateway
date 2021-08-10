@@ -39,7 +39,7 @@
 
         <!--        <b-icon icon="image" style="width: 100%;height: 300px;"></b-icon>-->
         <div style="width: 100%;height: 300px;">
-          <img :src="`${resourceImageRegistryUrl}/${resourceId}/1280-720.png`" style="width: 100%;">
+          <img :src="`${resourceImageRegistryUrl}/resource-images/${resourceId}/1280-720.png`" style="width: 100%;">
         </div>
 
         <b-button variant="link" v-on:click="$emit('right')">

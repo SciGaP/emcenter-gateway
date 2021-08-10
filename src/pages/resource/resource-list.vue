@@ -103,7 +103,7 @@
               </b-td>
               <b-td>
                 <div style="font-size: 25px;line-height: 25px;">
-                  <img :src="`${resourceImageRegistryUrl}/${resource.resourceId}/48-48.png`" style="width: 48px; height: 48px;">
+                  <img :src="`${resourceImageRegistryUrl}/resource-images/${resource.resourceId}/48-48.png`" style="width: 48px; height: 48px;">
 <!--                  <b-icon v-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"-->
 <!--                          v-b-tooltip.hover="`Dataset`"></b-icon>-->
 <!--                  <b-icon v-else-if="resource.type === 'COLLECTION'" icon="folder" aria-hidden="true"-->
