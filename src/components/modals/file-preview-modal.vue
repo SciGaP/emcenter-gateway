@@ -18,10 +18,10 @@
         <MapSelectedFilesAndFoldersToCollectionGroupsModal modal-id="map-to-collection-groups-modal"
                                                            :resource-ids="[resourceId]"/>
 
-        <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`">
-          <b-icon icon="trash"></b-icon>
-          Delete
-        </b-button>
+        <!--        <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`">-->
+        <!--          <b-icon icon="trash"></b-icon>-->
+        <!--          Delete-->
+        <!--        </b-button>-->
 
         <b-button variant="link" size="sm" v-b-tooltip.hover="`Notes`"
                   v-b-modal="`file-notes-modal`">
