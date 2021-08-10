@@ -36,7 +36,12 @@
         <b-button variant="link" v-on:click="$emit('left')">
           <b-icon icon="arrow-left"></b-icon>
         </b-button>
-        <b-icon icon="image" style="width: 100%;height: 300px;"></b-icon>
+
+        <!--        <b-icon icon="image" style="width: 100%;height: 300px;"></b-icon>-->
+        <div style="width: 100%;height: 300px;">
+          <img :src="`${resourceImageRegistryUrl}/resource-images/${resourceId}/1280-720.png`" style="width: 100%;">
+        </div>
+
         <b-button variant="link" v-on:click="$emit('right')">
           <b-icon icon="arrow-right"></b-icon>
         </b-button>
@@ -57,6 +62,7 @@ import MapSelectedFilesAndFoldersToCollectionGroupsModal
   from "@/components/modals/map-selected-files-and-folders-to-collection-groups-modal";
 import ModalShareEntity from "airavata-custos-portal/src/lib/components/modals/modal-share-entity";
 import NotesModal from "@/components/modals/notes-modal";
+import config from "@/config";
 
 
 export default {
@@ -70,7 +76,9 @@ export default {
     resourceId: {default: ""}
   },
   data() {
-    return {}
+    return {
+      resourceImageRegistryUrl: config.value('resourceImageRegistryUrl')
+    }
   },
   computed: {
     resource() {

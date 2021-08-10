@@ -103,14 +103,15 @@
               </b-td>
               <b-td>
                 <div style="font-size: 25px;line-height: 25px;">
-                  <b-icon v-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"
-                          v-b-tooltip.hover="`Dataset`"></b-icon>
-                  <b-icon v-else-if="resource.type === 'COLLECTION'" icon="folder" aria-hidden="true"
-                          v-b-tooltip.hover="`Collection`"></b-icon>
-                  <b-icon v-else-if="resource.type === 'COLLECTION_GROUP'" icon="folder-symlink"
-                          aria-hidden="true" v-b-tooltip.hover="`Collection Group`"></b-icon>
-                  <b-icon v-else-if="resource.type === 'LAB'" icon="box-seam"
-                          aria-hidden="true" v-b-tooltip.hover="`Lab`"></b-icon>
+                  <img :src="`${resourceImageRegistryUrl}/resource-images/${resource.resourceId}/48-48.png`" style="width: 48px; height: 48px;">
+<!--                  <b-icon v-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"-->
+<!--                          v-b-tooltip.hover="`Dataset`"></b-icon>-->
+<!--                  <b-icon v-else-if="resource.type === 'COLLECTION'" icon="folder" aria-hidden="true"-->
+<!--                          v-b-tooltip.hover="`Collection`"></b-icon>-->
+<!--                  <b-icon v-else-if="resource.type === 'COLLECTION_GROUP'" icon="folder-symlink"-->
+<!--                          aria-hidden="true" v-b-tooltip.hover="`Collection Group`"></b-icon>-->
+<!--                  <b-icon v-else-if="resource.type === 'LAB'" icon="box-seam"-->
+<!--                          aria-hidden="true" v-b-tooltip.hover="`Lab`"></b-icon>-->
                 </div>
               </b-td>
               <b-td>
@@ -219,6 +220,7 @@ import ResourceMetadataModal from "@/components/modals/resource-metadata-modal";
 import custosStore from "airavata-custos-portal/src/lib/store";
 // import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
 import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
+import config from "@/config";
 
 export default {
   name: "resource-list",
@@ -242,7 +244,9 @@ export default {
       defaultTypes: [
         EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION,
         EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET
-      ]
+      ],
+
+      resourceImageRegistryUrl:  config.value('resourceImageRegistryUrl')
     }
   },
   store: store,
