@@ -11,7 +11,7 @@
     <div class="w-100">
       <div class="pr-3 pl-3" v-if="!parentResourceId">
         <b-form-input v-model="searchTyping" v-on:keydown.enter="onSearchEnter"/>
-        <b-form-text>
+        <b-form-text v-if="!hasCollectionGroups">
           Metadata can be searched by inserting key values separated by commas. <br/>
           Eg:- microscope=emc123, angle=35
         </b-form-text>
@@ -103,15 +103,16 @@
               </b-td>
               <b-td>
                 <div style="font-size: 25px;line-height: 25px;">
-                  <img :src="`${resourceImageRegistryUrl}/resource-images/${resource.resourceId}/48-48.png`" style="width: 48px; height: 48px;">
-<!--                  <b-icon v-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"-->
-<!--                          v-b-tooltip.hover="`Dataset`"></b-icon>-->
-<!--                  <b-icon v-else-if="resource.type === 'COLLECTION'" icon="folder" aria-hidden="true"-->
-<!--                          v-b-tooltip.hover="`Collection`"></b-icon>-->
-<!--                  <b-icon v-else-if="resource.type === 'COLLECTION_GROUP'" icon="folder-symlink"-->
-<!--                          aria-hidden="true" v-b-tooltip.hover="`Collection Group`"></b-icon>-->
-<!--                  <b-icon v-else-if="resource.type === 'LAB'" icon="box-seam"-->
-<!--                          aria-hidden="true" v-b-tooltip.hover="`Lab`"></b-icon>-->
+                  <img :src="`${resourceImageRegistryUrl}/resource-images/${resource.resourceId}/48-48.png`"
+                       style="width: 48px; height: 48px;">
+                  <!--                  <b-icon v-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"-->
+                  <!--                          v-b-tooltip.hover="`Dataset`"></b-icon>-->
+                  <!--                  <b-icon v-else-if="resource.type === 'COLLECTION'" icon="folder" aria-hidden="true"-->
+                  <!--                          v-b-tooltip.hover="`Collection`"></b-icon>-->
+                  <!--                  <b-icon v-else-if="resource.type === 'COLLECTION_GROUP'" icon="folder-symlink"-->
+                  <!--                          aria-hidden="true" v-b-tooltip.hover="`Collection Group`"></b-icon>-->
+                  <!--                  <b-icon v-else-if="resource.type === 'LAB'" icon="box-seam"-->
+                  <!--                          aria-hidden="true" v-b-tooltip.hover="`Lab`"></b-icon>-->
                 </div>
               </b-td>
               <b-td>
@@ -175,9 +176,9 @@
                 <!--                      <b-icon icon="archive"></b-icon>-->
                 <!--                    </b-button>-->
 
-                <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`" disabled>
-                  <b-icon icon="trash"></b-icon>
-                </b-button>
+                <!--                <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`" disabled>-->
+                <!--                  <b-icon icon="trash"></b-icon>-->
+                <!--                </b-button>-->
 
                 <b-button variant="link" size="sm" v-b-tooltip.hover="`Notes`"
                           v-b-modal="`file-notes-modal-${resource.resourceId}`">
@@ -246,7 +247,7 @@ export default {
         EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET
       ],
 
-      resourceImageRegistryUrl:  config.value('resourceImageRegistryUrl')
+      resourceImageRegistryUrl: config.value('resourceImageRegistryUrl')
     }
   },
   store: store,
