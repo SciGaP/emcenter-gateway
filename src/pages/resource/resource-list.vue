@@ -310,7 +310,10 @@ export default {
     },
     title() {
       let _title = "Collections";
-      if (this.types.length === 1) {
+
+      if (this.parentResource && this.parentResource.type === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
+        _title = "Collection Groups";
+      } else if (this.types.length === 1) {
         if (this.types[0] === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
           _title = "Collection Groups";
         } else if (this.types[0] === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_LAB) {
@@ -336,7 +339,9 @@ export default {
         queryParams.push("sharedWithMe=true");
       }
 
-      if (this.types !== this.defaultTypes) {
+      if (this.parentResource && this.parentResource.type === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
+        queryParams.push(`types=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP}`);
+      } else if (this.types !== this.defaultTypes) {
         queryParams.push(`types=${this.types.join(",")}`);
       }
 
@@ -382,11 +387,9 @@ export default {
     resources() {
       let _resources = [];
 
-      for (let i = 0; i < this.types.length; i++) {
-        const type = this.types[i];
+      if (this.parentResourceId) {
         const list = this.$store.getters["emcResource/getResources"]({
           parentResourceId: this.parentResourceId,
-          type: type,
           queries: this.searchQuery
         });
 
@@ -394,7 +397,22 @@ export default {
           _resources = _resources.concat(list);
         } else {
           _resources = null;
-          break;
+        }
+      } else {
+        for (let i = 0; i < this.types.length; i++) {
+          const type = this.types[i];
+          const list = this.$store.getters["emcResource/getResources"]({
+            parentResourceId: this.parentResourceId,
+            type: type,
+            queries: this.searchQuery
+          });
+
+          if (list) {
+            _resources = _resources.concat(list);
+          } else {
+            _resources = null;
+            break;
+          }
         }
       }
 
@@ -426,6 +444,11 @@ export default {
           this.$store.dispatch("emcResource/fetchResource", {resourceId: this.parentResourceId}),
           this.$store.dispatch("emcResource/fetchParentResources", {resourceId: this.parentResourceId})
         ]);
+
+        await this.$store.dispatch("emcResource/fetchResources", {
+          parentResourceId: this.parentResourceId,
+          queries: this.searchQuery
+        });
       }
 
       await Promise.all(this.types.map(type => this.$store.dispatch("emcResource/fetchResources", {

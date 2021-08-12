@@ -245,7 +245,7 @@ export default class EmcResource {
                     params: {
                         "queries": queries,
                         "resourceId": parentResourceId,
-                        "type": type,
+                        // "type": type,
                         "depth": 1
                     }
                 }
