@@ -447,15 +447,17 @@ export default {
 
         await this.$store.dispatch("emcResource/fetchResources", {
           parentResourceId: this.parentResourceId,
+          parentResourceType: this.parentResource.type,
           queries: this.searchQuery
         });
+      } else {
+        await Promise.all(this.types.map(type => this.$store.dispatch("emcResource/fetchResources", {
+          parentResourceId: this.parentResourceId,
+          type: type,
+          queries: this.searchQuery
+        })));
       }
 
-      await Promise.all(this.types.map(type => this.$store.dispatch("emcResource/fetchResources", {
-        parentResourceId: this.parentResourceId,
-        type: type,
-        queries: this.searchQuery
-      })));
 
       await Promise.all(this.resources.map(({resourceId}) =>
           this.$store.dispatch("emcResource/fetchResourceThumbnailDataUrl", {resourceId})));

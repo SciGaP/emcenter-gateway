@@ -18,10 +18,10 @@ const RESOURCE_IMAGE_SIZE = {
 
 const actions = {
 
-    async fetchResources({commit}, {parentResourceId, type, queries} = {}) {
+    async fetchResources({commit}, {parentResourceId, parentResourceType, type, queries} = {}) {
         const queryString = JSON.stringify({parentResourceId, type, queries});
 
-        const resources = await emcService.resources.fetchResources({parentResourceId, type, queries});
+        const resources = await emcService.resources.fetchResources({parentResourceId, parentResourceType, type, queries});
 
         console.log("##### fetchResources ### queryString : ", queryString);
         console.log("##### fetchResources ### : ", resources);

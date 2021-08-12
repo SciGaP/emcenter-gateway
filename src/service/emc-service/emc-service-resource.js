@@ -223,7 +223,7 @@ export default class EmcResource {
         );
     }
 
-    async fetchResources({parentResourceId, type, queries}) {
+    async fetchResources({parentResourceId, parentResourceType, type, queries}) {
 
         // TODO
         console.log(`[FETCH] /emc/resources?parentResourceId=${parentResourceId}&type=${type}`);
@@ -245,7 +245,7 @@ export default class EmcResource {
                     params: {
                         "queries": queries,
                         "resourceId": parentResourceId,
-                        // "type": type,
+                        "type": parentResourceType,
                         "depth": 1
                     }
                 }
