@@ -1,5 +1,6 @@
 import {emcService} from "@/store/util/emc.util";
 import EmcResource from "@/service/emc-service/emc-service-resource";
+import axios from "axios";
 
 const state = {
     resourceMap: {},
@@ -139,37 +140,35 @@ const actions = {
 
             // try {
 
-            const url = await emcService.resources.downloadResource({resourceId});
+            let url = await emcService.resources.downloadResource({resourceId});
+            let filename = `${window.performance.now()}`;
 
             resourceDownload.processing = false;
             resourceDownload.progress = 100;
             commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
 
-            // await axios.get(url, {responseType: 'blob'}).then(resp => {
-            //     console.log("resp : ", resp)
-            //     resourceDownload.content = resp;
-            //     return resp.data;
-            // }).then(blob => {
-            //     console.log("blob : ", blob)
-            //     const dataUrl = window.URL.createObjectURL(blob);
-            //     return dataUrl;
-            // }).catch((error) => {
-            //     resourceDownload.errors.push({
-            //         title: "Unknown error when downloading.",
-            //         source: error, variant: "danger"
-            //     });
-            // });
+            await axios.get(url, {responseType: 'blob'}).then(resp => {
+                console.log("resp : ", resp)
+                resourceDownload.content = resp;
+                filename = resp.headers["content-disposition"].match(/.*filename="(.*)".*/)[1];
+                return resp.data;
+            }).then(blob => {
+                console.log("blob : ", blob)
+                url = window.URL.createObjectURL(blob);
+            }).catch((error) => {
+                resourceDownload.errors.push({
+                    title: "Unknown error when downloading.",
+                    source: error, variant: "danger"
+                });
+            });
 
-
-            // const a = document.createElement('iframe');
-            // a.src = url;
 
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
-            a.target = "_blank";
+            
             // // the filename you want
-            a.download = `${window.performance.now()}`;
+            a.download = filename;
             document.body.appendChild(a);
             a.click();
 
