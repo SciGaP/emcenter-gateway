@@ -1,5 +1,5 @@
 <template>
-  <b-modal :id="modalId" :title="resource.name" size="lg">
+  <b-modal :id="modalId" :title="resource.name" size="lg" v-on:show="refreshData">
     <div>
       <div>
         <b-button variant="link" size="sm" v-b-modal="`share-modal`"
@@ -18,10 +18,10 @@
         <MapSelectedFilesAndFoldersToCollectionGroupsModal modal-id="map-to-collection-groups-modal"
                                                            :resource-ids="[resourceId]"/>
 
-        <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`">
-          <b-icon icon="trash"></b-icon>
-          Delete
-        </b-button>
+        <!--        <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`">-->
+        <!--          <b-icon icon="trash"></b-icon>-->
+        <!--          Delete-->
+        <!--        </b-button>-->
 
         <b-button variant="link" size="sm" v-b-tooltip.hover="`Notes`"
                   v-b-modal="`file-notes-modal`">
@@ -37,9 +37,9 @@
           <b-icon icon="arrow-left"></b-icon>
         </b-button>
 
-        <!--        <b-icon icon="image" style="width: 100%;height: 300px;"></b-icon>-->
-        <div style="width: 100%;height: 300px;">
-          <img :src="`${resourceImageRegistryUrl}/resource-images/${resourceId}/1280-720.png`" style="width: 100%;">
+        <div style="width: 100%;min-height: 300px;">
+          <img v-if="resourcePreviewDataUrl" :src="resourcePreviewDataUrl" style="width: 100%;">
+          <b-icon v-else icon="image" style="width: 100%;height: 300px;"></b-icon>
         </div>
 
         <b-button variant="link" v-on:click="$emit('right')">
@@ -83,6 +83,14 @@ export default {
   computed: {
     resource() {
       return this.$store.getters["emcResource/getResource"]({resourceId: this.resourceId});
+    },
+    resourcePreviewDataUrl() {
+      return this.$store.getters["emcResource/getResourcePreviewDataUrl"]({resourceId: this.resourceId});
+    }
+  },
+  methods: {
+    refreshData() {
+      this.$store.dispatch("emcResource/fetchResourcePreviewDataUrl", {resourceId: this.resourceId})
     }
   }
 }

@@ -89,7 +89,7 @@
               <b-th>Created On</b-th>
               <b-th>Last Updated</b-th>
               <b-th>Lab</b-th>
-              <b-th>Owner</b-th>
+              <b-th>PI</b-th>
               <b-th></b-th>
             </b-tr>
           </b-thead>
@@ -103,16 +103,18 @@
               </b-td>
               <b-td>
                 <div style="font-size: 25px;line-height: 25px;">
-                  <img :src="`${resourceImageRegistryUrl}/resource-images/${resource.resourceId}/48-48.png`"
-                       style="width: 48px; height: 48px;">
-                  <!--                  <b-icon v-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"-->
-                  <!--                          v-b-tooltip.hover="`Dataset`"></b-icon>-->
-                  <!--                  <b-icon v-else-if="resource.type === 'COLLECTION'" icon="folder" aria-hidden="true"-->
-                  <!--                          v-b-tooltip.hover="`Collection`"></b-icon>-->
-                  <!--                  <b-icon v-else-if="resource.type === 'COLLECTION_GROUP'" icon="folder-symlink"-->
-                  <!--                          aria-hidden="true" v-b-tooltip.hover="`Collection Group`"></b-icon>-->
-                  <!--                  <b-icon v-else-if="resource.type === 'LAB'" icon="box-seam"-->
-                  <!--                          aria-hidden="true" v-b-tooltip.hover="`Lab`"></b-icon>-->
+                  <img v-if="getResourceThumbnailDataUrl(resource)" :src="getResourceThumbnailDataUrl(resource)"
+                       style="width: 24px; height: 24px;">
+                  <template v-else>
+                    <b-icon v-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"
+                            v-b-tooltip.hover="`Dataset`"></b-icon>
+                    <b-icon v-else-if="resource.type === 'COLLECTION'" icon="folder" aria-hidden="true"
+                            v-b-tooltip.hover="`Collection`"></b-icon>
+                    <b-icon v-else-if="resource.type === 'COLLECTION_GROUP'" icon="folder-symlink"
+                            aria-hidden="true" v-b-tooltip.hover="`Collection Group`"></b-icon>
+                    <b-icon v-else-if="resource.type === 'LAB'" icon="box-seam"
+                            aria-hidden="true" v-b-tooltip.hover="`Lab`"></b-icon>
+                  </template>
                 </div>
               </b-td>
               <b-td>
@@ -400,6 +402,9 @@ export default {
     }
   },
   methods: {
+    getResourceThumbnailDataUrl({resourceId}) {
+      return this.$store.getters["emcResource/getResourceThumbnailDataUrl"]({resourceId});
+    },
     isDownloadAllowed(resource) {
       return resource.type === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET;
     },
@@ -428,6 +433,9 @@ export default {
         type: type,
         queries: this.searchQuery
       })));
+
+      await Promise.all(this.resources.map(({resourceId}) =>
+          this.$store.dispatch("emcResource/fetchResourceThumbnailDataUrl", {resourceId})));
     },
     async downloadResource({resourceId}) {
       this.processingDownload = {...this.processingDownload, [resourceId]: true};

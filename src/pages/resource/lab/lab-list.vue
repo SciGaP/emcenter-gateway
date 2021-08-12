@@ -89,7 +89,7 @@
               <b-th>Created On</b-th>
               <b-th>Last Updated</b-th>
               <!--              <b-th>Lab</b-th>-->
-              <b-th>Owner</b-th>
+              <b-th>PI</b-th>
               <b-th></b-th>
             </b-tr>
           </b-thead>

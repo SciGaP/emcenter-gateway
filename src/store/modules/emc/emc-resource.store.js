@@ -7,6 +7,12 @@ const state = {
     parentResourcesListMap: {},
     resourceDownloadMap: {},
     resourceMetadataMap: {},
+    resourceImageDataUrlMap: {}
+};
+
+const RESOURCE_IMAGE_SIZE = {
+    PREVIEW: {width: 1280, height: 720},
+    THUMBNAIL: {width: 48, height: 48}
 };
 
 const actions = {
@@ -63,6 +69,20 @@ const actions = {
     async fetchResourceMetadata({commit}, {resourceId, type}) {
         const metadata = await emcService.resources.fetchResourceMetadata({resourceId, type});
         commit("SET_RESOURCE_METADATA", {resourceId, metadata});
+    },
+
+    async fetchResourcePreviewDataUrl({commit}, {resourceId}) {
+        const params = {resourceId, ...RESOURCE_IMAGE_SIZE.PREVIEW};
+        const queryString = JSON.stringify(params);
+        const dataUrl = await emcService.resources.fetchResourceImageBase64(params);
+        commit("SET_RESOURCE_IMAGE_DATA_URL", {queryString, dataUrl});
+    },
+
+    async fetchResourceThumbnailDataUrl({commit}, {resourceId}) {
+        const params = {resourceId, ...RESOURCE_IMAGE_SIZE.THUMBNAIL};
+        const queryString = JSON.stringify(params);
+        const dataUrl = await emcService.resources.fetchResourceImageBase64(params);
+        commit("SET_RESOURCE_IMAGE_DATA_URL", {queryString, dataUrl});
     },
 
     async fetchParentResources({commit}, {resourceId}) {
@@ -168,6 +188,12 @@ const actions = {
 
 
 const mutations = {
+    SET_RESOURCE_IMAGE_DATA_URL(state, {queryString, dataUrl}) {
+        state.resourceImageDataUrlMap = {
+            ...state.resourceImageDataUrlMap,
+            [queryString]: dataUrl
+        }
+    },
     SET_RESOURCE_PARENTS(state, {resourceId, parentResourceIds}) {
         state.parentResourcesListMap = {
             ...state.parentResourcesListMap,
@@ -219,7 +245,30 @@ const mutations = {
 
 
 const getters = {
-
+    getResourcePreviewDataUrl: (state) => {
+        return ({resourceId} = {}) => {
+            const params = {resourceId, ...RESOURCE_IMAGE_SIZE.PREVIEW};
+            const queryString = JSON.stringify(params);
+            const dataUrl = state.resourceImageDataUrlMap[queryString];
+            if (dataUrl) {
+                return dataUrl;
+            } else {
+                return null;
+            }
+        }
+    },
+    getResourceThumbnailDataUrl: (state) => {
+        return ({resourceId} = {}) => {
+            const params = {resourceId, ...RESOURCE_IMAGE_SIZE.THUMBNAIL};
+            const queryString = JSON.stringify(params);
+            const dataUrl = state.resourceImageDataUrlMap[queryString];
+            if (dataUrl) {
+                return dataUrl;
+            } else {
+                return null;
+            }
+        }
+    },
     getParentResources: (state, getters) => {
         return ({resourceId} = {}) => {
             const parentResourceIds = state.parentResourcesListMap[resourceId];
