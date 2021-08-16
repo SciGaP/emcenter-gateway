@@ -53,9 +53,17 @@ export default {
   },
   computed: {
     collectionGroups() {
-      return this.$store.getters["emcResource/getResources"]({
+      let _collectionGroups = this.$store.getters["emcResource/getResources"]({
         type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
       });
+
+      if (_collectionGroups) {
+        _collectionGroups = _collectionGroups.filter(({resourceId}) => {
+          return this.resourceIds.indexOf(resourceId) < 0;
+        });
+      }
+
+      return _collectionGroups
     },
     resources() {
       return this.resourceIds.map(resourceId => {
