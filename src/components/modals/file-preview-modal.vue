@@ -3,7 +3,7 @@
     <div>
       <div>
         <b-button variant="link" size="sm" v-b-modal="`share-modal`"
-                  v-b-tooltip.hover="`Share`">
+                  v-b-tooltip.hover="`Share`"  v-if="resource.type !== 'COLLECTION_GROUP'">
           <b-icon icon="share"></b-icon>
           Share
         </b-button>
