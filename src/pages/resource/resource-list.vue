@@ -158,7 +158,8 @@
                 <!--                    <CopyModal :modal-id="`copy-modal-${file.fileId}`" :file-ids="[file.fileId]"/>-->
 
                 <b-button variant="link" size="sm" v-b-modal="`share-modal-${resource.resourceId}`"
-                          v-b-tooltip.hover="`Share`" :disabled="!resource.canShare">
+                          v-b-tooltip.hover="`Share`" :disabled="!resource.canShare"
+                          v-if="resource.type !== 'COLLECTION_GROUP'">
                   <b-icon icon="share"></b-icon>
                 </b-button>
                 <ModalShareEntity :modal-id="`share-modal-${resource.resourceId}`"
@@ -189,7 +190,8 @@
                 <NotesModal :modal-id="`file-notes-modal-${resource.resourceId}`" :resource-id="resource.resourceId"/>
 
                 <b-button variant="link" size="sm" v-b-tooltip.hover="`Metadata`"
-                          v-b-modal="`resource-metadata-modal-${resource.resourceId}`">
+                          v-b-modal="`resource-metadata-modal-${resource.resourceId}`"
+                          v-if="resource.type !== 'COLLECTION_GROUP'">
                   <b-icon icon="info-circle"></b-icon>
                 </b-button>
                 <ResourceMetadataModal :modal-id="`resource-metadata-modal-${resource.resourceId}`"
