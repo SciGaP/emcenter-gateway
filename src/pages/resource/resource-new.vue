@@ -46,9 +46,23 @@ export default {
         return "New Resource";
       }
     },
+    collectionsLink() {
+      let collectionsLink = '/collections';
+
+      let queryParams = [];
+      if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
+        queryParams.push(`types=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP}`);
+      }
+
+      if (queryParams.length > 0) {
+        collectionsLink += `?${queryParams.join("&")}`
+      }
+
+      return collectionsLink;
+    },
     breadcrumbLinks() {
       return [
-        {to: '/collections', name: 'Collections'},
+        {to: this.collectionsLink, name: this.title},
         {to: `/collections/new?type=${this.resourceType}`, name: this.title}
       ];
     },
@@ -66,13 +80,7 @@ export default {
           name: this.name
         });
 
-        if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
-          await this.$router.push(`/collections?type=${this.resourceType}`);
-        } else if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_LAB) {
-          await this.$router.push(`/labs`);
-        } else {
-          await this.$router.push(`/collections`);
-        }
+        await this.$router.push(this.collectionsLink);
 
       } catch (error) {
         this.errors.push({
