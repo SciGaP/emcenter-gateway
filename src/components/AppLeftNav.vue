@@ -61,15 +61,15 @@
           </a>
         </router-link>
       </li>
-      <li v-if="hasEmcAdminRole">
-        <router-link :to="`/labs`"
-                     v-slot="{ href, route, navigate, isExactActive}" tag="">
-          <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <b-icon icon="box-seam"></b-icon>
-            Labs
-          </a>
-        </router-link>
-      </li>
+      <!--      <li v-if="hasEmcAdminRole">-->
+      <!--        <router-link :to="`/labs`"-->
+      <!--                     v-slot="{ href, route, navigate, isExactActive}" tag="">-->
+      <!--          <a :class="{active: isExactActive}" :href="href" @click="navigate">-->
+      <!--            <b-icon icon="box-seam"></b-icon>-->
+      <!--            Labs-->
+      <!--          </a>-->
+      <!--        </router-link>-->
+      <!--      </li>-->
       <!--      <li>-->
       <!--        <router-link to="/archived" v-slot="{ href, route, navigate, isActive}" tag="">-->
       <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
@@ -86,14 +86,14 @@
           </a>
         </router-link>
       </li>
-      <li>
-        <router-link to="/storages" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
-          <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <b-icon icon="gear"></b-icon>
-            Storage Settings
-          </a>
-        </router-link>
-      </li>
+      <!--      <li>-->
+      <!--        <router-link to="/storages" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">-->
+      <!--          <a :class="{active: isExactActive}" :href="href" @click="navigate">-->
+      <!--            <b-icon icon="gear"></b-icon>-->
+      <!--            Storage Settings-->
+      <!--          </a>-->
+      <!--        </router-link>-->
+      <!--      </li>-->
       <!--      <li>-->
       <!--        <router-link to="/notifications" v-slot="{ href, route, navigate, isActive}" tag="">-->
       <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
