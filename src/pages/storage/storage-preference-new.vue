@@ -8,21 +8,25 @@
     <div class="pr-3">
       <div class="pt-3">
         <label class="form-label">Auth Type</label>
-        <b-form-input placeholder="Auth Type" v-model="authType" :state="inputState.authType"/>
-        <b-form-invalid-feedback>
-          Auth type should be 'ssh'
-        </b-form-invalid-feedback>
+        <b-form-select placeholder="Auth Type" :options="availableAuthTypes" v-model="authType"
+                       :state="inputState.authType"/>
       </div>
 
-      <div class="pt-3">
+      <div class="pt-3" v-if="authType === 'sda'">
+        <label class="form-label">SDA path</label>
+        <b-form-input placeholder="User Name" v-model="sdaPath" :state="inputState.sdaPath"/>
+      </div>
+
+      <div class="pt-3" v-if="authType === 'ssh'">
         <label class="form-label">Username</label>
         <b-form-input placeholder="User Name" v-model="username" :state="inputState.username"/>
       </div>
 
-      <div class="pt-3">
+      <div class="pt-3" v-if="authType === 'ssh'">
         <label class="form-label">Credential Token</label>
         <div style="display: flex; flex-direction: row;">
-          <b-form-select v-model="credentialToken" :options="availableSecretEntities" :state="inputState.credentialToken" style="flex: 1;"
+          <b-form-select v-model="credentialToken" :options="availableSecretEntities"
+                         :state="inputState.credentialToken" style="flex: 1;"
                          :disabled="processingCredentialToken"/>
           <div class="pl-3">
             <button-overlay :show="processingCredentialToken">
@@ -40,8 +44,8 @@
       <div class="pt-3" v-if="this.storageId">
         <label class="form-label">StorageId</label>
         <b-form-input
-          v-model="this.storageId"
-          :readonly="true"
+            v-model="this.storageId"
+            :readonly="true"
         />
       </div>
 
@@ -82,25 +86,37 @@ export default {
       processing: false,
       processingCredentialToken: false,
 
-      authType: "ssh",
+      authType: null,
+      sdaPath: null,
       username: null,
       credentialToken: null,
       hostName: null,
       port: null,
-      inputFieldsList: ['authType','username','hostName','credentialToken','port']
+
+      availableAuthTypes: ["ssh", "sda"]
     };
   },
   computed: {
+    inputFieldsList() {
+      if (this.authType === "sda") {
+        return ['authType', 'sdaPath', 'hostName', 'port'];
+      } else if (this.authType === "ssh") {
+        return ['authType', 'username', 'hostName', 'credentialToken', 'port'];
+      } else {
+        return ['authType', 'sdaPath', 'username', 'hostName', 'credentialToken', 'port'];
+      }
+    },
     title() {
       return "New Storage Preference"
     },
-    inputState () {
+    inputState() {
       return {
-        hostName: this.hostName == null? null: this.isValid.hostName,
-        port: this.port == null? null: this.isValid.port,
-        authType: this.authType == null? null: this.isValid.authType,
-        username: this.username == null? null: this.isValid.username,
-        credentialToken: this.credentialToken == null? null: this.isValid.credentialToken,
+        hostName: this.hostName == null ? null : this.isValid.hostName,
+        port: this.port == null ? null : this.isValid.port,
+        authType: this.authType == null ? null : this.isValid.authType,
+        sdaPath: this.sdaPath == null ? null : this.isValid.sdaPath,
+        username: this.username == null ? null : this.isValid.username,
+        credentialToken: this.credentialToken == null ? null : this.isValid.credentialToken,
       }
     },
     storageId() {
@@ -108,12 +124,13 @@ export default {
     },
     isValid() {
       return {
-        hostName: this.hostName == 'localhost'? true: 
-          /^(?:(?:(?:[a-zA-z-]+):\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))(?::[0-9]{1,5})?$/.test(this.hostName)? true: false,
-        port: this.port>=1024 && this.port <= 65535? true: false,
-        authType: this.authType == "ssh"? true: false,
+        hostName: this.hostName == 'localhost' ? true :
+            /^(?:(?:(?:[a-zA-z-]+):\/{1,3})?(?:[a-zA-Z0-9])(?:[a-zA-Z0-9\-.]){1,61}(?:\.[a-zA-Z]{2,})+|\[(?:(?:(?:[a-fA-F0-9]){1,4})(?::(?:[a-fA-F0-9]){1,4}){7}|::1|::)\]|(?:(?:[0-9]{1,3})(?:\.[0-9]{1,3}){3}))(?::[0-9]{1,5})?$/.test(this.hostName) ? true : false,
+        port: this.port >= 1024 && this.port <= 65535 ? true : false,
+        authType: !!this.authType,
+        sdaPath: !!this.sdaPath,
         username: true,
-        credentialToken: this.credentialToken==null? false: (this.credentialToken.replaceAll('-','').length == 32? true: false),
+        credentialToken: this.credentialToken == null ? false : (this.credentialToken.replaceAll('-', '').length == 32 ? true : false),
 
       }
     },
@@ -147,10 +164,10 @@ export default {
       let _isFormValid = true;
       console.log("form");
       for (let i = 0; i < this.inputFieldsList.length; i++) {
-        if(this.inputFieldsList[i] == 'hostName' || this.inputFieldsList[i] == 'port'){
-          if(this.storageId == null)
+        if (this.inputFieldsList[i] == 'hostName' || this.inputFieldsList[i] == 'port') {
+          if (this.storageId == null)
             _isFormValid = _isFormValid && this.isValid[this.inputFieldsList[i]];
-        }else{
+        } else {
           _isFormValid = _isFormValid && this.isValid[this.inputFieldsList[i]];
         }
       }
@@ -164,13 +181,13 @@ export default {
       }
     },
     async onCreateClick() {
-      
+
       this.makeFormVisited();
-      
-      if(this.isFormValid()){
+
+      if (this.isFormValid()) {
         this.processing = true;
 
-        let storage = this.$store.getters["emcStorage/getStorage"]({storageId:this.storageId});
+        let storage = this.$store.getters["emcStorage/getStorage"]({storageId: this.storageId});
 
         try {
           await this.$store.dispatch("emcStoragePreference/createSSHStoragePreference", {
@@ -178,9 +195,9 @@ export default {
             authType: this.authType,
             userName: this.username,
             credentialToken: this.credentialToken,
-            storageId: this.storageId?storage.storageId:`storage-${this.hostName}-${this.port}`,
-            hostName: this.storageId?storage.hostName:this.hostName,
-            port: this.storageId?storage.port:this.port
+            storageId: this.storageId ? storage.storageId : `storage-${this.hostName}-${this.port}`,
+            hostName: this.storageId ? storage.hostName : this.hostName,
+            port: this.storageId ? storage.port : this.port
           });
           await this.$router.push(`/storages`);
         } catch (error) {
