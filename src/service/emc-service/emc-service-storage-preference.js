@@ -15,16 +15,37 @@ export default class EmcStoragePreference {
         return this._emcService;
     }
 
-    async createSSHStoragePreference({storagePreferenceId, authType, username, credentialToken, storageId, hostName, port}) {
+    async createSSHStoragePreference({storagePreferenceId, username, credentialToken, storageId, hostName, port}) {
         await this.emcService.axiosInstanceWithTokenAuthorization.post(
             EmcService.ENDPOINTS.STORAGE_PREFERENCE,
             {
                 "storagePreference": {
                     "sshStoragePreference": {
                         "storagePreferenceId": storagePreferenceId,
-                        "authType": authType,
+                        "authType": "ssh",
                         "username": username,
                         "credentialToken": credentialToken,
+                        "storage": {
+                            "storageId": storageId,
+                            "hostName": hostName,
+                            "port": port
+                        }
+                    }
+                }
+            }
+        );
+    }
+
+    async createSdaStoragePreference({storagePreferenceId, sdaPath, username, credentialToken, storageId, hostName, port}) {
+        await this.emcService.axiosInstanceWithTokenAuthorization.post(
+            EmcService.ENDPOINTS.STORAGE_PREFERENCE,
+            {
+                "storagePreference": {
+                    "sdaStoragePreference": {
+                        "storagePreferenceId": storagePreferenceId,
+                        "sdaPath": sdaPath,
+                        "proxyUserName": username,
+                        "proxyCredential": credentialToken,
                         "storage": {
                             "storageId": storageId,
                             "hostName": hostName,

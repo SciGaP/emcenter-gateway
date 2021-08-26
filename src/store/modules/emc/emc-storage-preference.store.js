@@ -23,10 +23,21 @@ const actions = {
         commit("SET_STORAGE_PREFERENCE_LIST", {queryString, storagePreferenceIds});
     },
 
-    async createSSHStoragePreference(obj, {storagePreferenceId, authType, username, credentialToken, storageId, hostName, port}) {
+    async createSSHStoragePreference(obj, {storagePreferenceId, username, credentialToken, storageId, hostName, port}) {
         return await emcService.storagePreference.createSSHStoragePreference({
             storagePreferenceId,
-            authType,
+            username,
+            credentialToken,
+            storageId,
+            hostName,
+            port
+        });
+    },
+
+    async createSdaStoragePreference(obj, {storagePreferenceId, sdaPath, username, credentialToken, storageId, hostName, port}) {
+        return await emcService.storagePreference.createSdaStoragePreference({
+            storagePreferenceId,
+            sdaPath,
             username,
             credentialToken,
             storageId,
