@@ -21,7 +21,12 @@ const actions = {
     async fetchResources({commit}, {parentResourceId, parentResourceType, type, queries} = {}) {
         const queryString = JSON.stringify({parentResourceId, type, queries});
 
-        const resources = await emcService.resources.fetchResources({parentResourceId, parentResourceType, type, queries});
+        const resources = await emcService.resources.fetchResources({
+            parentResourceId,
+            parentResourceType,
+            type,
+            queries
+        });
 
         console.log("##### fetchResources ### queryString : ", queryString);
         console.log("##### fetchResources ### : ", resources);
@@ -147,30 +152,42 @@ const actions = {
             resourceDownload.progress = 100;
             commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
 
-            await axios.get(url, {responseType: 'blob'}).then(resp => {
-                console.log("resp : ", resp)
-                resourceDownload.content = resp;
-                filename = resp.headers["content-disposition"].match(/.*filename="(.*)".*/)[1];
-                return resp.data;
-            }).then(blob => {
-                console.log("blob : ", blob)
-                url = window.URL.createObjectURL(blob);
-            }).catch((error) => {
+            try {
+                url = await axios.get(url, {responseType: 'blob'}).then(resp => {
+                    console.log("resp : ", resp)
+                    resourceDownload.content = resp;
+
+                    if (resp.headers["content-disposition"]) {
+                        filename = resp.headers["content-disposition"].match(/.*filename="(.*)".*/)[1];
+                    }
+
+                    return resp.data;
+                }).then(blob => {
+                    console.log("blob : ", blob)
+                    const dataUrl = window.URL.createObjectURL(blob);
+                    console.log("blob url : ", dataUrl)
+                    return dataUrl;
+                })
+
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+
+                // // the filename you want
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+            } catch (error) {
                 resourceDownload.errors.push({
                     title: "Unknown error when downloading.",
                     source: error, variant: "danger"
                 });
-            });
 
+                console.log("blob error : ", error)
 
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            
-            // // the filename you want
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
+                throw error;
+            }
+
 
             // window.URL.revokeObjectURL(url);
             // } catch (error) {

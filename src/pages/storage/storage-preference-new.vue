@@ -8,21 +8,21 @@
     <div class="pr-3">
       <div class="pt-3">
         <label class="form-label">Auth Type</label>
-        <b-form-select placeholder="Auth Type" :options="availableAuthTypes" v-model="authType"
+        <b-form-select :options="availableAuthTypes" v-model="authType"
                        :state="inputState.authType"/>
       </div>
 
       <div class="pt-3" v-if="authType === 'sda'">
         <label class="form-label">SDA path</label>
-        <b-form-input placeholder="User Name" v-model="sdaPath" :state="inputState.sdaPath"/>
+        <b-form-input v-model="sdaPath" :state="inputState.sdaPath"/>
       </div>
 
-      <div class="pt-3" v-if="authType === 'ssh'">
+      <div class="pt-3" v-if="authType === 'ssh' || authType === 'sda'">
         <label class="form-label">Username</label>
-        <b-form-input placeholder="User Name" v-model="username" :state="inputState.username"/>
+        <b-form-input v-model="username" :state="inputState.username"/>
       </div>
 
-      <div class="pt-3" v-if="authType === 'ssh'">
+      <div class="pt-3" v-if="authType === 'ssh' || authType === 'sda'">
         <label class="form-label">Credential Token</label>
         <div style="display: flex; flex-direction: row;">
           <b-form-select v-model="credentialToken" :options="availableSecretEntities"
@@ -51,7 +51,7 @@
 
       <div class="pt-3" v-if="!this.storageId">
         <label class="form-label">Hostname</label>
-        <b-form-input placeholder="Host Name" v-model="hostName" type="text" :state="inputState.hostName"/>
+        <b-form-input v-model="hostName" type="text" :state="inputState.hostName"/>
         <b-form-invalid-feedback>
           Host name should be either 'localhost' or in format of '192.168.23.45' or 'emc.portal.wsd'
         </b-form-invalid-feedback>
@@ -59,7 +59,7 @@
 
       <div class="pt-3" v-if="!this.storageId">
         <label class="form-label">Port</label>
-        <b-form-input placeholder="Port Number" v-model="port" type="number" :state="inputState.port"/>
+        <b-form-input v-model="port" type="number" :state="inputState.port"/>
         <b-form-invalid-feedback>
           Port should be number in range from 1024 to 65535
         </b-form-invalid-feedback>
@@ -87,6 +87,7 @@ export default {
       processingCredentialToken: false,
 
       authType: null,
+
       sdaPath: null,
       username: null,
       credentialToken: null,
@@ -99,11 +100,11 @@ export default {
   computed: {
     inputFieldsList() {
       if (this.authType === "sda") {
-        return ['authType', 'sdaPath', 'hostName', 'port'];
+        return ['authType', 'sdaPath', 'username', 'credentialToken', 'hostName', 'port'];
       } else if (this.authType === "ssh") {
-        return ['authType', 'username', 'hostName', 'credentialToken', 'port'];
+        return ['authType', 'username', 'credentialToken', 'hostName', 'port'];
       } else {
-        return ['authType', 'sdaPath', 'username', 'hostName', 'credentialToken', 'port'];
+        return ['authType', 'hostName', 'port'];
       }
     },
     title() {
@@ -129,7 +130,7 @@ export default {
         port: this.port >= 1024 && this.port <= 65535 ? true : false,
         authType: !!this.authType,
         sdaPath: !!this.sdaPath,
-        username: true,
+        username: !!this.username && this.username.length > 0,
         credentialToken: this.credentialToken == null ? false : (this.credentialToken.replaceAll('-', '').length == 32 ? true : false),
 
       }
@@ -190,17 +191,30 @@ export default {
         let storage = this.$store.getters["emcStorage/getStorage"]({storageId: this.storageId});
 
         try {
-          await this.$store.dispatch("emcStoragePreference/createSSHStoragePreference", {
-            storagePreferenceId: `storagePreference-${performance.now()}`,
-            authType: this.authType,
-            userName: this.username,
-            credentialToken: this.credentialToken,
-            storageId: this.storageId ? storage.storageId : `storage-${this.hostName}-${this.port}`,
-            hostName: this.storageId ? storage.hostName : this.hostName,
-            port: this.storageId ? storage.port : this.port
-          });
+          if (this.authType === "ssh") {
+            await this.$store.dispatch("emcStoragePreference/createSSHStoragePreference", {
+              storagePreferenceId: `storagePreference-${performance.now()}`,
+              userName: this.username,
+              credentialToken: this.credentialToken,
+              storageId: this.storageId ? storage.storageId : `storage-${this.hostName}-${this.port}`,
+              hostName: this.storageId ? storage.hostName : this.hostName,
+              port: this.storageId ? storage.port : this.port
+            });
+          } else if (this.authType === "sda") {
+            await this.$store.dispatch("emcStoragePreference/createSdaStoragePreference", {
+              storagePreferenceId: `storagePreference-${performance.now()}`,
+              sdaPath: this.sdaPath,
+              userName: this.username,
+              credentialToken: this.credentialToken,
+              storageId: this.storageId ? storage.storageId : `storage-${this.hostName}-${this.port}`,
+              hostName: this.storageId ? storage.hostName : this.hostName,
+              port: this.storageId ? storage.port : this.port
+            });
+          }
+
           await this.$router.push(`/storages`);
         } catch (error) {
+          console.log("error : ", error);
           this.errors.push({
             title: `Unknown error while creating the storage preference.`,
             source: error, variant: "danger"
