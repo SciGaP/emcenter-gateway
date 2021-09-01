@@ -6,6 +6,8 @@ export default class Configuration {
         return {
             clientId: '$VUE_APP_CLIENT_ID',
             clientSec: '$VUE_APP_CLIENT_SEC',
+            clientUsersGroupId: '$VUE_APP_CLIENT_USERS_GROUP_ID',
+            clientAdminGroupId: '$VUE_APP_CLIENT_ADMIN_GROUP_ID',
             redirectURI: '$VUE_APP_REDIRECT_URI',
             datalakeDrmsUrl: '$VUE_APP_DATA_LAKE_DRMS_URL',
             resourceImageRegistryUrl: '$VUE_APP_RESOURCE_IMAGE_REGISTRY_URL'
