@@ -5,6 +5,7 @@
 <script>
 
 import store from "airavata-custos-portal/src/lib/store";
+import config from "@/config";
 // import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 
 export default {
@@ -21,6 +22,19 @@ export default {
       //   realmRoles: ["tenant-requester"],
       //   clientLevel: false
       // });
+
+      const currentUsername = this.$store.getters["auth/currentUsername"];
+      this.$store.dispatch("group/addUserToGroup", {
+        clientId: config.value('clientId'),
+        groupId: config.value('clientUsersGroupId'),
+        username: currentUsername,
+        membershipType: "MEMBER"
+      }).catch(error => {
+        this.errors.push({
+          title: `Unknown error when adding the user '${currentUsername}' to users group`,
+          source: error, variant: "danger"
+        });
+      });
     }
   },
   async mounted() {
