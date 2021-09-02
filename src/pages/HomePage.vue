@@ -3,7 +3,9 @@
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark navbar-lg iu-crimson-bg">
       <div class="container">
         <a class="navbar-brand" href="#"><img src="../assets/images/trident-large.png" height="30"
-                                              class="d-inline-block align-top" alt=""> Electron Microscopy Center </a>
+                                              class="d-inline-block align-top" alt="">
+          Electron Microscopy Center Gateway
+        </a>
         <!--        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"-->
         <!--                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">-->
         <!--          <span class="navbar-toggler-icon"></span>-->
