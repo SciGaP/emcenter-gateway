@@ -1,6 +1,6 @@
 import {emcService} from "@/store/util/emc.util";
 import EmcResource from "@/service/emc-service/emc-service-resource";
-import axios from "axios";
+// import axios from "axios";
 
 const state = {
     resourceMap: {},
@@ -153,25 +153,28 @@ const actions = {
             commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
 
             try {
-                url = await axios.get(url, {responseType: 'blob'}).then(resp => {
-                    console.log("resp : ", resp)
-                    resourceDownload.content = resp;
-
-                    if (resp.headers["content-disposition"]) {
-                        filename = resp.headers["content-disposition"].match(/.*filename="(.*)".*/)[1];
-                    }
-
-                    return resp.data;
-                }).then(blob => {
-                    console.log("blob : ", blob)
-                    const dataUrl = window.URL.createObjectURL(blob);
-                    console.log("blob url : ", dataUrl)
-                    return dataUrl;
-                })
+                // url = await axios.get(url, {responseType: 'blob'}).then(resp => {
+                //     console.log("resp : ", resp)
+                //     console.log("resp.headers : ", resp.headers)
+                //     resourceDownload.content = resp;
+                //
+                //     if (resp.headers["content-disposition"]) {
+                //         filename = resp.headers["content-disposition"].match(/.*filename="(.*)".*/)[1];
+                //     }
+                //
+                //     return resp.data;
+                // }).then(blob => {
+                //     console.log("blob : ", blob)
+                //     const dataUrl = window.URL.createObjectURL(blob);
+                //     console.log("blob url : ", dataUrl)
+                //     return dataUrl;
+                // })
 
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
+                // a.onclick = "return false;";
+                // a.target = "_blank";
 
                 // // the filename you want
                 a.download = filename;
