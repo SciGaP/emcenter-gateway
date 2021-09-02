@@ -479,6 +479,8 @@ export default {
   },
   watch: {
     parentResourceId() {
+      this.searchTyping = "";
+      this.search = "";
       this.refreshData();
     },
     searchQuery() {
