@@ -41,13 +41,13 @@
         </b-form-invalid-feedback>
       </div>
 
-      <div class="pt-3" v-if="this.storageId">
-        <label class="form-label">StorageId</label>
-        <b-form-input
-            v-model="this.storageId"
-            :readonly="true"
-        />
-      </div>
+      <!--      <div class="pt-3" v-if="this.storageId">-->
+      <!--        <label class="form-label">StorageId</label>-->
+      <!--        <b-form-input-->
+      <!--            v-model="this.storageId"-->
+      <!--            :readonly="true"-->
+      <!--        />-->
+      <!--      </div>-->
 
       <div class="pt-3" v-if="!this.storageId">
         <label class="form-label">Hostname</label>
@@ -136,10 +136,14 @@ export default {
       }
     },
     breadcrumbLinks() {
-      return [
-        {to: '/storages', name: 'Storages'},
-        {to: `/storage-preferences/new?storageId=${this.storageId}`, name: this.title}
-      ];
+      const _breadcrumbLinks = [{to: '/storages', name: 'Storages'}];
+      if (this.storageId) {
+        _breadcrumbLinks.push({to: `/storages/${this.storageId}`, name: `${this.storageId}`, disabled: true});
+      }
+
+      _breadcrumbLinks.push({to: `/storage-preferences/new?storageId=${this.storageId}`, name: this.title});
+
+      return _breadcrumbLinks;
     },
     currentUsername() {
       return custosStore.getters["auth/currentUsername"];

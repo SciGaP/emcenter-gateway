@@ -31,9 +31,11 @@
             <b-td>{{ group.ownerId }}</b-td>
             <b-td>
               <button-overlay :show="processingDelete[group.groupId]">
-                <b-button variant="link" v-on:click="onDeleteClick(group)" v-b-tooltip.hover title="Delete">
+                <button-delete-after-confirmation variant="link" size="sm" v-on:click="onDeleteClick(group)"
+                                                  v-b-tooltip.hover
+                                                  title="Delete">
                   <b-icon icon="trash"></b-icon>
-                </b-button>
+                </button-delete-after-confirmation>
               </button-overlay>
             </b-td>
           </b-tr>
@@ -58,12 +60,14 @@ import store from "airavata-custos-portal/src/lib/store"
 import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
 import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
 import ButtonCopy from "airavata-custos-portal/src/lib/components/button/button-copy";
+import ButtonDeleteAfterConfirmation
+  from "airavata-custos-portal/src/lib/components/button/button-delete-after-confirmation";
 import Page from "../../components/Page";
 
 export default {
   name: "group-list-page",
   store: store,
-  components: {Page, ButtonCopy, ButtonOverlay, TableOverlayInfo},
+  components: {Page, ButtonCopy, ButtonOverlay, TableOverlayInfo, ButtonDeleteAfterConfirmation},
   data() {
     return {
       processingDelete: {},

@@ -10,21 +10,26 @@
         <li v-for="storage in storages" :key="storage.storageId">
           <div style="display: flex; flex-direction: row;">
             <div>
-              <b-button v-if="!storageExpanded[storage.storageId]" variant="link" size="sm" v-b-tooltip.hover title="Collapse" v-on:click="onClickExpandOrCollapse(storage.storageId)">
+              <b-button v-if="!storageExpanded[storage.storageId]" variant="link" size="sm" v-b-tooltip.hover
+                        title="Collapse" v-on:click="onClickExpandOrCollapse(storage.storageId)">
                 <b-icon icon="chevron-down"></b-icon>
               </b-button>
-              <b-button v-else variant="link" size="sm" v-b-tooltip.hover title="View Storage Preferences" v-on:click="onClickExpandOrCollapse(storage.storageId)">
+              <b-button v-else variant="link" size="sm" v-b-tooltip.hover title="View Storage Preferences"
+                        v-on:click="onClickExpandOrCollapse(storage.storageId)">
                 <b-icon icon="chevron-right"></b-icon>
               </b-button>
             </div>
             <div style="flex: 1;">
-              <span>{{ storage.hostName}}:{{storage.port}} <span style="font-size:12px">({{ storage.storageId }})</span></span>
+              <span>{{ storage.hostName }}:{{ storage.port }} <span style="font-size:12px">({{
+                  storage.storageId
+                }})</span></span>
             </div>
             <div style="margin-right: 25rem">
-              <router-link 
-                :to="{name: 'storage-preferences-new', query:{storageId: `${storage.storageId}`}}" 
-                v-slot="{ href, route, navigate}" tag="">
-                <b-button variant="link" size="sm" @click="navigate" v-b-tooltip.hover title="Create Storage Preferences">
+              <router-link
+                  :to="{name: 'storage-preferences-new', query:{storageId: `${storage.storageId}`}}"
+                  v-slot="{ href, route, navigate}" tag="">
+                <b-button variant="link" size="sm" @click="navigate" v-b-tooltip.hover
+                          title="Create Storage Preferences">
                   <b-icon icon="folder-plus"></b-icon>
                 </b-button>
               </router-link>
@@ -48,16 +53,18 @@
                   </b-tr>
                 </b-thead>
                 <b-tbody>
-                  <b-tr v-for="storagePreference in storagePreferencesByStorageId[storage.storageId]" :key="storagePreference.storagePreferenceId">
+                  <b-tr v-for="storagePreference in storagePreferencesByStorageId[storage.storageId]"
+                        :key="storagePreference.storagePreferenceId">
                     <b-td>{{ storagePreference.storagePreferenceId }}</b-td>
                     <b-td>{{ storagePreference.authType }}</b-td>
                     <b-td>{{ storagePreference.username }}</b-td>
                     <b-td>{{ storagePreference.credentialToken }}</b-td>
                     <b-td>
                       <button-overlay :show="processingDelete[storagePreference.storagePreferenceId]">
-                        <b-button variant="link" size='sm' v-b-tooltip.hover title="Delete" v-on:click="OnClickDeleteStoragePreference(storagePreference.storagePreferenceId)">
+                        <button-delete-after-confirmation variant="link" size='sm' v-b-tooltip.hover title="Delete"
+                                                          v-on:click="OnClickDeleteStoragePreference(storagePreference.storagePreferenceId)">
                           <b-icon icon="trash"></b-icon>
-                        </b-button>
+                        </button-delete-after-confirmation>
                       </button-overlay>
                     </b-td>
                   </b-tr>
@@ -75,15 +82,17 @@
 import Page from "@/components/Page";
 import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
 import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
+import ButtonDeleteAfterConfirmation
+  from "airavata-custos-portal/src/lib/components/button/button-delete-after-confirmation";
 import store from "@/store";
 
 export default {
   name: "storage-list",
   store: store,
-  components: {Page, TableOverlayInfo, ButtonOverlay},
+  components: {Page, TableOverlayInfo, ButtonOverlay, ButtonDeleteAfterConfirmation},
   data() {
     return {
-      errors:[],
+      errors: [],
       storageExpanded: {},
       storagePreferencesByStorageId: {},
       processingDelete: {}
@@ -102,10 +111,10 @@ export default {
   },
   watch: {
     storagePreferences() {
-      if(this.storagePreferences && this.storagePreferences instanceof Array){
-        this.storages.forEach( storage => {
-          this.storagePreferencesByStorageId = { 
-            ...this.storagePreferencesByStorageId, 
+      if (this.storagePreferences && this.storagePreferences instanceof Array) {
+        this.storages.forEach(storage => {
+          this.storagePreferencesByStorageId = {
+            ...this.storagePreferencesByStorageId,
             [storage.storageId]: this.storagePreferences.filter(storagePreference => storagePreference.storageId == storage.storageId)
           }
         });
@@ -114,10 +123,10 @@ export default {
   },
   methods: {
     async refreshData() {
-      try{
+      try {
         await this.$store.dispatch("emcStorage/fetchStorages");
         await this.$store.dispatch("emcStoragePreference/fetchStoragePreferences");
-      } catch(error){
+      } catch (error) {
         this.errors.push({
           title: `Unknown error when mapping to the collection group.`,
           source: error, variant: "danger"
@@ -126,24 +135,24 @@ export default {
     },
     async OnClickDeleteStoragePreference(storagePreferenceId) {
 
-      this.processingDelete = { ...this.processingDelete, [storagePreferenceId]: true}
+      this.processingDelete = {...this.processingDelete, [storagePreferenceId]: true}
       try {
         await this.$store.dispatch("emcStoragePreference/deleteStoragePreference", {
           storagePreferenceId: storagePreferenceId
         });
         await this.$store.dispatch("emcStoragePreference/fetchStoragePreferences");
 
-      }catch (error){
+      } catch (error) {
         this.errors.push({
           title: `Unknown error when deleting the storage preference ${storagePreferenceId}.`,
           source: error, variant: "danger"
         });
       }
-      this.processingDelete = { ...this.processingDelete, [storagePreferenceId]: false}
+      this.processingDelete = {...this.processingDelete, [storagePreferenceId]: false}
 
     },
     onClickExpandOrCollapse(storageId) {
-      this.storageExpanded = { ...this.storageExpanded, [storageId]: this.storageExpanded[storageId]^1 }
+      this.storageExpanded = {...this.storageExpanded, [storageId]: this.storageExpanded[storageId] ^ 1}
     },
   },
   mounted() {
