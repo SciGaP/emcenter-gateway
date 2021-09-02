@@ -25,10 +25,10 @@
             <b-td>
               <b-overlay :show="processingRemoveUser[user.username]"
                          rounded spinner-small spinner-variant="primary" class="d-inline-block">
-                <b-button variant="link" size="sm" v-on:click="onRemoveUser(user)"
-                          :disabled="user.membershipType === 'OWNER'">
+                <button-delete-after-confirmation variant="link" size="sm" v-on:click="onRemoveUser(user)"
+                                                  :disabled="user.membershipType === 'OWNER'">
                   <b-icon icon="trash"/>
-                </b-button>
+                </button-delete-after-confirmation>
               </b-overlay>
             </b-td>
           </b-tr>
@@ -50,12 +50,14 @@
 <script>
 import store from "airavata-custos-portal/src/lib/store";
 import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
+import ButtonDeleteAfterConfirmation
+  from "airavata-custos-portal/src/lib/components/button/button-delete-after-confirmation";
 import ModalSelectUsersOrGroups from "airavata-custos-portal/src/lib/components/modals/modal-select-users-or-groups";
 import Page from "../../components/Page";
 
 export default {
   name: "TenantGroup",
-  components: {Page, ModalSelectUsersOrGroups, TableOverlayInfo},
+  components: {Page, ModalSelectUsersOrGroups, TableOverlayInfo, ButtonDeleteAfterConfirmation},
   store: store,
   data() {
     return {
