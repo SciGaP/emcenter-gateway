@@ -88,8 +88,11 @@
               <b-th>size</b-th>
               <b-th>Created On</b-th>
               <b-th>Last Updated</b-th>
-              <b-th>Lab</b-th>
-              <b-th>PI</b-th>
+
+              <b-th v-if="hasCollectionGroups && !((hasCollections || hasDatasets))">Owner</b-th>
+              <b-th v-else-if="!hasCollectionGroups && (hasCollections || hasDatasets)">PI</b-th>
+              <b-th v-else>PI / Owner</b-th>
+
               <b-th></b-th>
             </b-tr>
           </b-thead>
@@ -141,7 +144,6 @@
               <b-td>{{ resource.size }}</b-td>
               <b-td>{{ resource.createdAt }}</b-td>
               <b-td>{{ resource.lastUpdatedAt }}</b-td>
-              <b-td>-- --</b-td>
               <b-td>{{ resource.createdBy }}</b-td>
               <b-td>
                 <button-overlay :show="processingDownload[resource.resourceId]">
@@ -259,6 +261,12 @@ export default {
     hasCollectionGroups() {
       return this.types.indexOf(EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) >= 0;
     },
+    hasCollections() {
+      return this.types.indexOf(EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION) >= 0;
+    },
+    hasDatasets() {
+      return this.types.indexOf(EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET) >= 0;
+    },
     hasLabs() {
       return this.types.indexOf(EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_LAB) >= 0;
     },
@@ -284,7 +292,11 @@ export default {
       if (this.$route.query.types) {
         return this.$route.query.types.split(",").map(type => type.trim());
       } else {
-        return this.defaultTypes
+        if (this.parentResource && this.parentResource.type === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
+          return [...this.defaultTypes, EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP];
+        } else {
+          return this.defaultTypes;
+        }
       }
     },
     sharedWith() {
