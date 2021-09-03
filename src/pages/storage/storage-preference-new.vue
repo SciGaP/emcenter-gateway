@@ -19,7 +19,7 @@
 
       <div class="pt-3" v-if="authType === 'ssh' || authType === 'sda'">
         <label class="form-label">Username</label>
-        <b-form-input v-model="username" :state="inputState.username"/>
+        <b-form-input v-model="userName" :state="inputState.userName"/>
       </div>
 
       <div class="pt-3" v-if="authType === 'ssh' || authType === 'sda'">
@@ -89,7 +89,7 @@ export default {
       authType: null,
 
       sdaPath: null,
-      username: null,
+      userName: null,
       credentialToken: null,
       hostName: null,
       port: null,
@@ -100,9 +100,9 @@ export default {
   computed: {
     inputFieldsList() {
       if (this.authType === "sda") {
-        return ['authType', 'sdaPath', 'username', 'credentialToken', 'hostName', 'port'];
+        return ['authType', 'sdaPath', 'userName', 'credentialToken', 'hostName', 'port'];
       } else if (this.authType === "ssh") {
-        return ['authType', 'username', 'credentialToken', 'hostName', 'port'];
+        return ['authType', 'userName', 'credentialToken', 'hostName', 'port'];
       } else {
         return ['authType', 'hostName', 'port'];
       }
@@ -116,7 +116,7 @@ export default {
         port: this.port == null ? null : this.isValid.port,
         authType: this.authType == null ? null : this.isValid.authType,
         sdaPath: this.sdaPath == null ? null : this.isValid.sdaPath,
-        username: this.username == null ? null : this.isValid.username,
+        userName: this.userName == null ? null : this.isValid.userName,
         credentialToken: this.credentialToken == null ? null : this.isValid.credentialToken,
       }
     },
@@ -130,7 +130,7 @@ export default {
         port: this.port >= 1024 && this.port <= 65535 ? true : false,
         authType: !!this.authType,
         sdaPath: !!this.sdaPath,
-        username: !!this.username && this.username.length > 0,
+        userName: !!this.userName && this.userName.length > 0,
         credentialToken: this.credentialToken == null ? false : (this.credentialToken.replaceAll('-', '').length == 32 ? true : false),
 
       }
@@ -198,7 +198,7 @@ export default {
           if (this.authType === "ssh") {
             await this.$store.dispatch("emcStoragePreference/createSSHStoragePreference", {
               storagePreferenceId: `storagePreference-${performance.now()}`,
-              userName: this.username,
+              userName: this.userName,
               credentialToken: this.credentialToken,
               storageId: this.storageId ? storage.storageId : `storage-${this.hostName}-${this.port}`,
               hostName: this.storageId ? storage.hostName : this.hostName,
@@ -208,7 +208,7 @@ export default {
             await this.$store.dispatch("emcStoragePreference/createSdaStoragePreference", {
               storagePreferenceId: `storagePreference-${performance.now()}`,
               sdaPath: this.sdaPath,
-              userName: this.username,
+              userName: this.userName,
               credentialToken: this.credentialToken,
               storageId: this.storageId ? storage.storageId : `storage-${this.hostName}-${this.port}`,
               hostName: this.storageId ? storage.hostName : this.hostName,

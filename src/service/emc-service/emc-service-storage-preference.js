@@ -15,7 +15,7 @@ export default class EmcStoragePreference {
         return this._emcService;
     }
 
-    async createSSHStoragePreference({storagePreferenceId, username, credentialToken, storageId, hostName, port}) {
+    async createSSHStoragePreference({storagePreferenceId, userName, credentialToken, storageId, hostName, port}) {
         await this.emcService.axiosInstanceWithTokenAuthorization.post(
             EmcService.ENDPOINTS.STORAGE_PREFERENCE,
             {
@@ -23,7 +23,7 @@ export default class EmcStoragePreference {
                     "sshStoragePreference": {
                         "storagePreferenceId": storagePreferenceId,
                         "authType": "ssh",
-                        "username": username,
+                        "userName": userName,
                         "credentialToken": credentialToken,
                         "storage": {
                             "storageId": storageId,
@@ -36,7 +36,7 @@ export default class EmcStoragePreference {
         );
     }
 
-    async createSdaStoragePreference({storagePreferenceId, sdaPath, username, credentialToken, storageId, hostName, port}) {
+    async createSdaStoragePreference({storagePreferenceId, sdaPath, userName, credentialToken, storageId, hostName, port}) {
         await this.emcService.axiosInstanceWithTokenAuthorization.post(
             EmcService.ENDPOINTS.STORAGE_PREFERENCE,
             {
@@ -44,7 +44,7 @@ export default class EmcStoragePreference {
                     "sdaStoragePreference": {
                         "storagePreferenceId": storagePreferenceId,
                         "sdaPath": sdaPath,
-                        "proxyUserName": username,
+                        "proxyUserName": userName,
                         "proxyCredential": credentialToken,
                         "storage": {
                             "storageId": storageId,
@@ -64,11 +64,11 @@ export default class EmcStoragePreference {
             return storagesPreference.map((
                 {
                     sshStoragePreference: {
-                        storagePreferenceId, authType, username, credentialToken, storage: {storageId, hostName, port}
+                        storagePreferenceId, authType, userName, credentialToken, storage: {storageId, hostName, port}
                     }
                 }
             ) => {
-                return {storagePreferenceId, authType, username, credentialToken, storageId, hostName, port};
+                return {storagePreferenceId, authType, userName, credentialToken, storageId, hostName, port};
             });
         });
     }
