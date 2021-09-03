@@ -135,6 +135,7 @@ import EmcResource from '@/service/emc-service/emc-service-resource';
 
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import {custosStore} from "../store";
+import config from "@/config";
 
 export default {
   name: "AppLeftNav",
@@ -155,11 +156,21 @@ export default {
     authenticated() {
       return this.$store.getters["auth/authenticated"]
     },
-    isAdmin() {
-      return this.$store.getters["auth/isAdmin"]
-    },
     hasEmcAdminRole() {
-      return this.user && this.user.realmRoles.indexOf("emc-admin") >= 0;
+      const adminGroupUsers = this.$store.getters["user/getUsers"]({
+        groupId: config.value('clientAdminGroupId'),
+        clientId: this.clientId
+      });
+
+      if (adminGroupUsers) {
+        for (let i = 0; i < adminGroupUsers.length; i++) {
+          if (adminGroupUsers[i].username === this.currentUsername) {
+            return true;
+          }
+        }
+      }
+
+      return false;
     },
     currentUsername() {
       return this.$store.getters["auth/currentUsername"]
@@ -172,7 +183,14 @@ export default {
     }
   },
   methods: {
-    logout: () => custosStore.dispatch("auth/logout")
+    logout: () => custosStore.dispatch("auth/logout"),
+    refreshData() {
+      this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, groupId: config.value('clientUsersGroupId')});
+      this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, groupId: config.value('clientAdminGroupId')});
+    }
+  },
+  mounted() {
+    this.refreshData();
   }
 }
 </script>
