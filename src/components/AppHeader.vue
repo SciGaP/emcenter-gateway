@@ -30,14 +30,14 @@
         <!--          <b-dropdown-item href="#">FA</b-dropdown-item>-->
         <!--        </b-nav-item-dropdown>-->
 
-        <b-nav-item href="#">
-          <div class="text-center text-dark">
-            <div>
-              <b-icon icon="bell"></b-icon>
-            </div>
-            <div><small>Notifications</small></div>
-          </div>
-        </b-nav-item>
+        <!--        <b-nav-item href="#">-->
+        <!--          <div class="text-center text-dark">-->
+        <!--            <div>-->
+        <!--              <b-icon icon="bell"></b-icon>-->
+        <!--            </div>-->
+        <!--            <div><small>Notifications</small></div>-->
+        <!--          </div>-->
+        <!--        </b-nav-item>-->
         <b-nav-item-dropdown right no-caret>
           <!-- Using 'button-content' slot -->
           <template #button-content>

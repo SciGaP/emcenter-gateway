@@ -102,14 +102,14 @@
       <!--          </a>-->
       <!--        </router-link>-->
       <!--      </li>-->
-      <li>
-        <router-link to="/profile" v-slot="{ href, route, navigate, isActive}" tag="">
-          <a :class="{active: isActive}" :href="href" @click="navigate">
-            <b-icon icon="person"></b-icon>
-            Profile
-          </a>
-        </router-link>
-      </li>
+      <!--      <li>-->
+      <!--        <router-link to="/profile" v-slot="{ href, route, navigate, isActive}" tag="">-->
+      <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
+      <!--            <b-icon icon="person"></b-icon>-->
+      <!--            Profile-->
+      <!--          </a>-->
+      <!--        </router-link>-->
+      <!--      </li>-->
       <!--    <li v-for="group in groups" :key="group.groupId">-->
       <!--      <router-link :to="`/data?groupId=${group.groupId}`" v-slot="{ href, route, navigate, isActive, isExactActive}"-->
       <!--                   tag="">-->
