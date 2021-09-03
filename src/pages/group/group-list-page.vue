@@ -32,7 +32,7 @@
             <b-td>
               <button-overlay :show="processingDelete[group.groupId]">
                 <button-delete-after-confirmation variant="link" size="sm" v-on:click="onDeleteClick(group)"
-                                                  v-b-tooltip.hover
+                                                  v-b-tooltip.hover :disabled="!isDeleteAllowed(group)"
                                                   title="Delete">
                   <b-icon icon="trash"></b-icon>
                 </button-delete-after-confirmation>
@@ -63,6 +63,7 @@ import ButtonCopy from "airavata-custos-portal/src/lib/components/button/button-
 import ButtonDeleteAfterConfirmation
   from "airavata-custos-portal/src/lib/components/button/button-delete-after-confirmation";
 import Page from "../../components/Page";
+import config from "@/config";
 
 export default {
   name: "group-list-page",
@@ -71,7 +72,10 @@ export default {
   data() {
     return {
       processingDelete: {},
-      errors: []
+      errors: [],
+      deleteDisabledGroupIds: [
+        config.value('clientUsersGroupId'), config.value('clientAdminGroupId')
+      ]
     }
   },
   computed: {
@@ -90,6 +94,9 @@ export default {
     }
   },
   methods: {
+    isDeleteAllowed(group) {
+      return this.deleteDisabledGroupIds.indexOf(group.groupId) < 0 && this.currentUsername === group.ownerId
+    },
     refreshData() {
       this.$store.dispatch("group/fetchGroups", {clientId: this.clientId, username: this.currentUsername});
     },

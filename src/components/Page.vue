@@ -39,6 +39,7 @@ import Breadcrumb from "./Breadcrumb";
 import AppLeftNav from "@/components/AppLeftNav";
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import {custosStore} from "@/store";
+import config from "@/config";
 
 export default {
   name: "Page",
@@ -61,10 +62,36 @@ export default {
   },
   computed: {
     hasEmcAdminRole() {
-      return this.user.realmRoles.indexOf("emc-admin") >= 0;
+      const adminGroupUsers = this.$store.getters["user/getUsers"]({
+        groupId: config.value('clientAdminGroupId'),
+        clientId: this.clientId
+      });
+
+      if (adminGroupUsers) {
+        for (let i = 0; i < adminGroupUsers.length; i++) {
+          if (adminGroupUsers[i].username === this.currentUsername) {
+            return true;
+          }
+        }
+      }
+
+      return false;
     },
     hasEmcUserRole() {
-      return true; // this.user.realmRoles.indexOf("emc-user") >= 0;
+      const adminGroupUsers = this.$store.getters["user/getUsers"]({
+        groupId: config.value('clientUsersGroupId'),
+        clientId: this.clientId
+      });
+
+      if (adminGroupUsers) {
+        for (let i = 0; i < adminGroupUsers.length; i++) {
+          if (adminGroupUsers[i].username === this.currentUsername) {
+            return true;
+          }
+        }
+      }
+
+      return false;
     },
     currentUsername() {
       return this.$store.getters["auth/currentUsername"]
@@ -72,6 +99,15 @@ export default {
     user() {
       return this.$store.getters["user/getUser"]({clientId: custosService.clientId, username: this.currentUsername});
     },
+  },
+  methods: {
+    refreshData() {
+      this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, groupId: config.value('clientUsersGroupId')});
+      this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, groupId: config.value('clientAdminGroupId')});
+    }
+  },
+  mounted() {
+    this.refreshData();
   }
 }
 </script>
