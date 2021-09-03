@@ -85,7 +85,7 @@
               </b-th>
               <b-th></b-th>
               <b-th>Name</b-th>
-              <b-th>size</b-th>
+              <!--              <b-th>size</b-th>-->
               <b-th>Created On</b-th>
               <b-th>Last Updated</b-th>
 
@@ -141,7 +141,7 @@
                   </router-link>
                 </div>
               </b-td>
-              <b-td>{{ resource.size }}</b-td>
+              <!--              <b-td>{{ resource.size }}</b-td>-->
               <b-td>{{ resource.createdAt }}</b-td>
               <b-td>{{ resource.lastUpdatedAt }}</b-td>
               <b-td>{{ resource.createdBy }}</b-td>

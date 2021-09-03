@@ -57,7 +57,7 @@
                         :key="storagePreference.storagePreferenceId">
                     <b-td>{{ storagePreference.storagePreferenceId }}</b-td>
                     <b-td>{{ storagePreference.authType }}</b-td>
-                    <b-td>{{ storagePreference.username }}</b-td>
+                    <b-td>{{ storagePreference.userName }}</b-td>
                     <b-td>{{ storagePreference.credentialToken }}</b-td>
                     <b-td>
                       <button-overlay :show="processingDelete[storagePreference.storagePreferenceId]">

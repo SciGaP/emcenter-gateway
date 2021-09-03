@@ -12,9 +12,9 @@ const actions = {
 
         const resources = await emcService.storagePreference.fetchStoragePreferences();
 
-        const storagePreferenceIds = resources.map(({storagePreferenceId, authType, username, credentialToken, storageId, hostName, port}) => {
+        const storagePreferenceIds = resources.map(({storagePreferenceId, authType, userName, credentialToken, storageId, hostName, port}) => {
             commit("SET_STORAGE_PREFERENCE", {
-                storagePreferenceId, authType, username, credentialToken, storageId, hostName, port
+                storagePreferenceId, authType, userName, credentialToken, storageId, hostName, port
             });
 
             return storagePreferenceId;
@@ -23,10 +23,10 @@ const actions = {
         commit("SET_STORAGE_PREFERENCE_LIST", {queryString, storagePreferenceIds});
     },
 
-    async createSSHStoragePreference(obj, {storagePreferenceId, username, credentialToken, storageId, hostName, port}) {
+    async createSSHStoragePreference(obj, {storagePreferenceId, userName, credentialToken, storageId, hostName, port}) {
         return await emcService.storagePreference.createSSHStoragePreference({
             storagePreferenceId,
-            username,
+            userName,
             credentialToken,
             storageId,
             hostName,
@@ -34,11 +34,11 @@ const actions = {
         });
     },
 
-    async createSdaStoragePreference(obj, {storagePreferenceId, sdaPath, username, credentialToken, storageId, hostName, port}) {
+    async createSdaStoragePreference(obj, {storagePreferenceId, sdaPath, userName, credentialToken, storageId, hostName, port}) {
         return await emcService.storagePreference.createSdaStoragePreference({
             storagePreferenceId,
             sdaPath,
-            username,
+            userName,
             credentialToken,
             storageId,
             hostName,
@@ -61,10 +61,10 @@ const mutations = {
             [queryString]: storagePreferenceIds
         }
     },
-    SET_STORAGE_PREFERENCE(state, {storagePreferenceId, authType, username, credentialToken, storageId, hostName, port}) {
+    SET_STORAGE_PREFERENCE(state, {storagePreferenceId, authType, userName, credentialToken, storageId, hostName, port}) {
         state.storagePreferenceMap = {
             ...state.storagePreferenceMap,
-            [storagePreferenceId]: {storagePreferenceId, authType, username, credentialToken, storageId, hostName, port}
+            [storagePreferenceId]: {storagePreferenceId, authType, userName, credentialToken, storageId, hostName, port}
         }
     }
 }
