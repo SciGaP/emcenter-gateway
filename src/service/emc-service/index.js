@@ -89,8 +89,9 @@ export default class EmcService {
     //     });
     // }
     //
+
     get axiosInstanceWithTokenAuthorization() {
-        return axios.create({
+        const instance = axios.create({
             httpAgent,
             httpsAgent,
             baseURL: EmcService.baseURL,
@@ -103,5 +104,23 @@ export default class EmcService {
                 'Authorization': `Bearer ${custosService.identity.accessToken}`
             }
         })
+
+        instance.interceptors.response.use(response => {
+            return response;
+        }, async error => {
+            const {config, response: {status}} = error;
+            const originalRequest = config;
+
+            if (status >= 400) {
+                await custosService.identity.getTokenUsingRefreshToken();
+                originalRequest.headers['Authorization'] = `Bearer ${custosService.identity.accessToken}`;
+                return axios(originalRequest);
+            } else {
+                return Promise.reject(error);
+            }
+        });
+
+        return instance;
     }
+
 }
