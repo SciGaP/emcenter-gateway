@@ -1,8 +1,6 @@
 import axios from "axios";
 import http from "http";
 import https from "https";
-import EmcFiles from "./custos-service-files";
-import EmcFolders from "./custos-service-folders";
 import EmcResources from "./emc-service-resource";
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import config from "../../config";
@@ -34,19 +32,9 @@ export default class EmcService {
     };
 
     constructor() {
-        this._files = new EmcFiles(this);
-        this._folders = new EmcFolders(this);
         this._resources = new EmcResources(this);
         this._storagePreference = new EmcStoragePreference(this);
         this._storage = new EmcStorage(this);
-    }
-
-    get files() {
-        return this._files;
-    }
-
-    get folders() {
-        return this._folders;
     }
 
     get resources() {

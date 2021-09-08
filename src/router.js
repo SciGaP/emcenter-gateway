@@ -66,6 +66,13 @@ export default new Router({
                 import("./pages/ProfilePage")
         },
         {
+            path: "/notifications",
+            name: "notifications",
+            beforeEnter: _validateAuthenticationBeforeEnter,
+            component: () =>
+                import("./pages/Notifications")
+        },
+        {
             path: "/storage-preferences/new",
             name: "storage-preferences-new",
             beforeEnter: _validateAuthenticationBeforeEnter,
