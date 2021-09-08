@@ -58,9 +58,18 @@ export default {
   },
   methods: {
     async refreshData() {
-      const baseUrl = config.value('datalakeDrmsUrl');
-      const {data: {notifications}} = await axios.get(`${baseUrl}/v1.0/api/dataorch/notifications`);
-      this.notifications = notifications;
+      this.processing = true;
+      try {
+        const baseUrl = config.value('datalakeDrmsUrl');
+        const {data: {notifications}} = await axios.get(`${baseUrl}/v1.0/api/dataorch/notifications`);
+        this.notifications = notifications;
+      } catch (error) {
+        this.errors.push({
+          title: `Unknown error when fetching the notifications.`,
+          source: error, variant: "danger"
+        });
+      }
+      this.processing = false;
     }
   },
   mounted() {
