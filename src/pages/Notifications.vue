@@ -4,17 +4,23 @@
       <b-table-simple>
         <b-thead>
           <b-tr>
-            <b-th>notificationId</b-th>
-            <b-th>resourceType</b-th>
-            <b-th>occuredTime</b-th>
-            <b-th>hostName</b-th>
-            <b-th>basePath</b-th>
-            <b-th>eventType</b-th>
+            <b-th>Notification ID</b-th>
+            <b-th>Resource Type</b-th>
+            <b-th>Occured Time</b-th>
+            <b-th>Hostname</b-th>
+            <b-th>Base Path</b-th>
+            <b-th>Event Type</b-th>
           </b-tr>
         </b-thead>
         <b-tbody>
           <b-tr v-for="notification in notifications" :key="notification.notificationId">
-            <b-td>{{ notification.notificationId }}</b-td>
+            <b-td>
+              <b-link v-b-modal="`notification-statuses-modal-${notification.notificationId}`">
+                {{ notification.notificationId }}
+              </b-link>
+              <NotificationStatusesModal :modal-id="`notification-statuses-modal-${notification.notificationId}`"
+                                         :notification-id="notification.notificationId"/>
+            </b-td>
             <b-td>{{ notification.resourceType }}</b-td>
             <b-td>{{ notification.occuredTime }}</b-td>
             <b-td>{{ notification.hostName }}</b-td>
@@ -32,10 +38,11 @@ import axios from "axios";
 import Page from "@/components/Page";
 import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
 import config from "@/config";
+import NotificationStatusesModal from "@/components/modals/notification-statuses-modal";
 
 export default {
   name: "Notifications",
-  components: {Page, TableOverlayInfo},
+  components: {NotificationStatusesModal, Page, TableOverlayInfo},
   data() {
     return {
       processing: false,
@@ -62,7 +69,13 @@ export default {
       try {
         const baseUrl = config.value('datalakeDrmsUrl');
         const {data: {notifications}} = await axios.get(`${baseUrl}/v1.0/api/dataorch/notifications`);
+        for (let i = 0; i < notifications.length; i++) {
+          notifications[i].occuredTime = new Date(parseInt(notifications[i].occuredTime)).toLocaleString()
+        }
+
         this.notifications = notifications;
+
+
       } catch (error) {
         this.errors.push({
           title: `Unknown error when fetching the notifications.`,
