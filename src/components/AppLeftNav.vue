@@ -114,7 +114,7 @@
         <router-link to="/notifications" v-slot="{ href, route, navigate, isActive}" tag="">
           <a :class="{active: isActive}" :href="href" @click="navigate">
             <b-icon icon="bell"></b-icon>
-            Notifications
+            Data Scan Notifications
           </a>
         </router-link>
       </li>
