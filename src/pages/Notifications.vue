@@ -1,5 +1,5 @@
 <template>
-  <Page title="Notifications" :breadcrumb-links="breadcrumbLinks" :errors="errors">
+  <Page title="Data Scan Notifications" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <table-overlay-info :data="notifications" :rows="5" :columns="5">
       <b-table-simple>
         <b-thead>
@@ -58,7 +58,7 @@ export default {
       const _breadcrumbLinks = [
         {
           to: `/notifications`,
-          name: "Notifications"
+          name: "Data Scan Notifications"
         }
       ];
 
