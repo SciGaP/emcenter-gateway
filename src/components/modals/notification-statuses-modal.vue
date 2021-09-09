@@ -62,13 +62,13 @@ export default {
       this.processing = true;
       try {
         const baseUrl = config.value('datalakeDrmsUrl');
-        const {data: {statuses}} = await axios.get(`${baseUrl}/v1.0/api/dataorch/notification/status/`);
+        const {data: {statuses}} = await axios.get(`${baseUrl}/v1.0/api/dataorch/notification/status/${this.notificationId}`);
+
+        this.statuses = statuses.filter(status => status.notificationId === this.notificationId).sort((f, s) => f.publishedTime - s.publishedTime);
+
         for (let i = 0; i < statuses.length; i++) {
           statuses[i].publishedTime = new Date(parseInt(statuses[i].publishedTime)).toLocaleString();
         }
-
-        this.statuses = statuses.filter(status => status.notificationId === this.notificationId);
-
       } catch (error) {
         this.errors.push({
           title: `Unknown error when fetching the statuses.`,
@@ -77,9 +77,6 @@ export default {
       }
       this.processing = false;
     }
-  },
-  mounted() {
-    this.refreshData();
   }
 }
 </script>
