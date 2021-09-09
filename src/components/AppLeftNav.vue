@@ -110,7 +110,7 @@
       <!--          </a>-->
       <!--        </router-link>-->
       <!--      </li>-->
-      <li>
+      <li v-if="hasEmcAdminRole">
         <router-link to="/notifications" v-slot="{ href, route, navigate, isActive}" tag="">
           <a :class="{active: isActive}" :href="href" @click="navigate">
             <b-icon icon="bell"></b-icon>
