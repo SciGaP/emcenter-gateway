@@ -9,6 +9,7 @@
             <b-th>Occured Time</b-th>
             <b-th>Hostname</b-th>
             <b-th>Base Path</b-th>
+            <b-th>Resource Path</b-th>
             <b-th>Event Type</b-th>
           </b-tr>
         </b-thead>
@@ -25,6 +26,7 @@
             <b-td>{{ notification.occuredTime }}</b-td>
             <b-td>{{ notification.hostName }}</b-td>
             <b-td>{{ notification.basePath }}</b-td>
+            <b-td>{{ notification.resourcePath }}</b-td>
             <b-td>{{ notification.eventType }}</b-td>
           </b-tr>
         </b-tbody>
