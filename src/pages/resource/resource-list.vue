@@ -144,7 +144,11 @@
               <!--              <b-td>{{ resource.size }}</b-td>-->
               <b-td>{{ resource.createdAt }}</b-td>
               <b-td>{{ resource.lastUpdatedAt }}</b-td>
-              <b-td>{{ resource.createdBy }}</b-td>
+              <b-td>
+                <block-tooltip-user :username="resource.createdBy">
+                  {{ resource.createdBy }}
+                </block-tooltip-user>
+              </b-td>
               <b-td>
                 <button-overlay :show="processingDownload[resource.resourceId]">
                   <b-button variant="link" size="sm" v-on:click="downloadResource(resource)"
@@ -228,10 +232,12 @@ import custosStore from "airavata-custos-portal/src/lib/store";
 // import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
 import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
 import config from "@/config";
+import BlockTooltipUser from "@/components/blocks/block-tooltip-user";
 
 export default {
   name: "resource-list",
   components: {
+    BlockTooltipUser,
     ResourceMetadataModal,
     ModalShareEntity,
     NotesModal,
