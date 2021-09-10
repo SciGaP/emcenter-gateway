@@ -86,7 +86,7 @@
 
 <script>
 import {mapGetters, mapActions} from "vuex";
-import {custosStore} from "../store";
+import custosStore from "airavata-custos-portal/src/lib/store";
 
 export default {
   name: 'LoginPage',

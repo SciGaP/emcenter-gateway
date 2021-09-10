@@ -44,9 +44,12 @@
               </div>
               <p>Our goal is to promote the development of researchers that are knowledgeable, confident and comfortable
                 in the use of electron microscopes.</p>
-              <router-link to="/login" v-slot="{ href, route, navigate}" tag="">
-                <button class="btn btn-lg btn-iu-crimson" @click="navigate">Get Started</button>
-              </router-link>
+
+              <!--              <router-link to="/login" v-slot="{ href, route, navigate}" tag="">-->
+              <!--                <button class="btn btn-lg btn-iu-crimson" @click="navigate">Get Started</button>-->
+              <!--              </router-link>-->
+
+              <button class="btn btn-lg btn-iu-crimson" v-on:click="this.loadAuthURL">Get Started</button>
 
             </div>
             <div class="col-lg-4">
@@ -148,8 +151,16 @@
 <script>
 // import Login from "./LoginPage";
 
+import custosStore from "airavata-custos-portal/src/lib/store";
+
 export default {
-  name: "HomePage"
+  name: "HomePage",
+  store: custosStore,
+  methods: {
+    async loadAuthURL() {
+      await this.$store.dispatch("auth/fetchAuthorizationEndpoint");
+    },
+  }
 }
 </script>
 
