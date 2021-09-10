@@ -495,6 +495,20 @@ export default {
       this.search = "";
       this.refreshData();
     },
+    sharedWith() {
+      this.searchTyping = "";
+      this.search = "";
+    },
+    sharedBy() {
+      this.searchTyping = "";
+      this.search = "";
+    },
+    types(a, b) {
+      if (JSON.stringify(a) !== JSON.stringify(b)) {
+        this.searchTyping = "";
+        this.search = "";
+      }
+    },
     searchQuery() {
       this.refreshData();
     }
