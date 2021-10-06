@@ -10,6 +10,7 @@ export default class Configuration {
             clientAdminGroupId: '$VUE_APP_CLIENT_ADMIN_GROUP_ID',
             redirectURI: '$VUE_APP_REDIRECT_URI',
             datalakeDrmsUrl: '$VUE_APP_DATA_LAKE_DRMS_URL',
+            emcApiUrl: '$VUE_APP_EMC_API_URL',
             resourceImageRegistryUrl: '$VUE_APP_RESOURCE_IMAGE_REGISTRY_URL'
         }
     }
