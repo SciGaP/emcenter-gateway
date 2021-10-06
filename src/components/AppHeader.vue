@@ -30,11 +30,6 @@
         <!--          <b-dropdown-item href="#">FA</b-dropdown-item>-->
         <!--        </b-nav-item-dropdown>-->
 
-        <b-nav-item href="#" v-on:click="downloadCurlScript">
-          <div class="text-center text-dark">
-            <div><small>Download curl script</small></div>
-          </div>
-        </b-nav-item>
         <b-nav-item-dropdown right no-caret>
           <!-- Using 'button-content' slot -->
           <template #button-content>
@@ -59,8 +54,6 @@
 
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import {custosStore} from "../store";
-import config from "@/config";
-import axios from "axios";
 
 export default {
   name: "AppHeader.vue",
@@ -83,78 +76,7 @@ export default {
     }
   },
   methods: {
-    logout: () => custosStore.dispatch("auth/logout"),
-    async downloadCurlScript() {
-      // resourceDownload.processing = true;
-      //       resourceDownload.progress = 0;
-      //       commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
-
-      // try {
-
-      // let url = await emcService.resources.downloadResource({resourceId});
-      let filename = `${window.performance.now()}`;
-      // let filename = 'emc-curl-script.sh';
-
-      // resourceDownload.processing = false;
-      // resourceDownload.progress = 100;
-      // commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
-
-      try {
-        // alert("sdfsdf" + config.value('emcApiUrl'))
-        let url = `${config.value('emcApiUrl')}/curl-script`
-        url = await axios.get(url, {
-          // responseType: 'arraybuffer',
-          headers: {
-            'Connection': 'keep-alive',
-            'Keep-Alive': 'timeout=1500, max=100',
-            // 'Accept': '*/*',
-            // 'Content-Type': 'application/json',
-            // 'Access-Control-Allow-Origin': "*",
-            // 'Origin': '*',
-            'Authorization': `Bearer ${custosService.identity.accessToken}`
-          }
-        },).then((resp, resp2, resp3) => {
-          console.log("arguments : ", [resp, resp2, resp3])
-          console.log("resp : ", resp)
-          console.log("resp.headers : ", resp.headers)
-          // resourceDownload.content = resp;
-
-          if (resp.headers["content-disposition"]) {
-            filename = resp.headers["content-disposition"].match(/.*filename="(.*)".*/)[1];
-          }
-
-          return resp;
-          // return resp.data;
-        }).then(response => {
-          // console.log("blob : ", blob)
-
-          const dataUrl = window.URL.createObjectURL(new Blob([response.data]));
-          // const dataUrl = window.URL.createObjectURL(blob);
-          console.log("blob url : ", dataUrl)
-          return dataUrl;
-        })
-
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        // a.onclick = "return false;";
-        // a.target = "_blank";
-
-        // // the filename you want
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-      } catch (error) {
-        // resourceDownload.errors.push({
-        //     title: "Unknown error when downloading.",
-        //     source: error, variant: "danger"
-        // });
-
-        console.log("blob error : ", error)
-
-        throw error;
-      }
-    }
+    logout: () => custosStore.dispatch("auth/logout")
   }
 }
 </script>
