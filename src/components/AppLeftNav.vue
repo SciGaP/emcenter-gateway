@@ -118,6 +118,14 @@
           </a>
         </router-link>
       </li>
+
+      <li>
+        <a href="#" v-on:click.prevent="downloadCurlScript">
+          <b-icon icon="laptop-fill"></b-icon>
+          Download curl script
+        </a>
+      </li>
+
       <!--    <li v-for="group in groups" :key="group.groupId">-->
       <!--      <router-link :to="`/data?groupId=${group.groupId}`" v-slot="{ href, route, navigate, isActive, isExactActive}"-->
       <!--                   tag="">-->
@@ -144,6 +152,7 @@ import EmcResource from '@/service/emc-service/emc-service-resource';
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import {custosStore} from "../store";
 import config from "@/config";
+import axios from "axios";
 
 export default {
   name: "AppLeftNav",
@@ -195,6 +204,38 @@ export default {
     refreshData() {
       this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, groupId: config.value('clientUsersGroupId')});
       this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, groupId: config.value('clientAdminGroupId')});
+    },
+    async downloadCurlScript() {
+      let filename = `${window.performance.now()}`;
+
+      let url = `${config.value('emcApiUrl')}/curl-script`
+      url = await axios.get(url, {
+        headers: {
+          'Connection': 'keep-alive',
+          'Keep-Alive': 'timeout=1500, max=100',
+          'Authorization': `Bearer ${custosService.identity.accessToken}`
+        }
+      },).then(resp => {
+        console.log("resp : ", resp)
+        console.log("resp.headers : ", resp.headers)
+
+        if (resp.headers["content-disposition"]) {
+          filename = resp.headers["content-disposition"].match(/.*filename="(.*)".*/)[1];
+        }
+
+        return resp;
+      }).then(response => {
+        const dataUrl = window.URL.createObjectURL(new Blob([response.data]));
+        console.log("blob url : ", dataUrl)
+        return dataUrl;
+      })
+
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
     }
   },
   mounted() {
