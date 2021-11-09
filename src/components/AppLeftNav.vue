@@ -119,12 +119,12 @@
         </router-link>
       </li>
 
-      <li>
-        <a href="#" v-on:click.prevent="downloadCurlScript">
-          <b-icon icon="laptop-fill"></b-icon>
-          Download curl script
-        </a>
-      </li>
+      <!--      <li>-->
+      <!--        <a href="#" v-on:click.prevent="downloadCurlScript">-->
+      <!--          <b-icon icon="laptop-fill"></b-icon>-->
+      <!--          Download curl script-->
+      <!--        </a>-->
+      <!--      </li>-->
 
       <!--    <li v-for="group in groups" :key="group.groupId">-->
       <!--      <router-link :to="`/data?groupId=${group.groupId}`" v-slot="{ href, route, navigate, isActive, isExactActive}"-->
