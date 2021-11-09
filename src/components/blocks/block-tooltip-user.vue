@@ -1,7 +1,9 @@
 <template>
   <div>
     <span :id="tooltipRef" variant="primary">
-      <slot>{{ username }}</slot>
+<!--      <slot>{{ username }}</slot>-->
+      <span v-if="user">{{ user.email }}</span>
+      <span v-else>Loading ...</span>
     </span>
     <b-tooltip ref="tooltip" :target="tooltipRef" v-on:show="refreshData">
       {{ title }}
@@ -41,11 +43,15 @@ export default {
   },
   methods: {
     refreshData() {
-      this.$store.dispatch("user/fetchUsers", {clientId: custosService.clientId, username: this.username});
+      if (!this.user) {
+        this.$store.dispatch("user/fetchUsers", {clientId: custosService.clientId, username: this.username});
+      }
     }
   },
   mounted() {
     this.tooltipRef = `ref-block-tooltip-user-${window.performance.now()}`;
+
+    this.refreshData();
   }
 }
 </script>
