@@ -1,5 +1,5 @@
 <template>
-  <page :title="title" :breadcrumb-links="breadcrumbLinks">
+  <page :title="title" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <button-overlay :show="processing">
         <b-button variant="primary" v-on:click="onCreateClick">Create</b-button>
@@ -84,7 +84,7 @@ export default {
 
       } catch (error) {
         this.errors.push({
-          title: `Unknown error when mapping to the collection group.`,
+          title: `Unknown error when creating the collection group.`,
           source: error, variant: "danger"
         });
       }
