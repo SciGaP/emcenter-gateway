@@ -47,9 +47,9 @@ export default {
     authenticated: () => custosStore.getters["auth/authenticated"],
     currentUsername: () => custosStore.getters["auth/currentUsername"]
   },
-  mounted() {
-    this.redirectToLoginIfNotAuthenticated();
-  }
+  // mounted() {
+  //   this.redirectToLoginIfNotAuthenticated();
+  // }
 }
 </script>
 
