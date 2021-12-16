@@ -59,6 +59,12 @@ export default new Router({
             component: Login
         },
         {
+            path: "/contact",
+            name: "contact",
+            component: () =>
+                import("./pages/ContactPage")
+        },
+        {
             path: "/profile",
             name: "profile",
             beforeEnter: _validateAuthenticationBeforeEnter,
