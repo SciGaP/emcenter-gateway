@@ -5,7 +5,7 @@
         <a class="navbar-brand" href="#">
           <img src="../assets/images/iu-sig-formal.svg" height="30" class="d-inline-block align-top" alt="">
         </a>
-        © Copyright 2020
+        © Copyright 2021
       </div>
     </nav>
   </footer>
