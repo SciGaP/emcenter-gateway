@@ -2,9 +2,9 @@
   <div>
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark navbar-lg iu-crimson-bg">
       <div class="container">
-        <a class="navbar-brand" to="/"><img src="../assets/images/trident-large.png"
+        <router-link class="navbar-brand" to="/"><img src="../assets/images/trident-large.png"
                                             height="30" class="d-inline-block align-top" alt="">
-          Electron Microscopy Center </a>
+          Electron Microscopy Center </router-link>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -14,9 +14,6 @@
           </ul>
           <form class="form-inline my-2 my-lg-0">
             <ul class="navbar-nav mr-2">
-              <li class="nav-item">
-                <a class="nav-link" href="/#howitworks">How it Works</a>
-              </li>
               <li class="nav-item">
                 <router-link to="/contact" v-slot="{href, navigate}" tag="">
                   <a class="nav-link" :href="href" @click="navigate">Contact</a>
@@ -40,6 +37,7 @@
               <p>Our goal is to promote the development of researchers that are knowledgeable, confident and
                 comfortable in the use of electron microscopes.</p>
               <button class="btn btn-lg btn-iu-crimson" v-on:click="loadAuthURL">Get Started</button>
+              <a href="#howitworks" class="ml-3 btn btn-lg btn-outline-dark">How it works</a>
             </div>
             <div class="col-lg-4">
               <img src="../assets/images/0.svg" class="img-fluid pt-5 mt-5" alt="">
@@ -51,9 +49,7 @@
         <div class="row">
           <div class="col-lg-10">
             <div class="h1 font-weight-bold">Our Services</div>
-            <p>On July 1, 2013, the Electron Microscopy Center (EMC) officially opened for business. We gave away
-              coffee and donuts all morning while answering questions about the new core facility and giving tours
-              of the equipment.</p>
+            <p>On July 1, 2013, the Electron Microscopy Center (EMC) officially opened for business.</p>
           </div>
         </div>
         <div class="row course-cards">

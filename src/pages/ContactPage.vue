@@ -2,9 +2,9 @@
   <div>
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark navbar-lg iu-crimson-bg">
       <div class="container">
-        <a class="navbar-brand" to="/"><img src="../assets/images/trident-large.png"
+        <router-link class="navbar-brand" to="/"><img src="../assets/images/trident-large.png"
                                             height="30" class="d-inline-block align-top" alt="">
-          Electron Microscopy Center </a>
+          Electron Microscopy Center </router-link>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -14,9 +14,6 @@
           </ul>
           <form class="form-inline my-2 my-lg-0">
             <ul class="navbar-nav mr-2">
-              <li class="nav-item">
-                <a class="nav-link" href="/#howitworks">How it Works</a>
-              </li>
               <li class="nav-item">
                 <router-link to="/contact" v-slot="{href, navigate}" tag="">
                   <a class="nav-link" :href="href" @click="navigate">Contact</a>
@@ -36,7 +33,7 @@
           <div class="page-header">Reach to Us</div>
           <div class="row">
             <div class="col-12">
-              <div>For EMC portal queries please contact <a href="mailto:xirc@iu.edu">xirc@iu.edu</a>
+              <div>For EMC portal queries please contact <a href="mailto:circ@iu.edu">circ@iu.edu</a>
               </div>
               <div>EM Center queries please contact <a href="https://iubemcenter.indiana.edu/contact/index.html">https://iubemcenter.indiana.edu/contact/index.html</a>
               </div>
