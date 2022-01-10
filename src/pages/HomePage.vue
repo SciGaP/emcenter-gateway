@@ -98,9 +98,6 @@
           <div class="row">
             <div class="col-lg-10 mb-5">
               <div class="display-4 text-light">How it works</div>
-              <p>On July 1, 2013, the Electron Microscopy Center (EMC) officially opened for business. We gave
-                away coffee and donuts all morning while answering questions about the new core facility and
-                giving tours of the equipment.</p>
             </div>
           </div>
           <div class="row py-5">
