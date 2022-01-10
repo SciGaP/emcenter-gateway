@@ -101,28 +101,28 @@ export default new Router({
         },
         {
             path: "/collections",
-            name: "data",
+            name: "collections",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
                 import("./pages/resource/resource-list")
         },
         {
             path: "/labs",
-            name: "data",
+            name: "labs",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
                 import("./pages/resource/lab/lab-list")
         },
         {
             path: "/labs/:resourceId",
-            name: "data",
+            name: "lab",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
                 import("./pages/resource/lab/lab-page")
         },
         {
             path: "/collections/new",
-            name: "data",
+            name: "collections-new",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
                 import("./pages/resource/resource-new")
@@ -136,14 +136,14 @@ export default new Router({
         },
         {
             path: "/groups/new",
-            name: "groups",
+            name: "groups-new",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
                 import("./pages/group/group-new-page")
         },
         {
             path: "/groups/:groupId",
-            name: "settings",
+            name: "group",
             beforeEnter: _validateAuthenticationBeforeEnter,
             component: () =>
                 import("./pages/group/group-page")
