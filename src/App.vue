@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="v-100 bg-light" style="height: 100%; display: flex; flex-direction: column;">
-    <AppHeader/>
+    <AppHeader v-if="showHeader"/>
     <div class="v-100">
       <router-view/>
     </div>
@@ -44,6 +44,9 @@ export default {
     }
   },
   computed: {
+    showHeader() {
+      return ["home", "contact"].indexOf(this.$route.name) < 0;
+    },
     authenticated: () => custosStore.getters["auth/authenticated"],
     currentUsername: () => custosStore.getters["auth/currentUsername"]
   },
