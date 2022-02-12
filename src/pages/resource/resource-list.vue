@@ -106,9 +106,9 @@
               </b-td>
               <b-td>
                 <div style="font-size: 25px;line-height: 25px;">
-                  <img v-if="getResourceThumbnailDataUrl(resource)" :src="getResourceThumbnailDataUrl(resource)"
-                       style="width: 24px; height: 24px;">
-                  <template v-else>
+<!--                  <img v-if="getResourceThumbnailDataUrl(resource)" :src="getResourceThumbnailDataUrl(resource)"-->
+<!--                       style="width: 24px; height: 24px;">-->
+<!--                  <template v-else>-->
                     <b-icon v-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"
                             v-b-tooltip.hover="`Dataset`"></b-icon>
                     <b-icon v-else-if="resource.type === 'COLLECTION'" icon="folder" aria-hidden="true"
@@ -117,7 +117,7 @@
                             aria-hidden="true" v-b-tooltip.hover="`Collection Group`"></b-icon>
                     <b-icon v-else-if="resource.type === 'LAB'" icon="box-seam"
                             aria-hidden="true" v-b-tooltip.hover="`Lab`"></b-icon>
-                  </template>
+<!--                  </template>--><!---->
                 </div>
               </b-td>
               <b-td>
