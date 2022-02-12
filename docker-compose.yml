@@ -16,3 +16,8 @@ services:
       VUE_APP_RESOURCE_IMAGE_REGISTRY_URL: "http://localhost:8080"
       VUE_APP_CUSTOS_API_URL: ""
       VUE_APP_SUPER_CLIENT_ID: ""
+  tusd:
+    image: tusproject/tusd:latest
+    ports:
+      - "1080:1080"
+    command: -upload-dir=./resource-images
