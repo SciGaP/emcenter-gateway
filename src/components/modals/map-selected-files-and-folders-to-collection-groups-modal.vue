@@ -119,7 +119,6 @@ export default {
         }
 
       } catch (error) {
-        console.log("error : ", error);
 
         // Rollback the state if the saving causes any error.
         this.isCollectionGroupMapped = {

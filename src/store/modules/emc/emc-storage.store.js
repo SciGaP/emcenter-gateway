@@ -51,7 +51,6 @@ const mutations = {
 
 const getters = {
     getStorages: (state, getters) => {
-        // console.log("two");
         return () => {
             const queryString = "";
             const storageIds = state.storageListMap[queryString];
@@ -63,7 +62,6 @@ const getters = {
         }
     },
     getStorage: (state) => {
-        // console.log("one");
         return ({storageId}) => {
             if (state.storageMap[storageId]) {
                 return state.storageMap[storageId];

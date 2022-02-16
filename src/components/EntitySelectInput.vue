@@ -39,7 +39,6 @@ export default {
     },
     typeheadDataSerializer() {
       return (obj) => {
-        console.log("typeheadDataSerializer", obj)
         if (obj.username) {
           return obj.username;
         } else {
