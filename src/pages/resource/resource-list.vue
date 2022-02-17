@@ -452,7 +452,7 @@ export default {
       if (this.parentResourceId) {
         await Promise.all([
           this.$store.dispatch("emcResource/fetchResource", {resourceId: this.parentResourceId}),
-          // this.$store.dispatch("emcResource/fetchParentResources", {resourceId: this.parentResourceId})
+          this.$store.dispatch("emcResource/fetchParentResources", {resourceId: this.parentResourceId})
         ]);
 
         await this.$store.dispatch("emcResource/fetchResources", {
