@@ -70,10 +70,6 @@ export default class EmcResource {
     }
 
     async fetchParentResources({resourceId, type}) {
-
-        // TODO
-        console.log(`[FETCH] /emc/path?resourceId=${resourceId}`);
-
         const response = await this.emcService.axiosInstanceWithTokenAuthorization.get(
             EmcService.ENDPOINTS.RESOURCE_PARENT,
             {
@@ -155,8 +151,6 @@ export default class EmcResource {
             }
         );
 
-
-        console.log("@@@@@@@ fetchResource : ", response)
         const {
             data: {
                 resource: {
@@ -224,10 +218,6 @@ export default class EmcResource {
     }
 
     async fetchResources({parentResourceId, parentResourceType, type, queries}) {
-
-        // TODO
-        console.log(`[FETCH] /emc/resources?parentResourceId=${parentResourceId}&type=${type}`);
-
         let response = null;
         if (!parentResourceId) {
             response = await this.emcService.axiosInstanceWithTokenAuthorization.post(

@@ -74,7 +74,6 @@ export default class EmcStoragePreference {
     }
 
     async deleteStoragePreference({storagePreferenceId}) {
-        console.log("service: "+ storagePreferenceId);
         return await this.emcService.axiosInstanceWithTokenAuthorization.delete(
             EmcService.ENDPOINTS.STORAGE_PREFERENCE,
             { 

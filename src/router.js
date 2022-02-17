@@ -23,10 +23,7 @@ async function _validateAuthenticationBeforeEnter(to, from, next) {
     await custosStore.dispatch('auth/refreshAuthentication');
     const authenticated = custosStore.getters['auth/authenticated'];
 
-
-    console.log("store ", custosStore)
     if (!authenticated) {
-        console.log("NOT authenticated");
         // next(true);
         next('/');
     } else {
@@ -36,11 +33,6 @@ async function _validateAuthenticationBeforeEnter(to, from, next) {
             await custosStore.dispatch('user/fetchUsers', {username, clientId: custosService.clientId});
         }
 
-        // if (!custosStore.getters["tenant/getTenant"]({clientId: custosService.clientId})) {
-        //     await custosStore.dispatch("tenant/fetchTenant", {clientId: custosService.clientId});
-        // }
-
-        console.log("YES authenticated " + custosStore.getters["user/getUser"]({username}));
         next(true);
     }
 }

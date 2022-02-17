@@ -167,7 +167,6 @@ export default {
   methods: {
     isFormValid() {
       let _isFormValid = true;
-      console.log("form");
       for (let i = 0; i < this.inputFieldsList.length; i++) {
         if (this.inputFieldsList[i] == 'hostName' || this.inputFieldsList[i] == 'port') {
           if (this.storageId == null)
@@ -176,8 +175,7 @@ export default {
           _isFormValid = _isFormValid && this.isValid[this.inputFieldsList[i]];
         }
       }
-      console.log("end");
-      console.log(_isFormValid);
+
       return _isFormValid;
     },
     makeFormVisited() {
@@ -218,7 +216,6 @@ export default {
 
           await this.$router.push(`/storages`);
         } catch (error) {
-          console.log("error : ", error);
           this.errors.push({
             title: `Unknown error while creating the storage preference.`,
             source: error, variant: "danger"
@@ -240,7 +237,7 @@ export default {
           type: "SECRET",
           ownerId: this.currentUsername
         });
-        console.log("#### onClickCreateNewCredentialToken  : entityId : ", entityId);
+
         await this.refreshData();
         this.credentialToken = entityId;
       } catch (error) {

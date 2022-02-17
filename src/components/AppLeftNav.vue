@@ -216,9 +216,6 @@ export default {
           'Authorization': `Bearer ${custosService.identity.accessToken}`
         }
       },).then(resp => {
-        console.log("resp : ", resp)
-        console.log("resp.headers : ", resp.headers)
-
         if (resp.headers["content-disposition"]) {
           filename = resp.headers["content-disposition"].match(/.*filename="(.*)".*/)[1];
         }
@@ -226,7 +223,6 @@ export default {
         return resp;
       }).then(response => {
         const dataUrl = window.URL.createObjectURL(new Blob([response.data]));
-        console.log("blob url : ", dataUrl)
         return dataUrl;
       })
 

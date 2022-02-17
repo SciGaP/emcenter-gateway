@@ -12,8 +12,11 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import custosStore from "airavata-custos-portal/src/lib/store";
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
+
+Vue.prototype.userFetchStatus = {};
 
 export default {
   name: "block-tooltip-user",
@@ -42,9 +45,11 @@ export default {
     }
   },
   methods: {
-    refreshData() {
-      if (!this.user) {
-        this.$store.dispatch("user/fetchUsers", {clientId: custosService.clientId, username: this.username});
+    async refreshData() {
+      if (!this.user && !this.userFetchStatus[this.username]) {
+        this.userFetchStatus[this.username] = "FETCHING";
+        await this.$store.dispatch("user/fetchUsers", {clientId: custosService.clientId, username: this.username});
+        this.userFetchStatus[this.username] = "COMPLETED";
       }
     }
   },

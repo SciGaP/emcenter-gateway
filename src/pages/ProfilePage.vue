@@ -324,7 +324,6 @@ export default {
             });
           }
         } catch (error) {
-          console.log("error ", error);
           this.errors.push({
             title: "Unknown error when updating the user profile.",
             source: error, variant: "danger"
@@ -338,7 +337,6 @@ export default {
   watch: {
     user() {
       if (this.user) {
-        console.log("########## user watch")
         this.firstName = this.user.firstName;
         this.lastName = this.user.lastName;
         this.email = this.user.email;
@@ -358,7 +356,6 @@ export default {
     this.$store.dispatch("tenant/fetchTenantRoles", {clientId: this.clientId, clientLevel: false});
 
     if (this.user) {
-      console.log("########## user watch")
       this.firstName = this.user.firstName;
       this.lastName = this.user.lastName;
       this.email = this.user.email;

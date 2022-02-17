@@ -28,9 +28,6 @@ const actions = {
             queries
         });
 
-        console.log("##### fetchResources ### queryString : ", queryString);
-        console.log("##### fetchResources ### : ", resources);
-
         const resourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete}) => {
             commit("SET_RESOURCE", {
                 resourceId,
@@ -153,23 +150,6 @@ const actions = {
             commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
 
             try {
-                // url = await axios.get(url, {responseType: 'blob'}).then(resp => {
-                //     console.log("resp : ", resp)
-                //     console.log("resp.headers : ", resp.headers)
-                //     resourceDownload.content = resp;
-                //
-                //     if (resp.headers["content-disposition"]) {
-                //         filename = resp.headers["content-disposition"].match(/.*filename="(.*)".*/)[1];
-                //     }
-                //
-                //     return resp.data;
-                // }).then(blob => {
-                //     console.log("blob : ", blob)
-                //     const dataUrl = window.URL.createObjectURL(blob);
-                //     console.log("blob url : ", dataUrl)
-                //     return dataUrl;
-                // })
-
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
@@ -185,8 +165,6 @@ const actions = {
                     title: "Unknown error when downloading.",
                     source: error, variant: "danger"
                 });
-
-                console.log("blob error : ", error)
 
                 throw error;
             }
@@ -310,7 +288,6 @@ const getters = {
     getResources: (state, getters) => {
         return ({parentResourceId, type, queries} = {}) => {
             const queryString = JSON.stringify({parentResourceId, type, queries});
-            console.log("========== getResources : ", queryString);
             const resourceIds = state.resourceListMap[queryString];
             if (resourceIds) {
                 return resourceIds.map(resourceId => getters.getResource({resourceId}));
