@@ -506,8 +506,10 @@ export default {
         this.search = "";
       }
     },
-    searchQuery() {
-      this.refreshData();
+    searchQuery(a, b) {
+      if (JSON.stringify(a) !== JSON.stringify(b)) {
+        this.refreshData();
+      }
     }
   },
   beforeMount() {
