@@ -150,59 +150,47 @@
                 </block-tooltip-user>
               </b-td>
               <b-td>
-                <button-overlay :show="processingDownload[resource.resourceId]">
-                  <b-button variant="link" size="sm" v-on:click="downloadResource(resource)"
-                            :disabled="!isDownloadAllowed(resource)" v-b-tooltip.hover="`Download`">
-                    <b-icon icon="download"></b-icon>
+                <div class="d-flex flex-row">
+                  <button-overlay :show="processingDownload[resource.resourceId]">
+                    <b-button variant="link" size="sm" v-on:click="downloadResource(resource)"
+                              :disabled="!isDownloadAllowed(resource)" v-b-tooltip.hover="`Download`">
+                      <b-icon icon="download"></b-icon>
+                    </b-button>
+                  </button-overlay>
+
+                  <b-button variant="link" size="sm" v-b-modal="`share-modal-${resource.resourceId}`"
+                            v-b-tooltip.hover="`Share`" :disabled="!resource.canShare"
+                            v-if="resource.type !== 'COLLECTION_GROUP'">
+                    <b-icon icon="share"></b-icon>
                   </b-button>
-                </button-overlay>
+                  <ModalShareEntity :modal-id="`share-modal-${resource.resourceId}`"
+                                    :entity-id="resource.resourceId"/>
 
-                <!--                    <b-button variant="link" size="sm" v-b-modal="`copy-modal-${file.fileId}`"-->
-                <!--                              v-b-tooltip.hover="`Copy to`">-->
-                <!--                      <b-icon icon="cloud"></b-icon>-->
-                <!--                    </b-button>-->
-                <!--                    <CopyModal :modal-id="`copy-modal-${file.fileId}`" :file-ids="[file.fileId]"/>-->
+                  <b-button variant="link" size="sm"
+                            v-b-modal="`map-to-collection-groups-modal-${resource.resourceId}`"
+                            v-b-tooltip.hover="`Group Collections`">
+                    <b-icon icon="folder"></b-icon>
+                  </b-button>
 
-                <b-button variant="link" size="sm" v-b-modal="`share-modal-${resource.resourceId}`"
-                          v-b-tooltip.hover="`Share`" :disabled="!resource.canShare"
-                          v-if="resource.type !== 'COLLECTION_GROUP'">
-                  <b-icon icon="share"></b-icon>
-                </b-button>
-                <ModalShareEntity :modal-id="`share-modal-${resource.resourceId}`"
-                                  :entity-id="resource.resourceId"/>
+                  <MapSelectedFilesAndFoldersToCollectionGroupsModal
+                      :modal-id="`map-to-collection-groups-modal-${resource.resourceId}`"
+                      :resource-ids="[resource.resourceId]"/>
 
-                <b-button variant="link" size="sm"
-                          v-b-modal="`map-to-collection-groups-modal-${resource.resourceId}`"
-                          v-b-tooltip.hover="`Group Collections`">
-                  <b-icon icon="folder"></b-icon>
-                </b-button>
+                  <b-button variant="link" size="sm" v-b-tooltip.hover="`Notes`"
+                            v-b-modal="`file-notes-modal-${resource.resourceId}`">
+                    <b-icon icon="chat-square-text"></b-icon>
+                  </b-button>
+                  <NotesModal :modal-id="`file-notes-modal-${resource.resourceId}`" :resource-id="resource.resourceId"/>
 
-                <MapSelectedFilesAndFoldersToCollectionGroupsModal
-                    :modal-id="`map-to-collection-groups-modal-${resource.resourceId}`"
-                    :resource-ids="[resource.resourceId]"/>
+                  <b-button variant="link" size="sm" v-b-tooltip.hover="`Metadata`"
+                            v-b-modal="`resource-metadata-modal-${resource.resourceId}`"
+                            v-if="resource.type !== 'COLLECTION_GROUP'">
+                    <b-icon icon="info-circle"></b-icon>
+                  </b-button>
+                  <ResourceMetadataModal :modal-id="`resource-metadata-modal-${resource.resourceId}`"
+                                         :resource-id="resource.resourceId"/>
 
-                <!--                    <b-button variant="link" size="sm" v-b-tooltip.hover="`Archive`">-->
-                <!--                      <b-icon icon="archive"></b-icon>-->
-                <!--                    </b-button>-->
-
-                <!--                <b-button variant="link" size="sm" v-b-tooltip.hover="`Delete`" disabled>-->
-                <!--                  <b-icon icon="trash"></b-icon>-->
-                <!--                </b-button>-->
-
-                <b-button variant="link" size="sm" v-b-tooltip.hover="`Notes`"
-                          v-b-modal="`file-notes-modal-${resource.resourceId}`">
-                  <b-icon icon="chat-square-text"></b-icon>
-                </b-button>
-                <NotesModal :modal-id="`file-notes-modal-${resource.resourceId}`" :resource-id="resource.resourceId"/>
-
-                <b-button variant="link" size="sm" v-b-tooltip.hover="`Metadata`"
-                          v-b-modal="`resource-metadata-modal-${resource.resourceId}`"
-                          v-if="resource.type !== 'COLLECTION_GROUP'">
-                  <b-icon icon="info-circle"></b-icon>
-                </b-button>
-                <ResourceMetadataModal :modal-id="`resource-metadata-modal-${resource.resourceId}`"
-                                       :resource-id="resource.resourceId"/>
-
+                </div>
               </b-td>
             </b-tr>
 
