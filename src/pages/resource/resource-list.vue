@@ -106,25 +106,24 @@
               </b-td>
               <b-td>
                 <div style="font-size: 25px;line-height: 25px;">
-<!--                  <img v-if="getResourceThumbnailDataUrl(resource)" :src="getResourceThumbnailDataUrl(resource)"-->
-<!--                       style="width: 24px; height: 24px;">-->
-<!--                  <template v-else>-->
-                    <b-icon v-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"
-                            v-b-tooltip.hover="`Dataset`"></b-icon>
-                    <b-icon v-else-if="resource.type === 'COLLECTION'" icon="folder" aria-hidden="true"
-                            v-b-tooltip.hover="`Collection`"></b-icon>
-                    <b-icon v-else-if="resource.type === 'COLLECTION_GROUP'" icon="folder-symlink"
-                            aria-hidden="true" v-b-tooltip.hover="`Collection Group`"></b-icon>
-                    <b-icon v-else-if="resource.type === 'LAB'" icon="box-seam"
-                            aria-hidden="true" v-b-tooltip.hover="`Lab`"></b-icon>
-<!--                  </template>--><!---->
+                  <!--                  <img v-if="getResourceThumbnailDataUrl(resource)" :src="getResourceThumbnailDataUrl(resource)"-->
+                  <!--                       style="width: 24px; height: 24px;">-->
+                  <!--                  <template v-else>-->
+                  <b-icon v-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"
+                          v-b-tooltip.hover="`Dataset`"></b-icon>
+                  <b-icon v-else-if="resource.type === 'COLLECTION'" icon="folder" aria-hidden="true"
+                          v-b-tooltip.hover="`Collection`"></b-icon>
+                  <b-icon v-else-if="resource.type === 'COLLECTION_GROUP'" icon="folder-symlink"
+                          aria-hidden="true" v-b-tooltip.hover="`Collection Group`"></b-icon>
+                  <b-icon v-else-if="resource.type === 'LAB'" icon="box-seam"
+                          aria-hidden="true" v-b-tooltip.hover="`Lab`"></b-icon>
+                  <!--                  </template>--><!---->
                 </div>
               </b-td>
               <b-td>
-                <div style="flex: 1;">
+                <div style="flex: 1;" class="resource-name" :id="`resource-name-${resource.resourceId}`">
                   <div v-if="resource.type === 'FILE'">
                     <a href="#"
-                       style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
                        v-b-modal="`file-preview-modal-${resource.resourceId}`"
                        v-on:click.prevent="$bvModal.show(`file-preview-modal-${resource.resourceId}`)">
                       {{ resource.name }}
@@ -140,6 +139,9 @@
                     </a>
                   </router-link>
                 </div>
+                <b-tooltip ref="tooltip" :target="`resource-name-${resource.resourceId}`">
+                  {{ resource.name }}
+                </b-tooltip>
               </b-td>
               <!--              <b-td>{{ resource.size }}</b-td>-->
               <b-td>{{ resource.createdAt }}</b-td>
@@ -526,4 +528,16 @@ table label {
   top: -100px;
 }
 
+div.resource-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}
+
+div.resource-name a {
+  display: inline;
+  padding-left: 5px;
+  line-height: 24px;
+}
 </style>
