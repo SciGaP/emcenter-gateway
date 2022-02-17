@@ -479,8 +479,9 @@ export default {
       }
 
 
-      await Promise.all(this.resources.map(({resourceId}) =>
-          this.$store.dispatch("emcResource/fetchResourceThumbnailDataUrl", {resourceId})));
+      // TODO Fix - Commented since the thumbnails are not currently used.
+      // await Promise.all(this.resources.map(({resourceId}) =>
+      //     this.$store.dispatch("emcResource/fetchResourceThumbnailDataUrl", {resourceId})));
     },
     async downloadResource({resourceId}) {
       this.processingDownload = {...this.processingDownload, [resourceId]: true};
