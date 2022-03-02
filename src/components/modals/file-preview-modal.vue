@@ -3,7 +3,7 @@
     <div>
       <div>
         <b-button variant="link" size="sm" v-b-modal="`share-modal`"
-                  v-b-tooltip.hover="`Share`"  v-if="resource.type !== 'COLLECTION_GROUP'">
+                  v-b-tooltip.hover="`Share`" v-if="resource.type !== 'COLLECTION_GROUP'">
           <b-icon icon="share"></b-icon>
           Share
         </b-button>
@@ -85,12 +85,28 @@ export default {
       return this.$store.getters["emcResource/getResource"]({resourceId: this.resourceId});
     },
     resourcePreviewDataUrl() {
-      return this.$store.getters["emcResource/getResourcePreviewDataUrl"]({resourceId: this.resourceId});
+      if (this.resource) {
+        const metadata = this.$store.getters["emcResource/getResourceMetadata"]({
+          resourceId: this.resource.resourceId,
+          type: this.resource.type
+        });
+        if (metadata && metadata.length > 0 && metadata[0].image) {
+          return metadata[0].image;
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
     }
   },
   methods: {
-    refreshData() {
-      this.$store.dispatch("emcResource/fetchResourcePreviewDataUrl", {resourceId: this.resourceId})
+    async refreshData() {
+      await this.$store.dispatch("emcResource/fetchResource", {resourceId: this.resourceId});
+      await this.$store.dispatch("emcResource/fetchResourceMetadata", {
+        resourceId: this.resourceId,
+        type: this.resource.type
+      });
     }
   }
 }
