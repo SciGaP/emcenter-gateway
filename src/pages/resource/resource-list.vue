@@ -106,10 +106,9 @@
               </b-td>
               <b-td>
                 <div style="font-size: 25px;line-height: 25px;">
-                  <!--                  <img v-if="getResourceThumbnailDataUrl(resource)" :src="getResourceThumbnailDataUrl(resource)"-->
-                  <!--                       style="width: 24px; height: 24px;">-->
-                  <!--                  <template v-else>-->
-                  <b-icon v-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"
+                  <img v-if="getResourceThumbnailUrl(resource)" :src="getResourceThumbnailUrl(resource)"
+                       style="width: 24px; height: 24px;">
+                  <b-icon v-else-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"
                           v-b-tooltip.hover="`Dataset`"></b-icon>
                   <b-icon v-else-if="resource.type === 'COLLECTION'" icon="folder" aria-hidden="true"
                           v-b-tooltip.hover="`Collection`"></b-icon>
@@ -117,7 +116,6 @@
                           aria-hidden="true" v-b-tooltip.hover="`Collection Group`"></b-icon>
                   <b-icon v-else-if="resource.type === 'LAB'" icon="box-seam"
                           aria-hidden="true" v-b-tooltip.hover="`Lab`"></b-icon>
-                  <!--                  </template>--><!---->
                 </div>
               </b-td>
               <b-td>
@@ -430,9 +428,6 @@ export default {
     }
   },
   methods: {
-    getResourceThumbnailDataUrl({resourceId}) {
-      return this.$store.getters["emcResource/getResourceThumbnailDataUrl"]({resourceId});
-    },
     isDownloadAllowed(resource) {
       return resource.type === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET;
     },
@@ -468,10 +463,22 @@ export default {
         })));
       }
 
-
-      // TODO Fix - Commented since the thumbnails are not currently used.
-      // await Promise.all(this.resources.map(({resourceId}) =>
-      //     this.$store.dispatch("emcResource/fetchResourceThumbnailDataUrl", {resourceId})));
+      for (let i = 0; i < this.resources.length; i++) {
+        if (this.resources[i].type === 'FILE') {
+          this.$store.dispatch("emcResource/fetchResourceMetadata", {
+            resourceId: this.resources[i].resourceId,
+            type: this.resources[i].type
+          });
+        }
+      }
+    },
+    getResourceThumbnailUrl({resourceId, type}) {
+      const metadata = this.$store.getters["emcResource/getResourceMetadata"]({resourceId, type});
+      if (metadata && metadata.length > 0 && metadata[0].thumbnail) {
+        return metadata[0].thumbnail;
+      } else {
+        return null;
+      }
     },
     async downloadResource({resourceId}) {
       this.processingDownload = {...this.processingDownload, [resourceId]: true};
