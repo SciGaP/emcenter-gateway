@@ -62,8 +62,6 @@ import MapSelectedFilesAndFoldersToCollectionGroupsModal
   from "@/components/modals/map-selected-files-and-folders-to-collection-groups-modal";
 import ModalShareEntity from "airavata-custos-portal/src/lib/components/modals/modal-share-entity";
 import NotesModal from "@/components/modals/notes-modal";
-import config from "@/config";
-
 
 export default {
   name: "file-preview-modal",
@@ -74,11 +72,6 @@ export default {
   props: {
     modalId: {default: ""},
     resourceId: {default: ""}
-  },
-  data() {
-    return {
-      resourceImageRegistryUrl: config.value('resourceImageRegistryUrl')
-    }
   },
   computed: {
     resource() {

@@ -219,7 +219,6 @@ import ResourceMetadataModal from "@/components/modals/resource-metadata-modal";
 import custosStore from "airavata-custos-portal/src/lib/store";
 // import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
 import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
-import config from "@/config";
 import BlockTooltipUser from "@/components/blocks/block-tooltip-user";
 
 export default {
@@ -245,9 +244,7 @@ export default {
       defaultTypes: [
         EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION,
         EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET
-      ],
-
-      resourceImageRegistryUrl: config.value('resourceImageRegistryUrl')
+      ]
     }
   },
   store: store,
