@@ -5,7 +5,6 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./resource-images:/usr/share/nginx/html/resource-images
       - /Users/isururanawaka/Documents/Airavata_Repository/airavata-custos-portal/custos-demo-gateway/privkey.pem:/etc/nginx/privkey.pem
       - /Users/isururanawaka/Documents/Airavata_Repository/airavata-custos-portal/custos-demo-gateway/fullchain.pem:/etc/nginx/fullchain.pem
     environment:
@@ -13,7 +12,6 @@ services:
       VUE_APP_CLIENT_SEC: ""
       VUE_APP_REDIRECT_URI: "http://localhost:8080/callback"
       VUE_APP_DATA_LAKE_DRMS_URL: ""
-      VUE_APP_RESOURCE_IMAGE_REGISTRY_URL: "http://localhost:8080"
       VUE_APP_CUSTOS_API_URL: ""
       VUE_APP_SUPER_CLIENT_ID: ""
   tusd:

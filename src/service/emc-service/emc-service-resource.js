@@ -1,6 +1,4 @@
 import EmcService from "@/service/emc-service/index";
-import axios from "axios";
-import config from "@/config";
 
 export default class EmcResource {
 
@@ -132,15 +130,6 @@ export default class EmcResource {
         );
 
         return metadata;
-    }
-
-    async fetchResourceImageBase64({resourceId, width, height}) {
-        return await axios.get(
-            `${config.value('resourceImageRegistryUrl')}/resource-images/${resourceId}/${width}-${height}.png`,
-            {responseType: 'blob'}
-        ).then(response => {
-            return window.URL.createObjectURL(new Blob([response.data]));
-        }).catch(() => null);
     }
 
     async fetchResource({resourceId}) {
