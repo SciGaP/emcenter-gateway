@@ -1,4 +1,15 @@
 import EmcService from "@/service/emc-service/index";
+import config from "@/config";
+
+function encodeTusdFileUrl(tusdFileUrl) {
+    let tusdFileId = /\/([a-zA-Z0-9]*)$/.exec(tusdFileUrl);
+    if (tusdFileId && tusdFileId.length > 1) {
+        tusdFileId = tusdFileId[1];
+        return `${config.value('resourceImageRegistryUrl')}/${tusdFileId}`;
+    }
+
+    return null;
+}
 
 export default class EmcResource {
 
@@ -128,6 +139,13 @@ export default class EmcResource {
                 params: {resourceId, type}
             }
         );
+
+        if (Array.isArray(metadata)) {
+            for (let i = 0; i < metadata.length; i++) {
+                if (metadata[i].image) metadata[i].image = encodeTusdFileUrl(metadata[i].image);
+                if (metadata[i].thumbnail) metadata[i].thumbnail = encodeTusdFileUrl(metadata[i].thumbnail);
+            }
+        }
 
         return metadata;
     }
