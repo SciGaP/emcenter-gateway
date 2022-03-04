@@ -365,6 +365,18 @@ export default {
 
       let _breadcrumbLinks = [{to: collectionsLink, name: this.title}]
 
+      if (this.parentDirectory) {
+        const parentDirectories = this.parentDirectory.replace(/^\//, "").replace(/\/$/, "").split("/")
+        let nextParentDirectoryPath = "/";
+        for (let i = 0; i < parentDirectories.length; i++) {
+          nextParentDirectoryPath = `${nextParentDirectoryPath}${parentDirectories[i]}/`
+          _breadcrumbLinks.push({
+            to: `/collections?parentDirectory=${nextParentDirectoryPath}`,
+            name: parentDirectories[i]
+          });
+        }
+      }
+
       if (this.parentResourceId) {
         if (this.parentResourcePath) {
           for (let i = 0; i < this.parentResourcePath.length; i++) {
@@ -396,7 +408,21 @@ export default {
       return "/images/GatewayTests/workdir";
     },
     parentDirectory() {
-      if (this.$route.query.parentDirectory) {
+      if (this.parentResourceId) {
+        const parentResourceMetadata = this.$store.getters["emcResource/getResourceMetadata"]({
+          resourceId: this.parentResourceId
+        });
+        if (parentResourceMetadata && Array.isArray(parentResourceMetadata) && parentResourceMetadata.length > 0) {
+          let _parentDirectory = new RegExp(`${this.rootDirectory.replace(/\//, "\\/")}(\\/.*\\/)(.*\\/)${this.parentResource.name}`).exec(parentResourceMetadata[0].resourcePath);
+          if (_parentDirectory && _parentDirectory.length > 1) {
+            _parentDirectory = _parentDirectory[1];
+            return _parentDirectory;
+          }
+        }
+
+        return null;
+
+      } else if (this.$route.query.parentDirectory) {
         return window.decodeURIComponent(this.$route.query.parentDirectory)
       } else {
         return "/";
@@ -535,13 +561,16 @@ export default {
       }
 
       for (let i = 0; i < this.resources.length; i++) {
-        // if (this.resources[i].type === 'FILE') {
         this.$store.dispatch("emcResource/fetchResourceMetadata", {
           resourceId: this.resources[i].resourceId,
           type: this.resources[i].type
         });
-        // }
       }
+
+      this.$store.dispatch("emcResource/fetchResourceMetadata", {
+        resourceId: this.parentResource.resourceId,
+        type: this.parentResource.type
+      });
     },
     getResourceThumbnailUrl({resourceId, type}) {
       const metadata = this.$store.getters["emcResource/getResourceMetadata"]({resourceId, type});
