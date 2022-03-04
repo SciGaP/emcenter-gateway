@@ -159,7 +159,7 @@
                 </block-tooltip-user>
               </b-td>
               <b-td>
-                <div class="d-flex flex-row">
+                <div class="d-flex flex-row" v-if="!resource.hasChildren">
                   <button-overlay :show="processingDownload[resource.resourceId]">
                     <b-button variant="link" size="sm" v-on:click="downloadResource(resource)"
                               :disabled="!isDownloadAllowed(resource)" v-b-tooltip.hover="`Download`">
