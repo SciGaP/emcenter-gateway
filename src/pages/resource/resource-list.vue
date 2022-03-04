@@ -69,7 +69,7 @@
       <!--          </b-button>-->
       <!--        </div>-->
       <!--      </div>-->
-      <table-overlay-info :rows="5" :columns="6" :data="resources">
+      <table-overlay-info :rows="5" :columns="6" :data="directoriesAndResources">
         <template #empty>
           <div class="w-100 p-4 text-center">
             No Collections to show. It's empty.
@@ -97,7 +97,8 @@
             </b-tr>
           </b-thead>
           <b-tbody>
-            <b-tr v-for="(resource, resourceIndex) in resources" :key="resourceIndex" :class="{selected: false}">
+            <b-tr v-for="(resource, resourceIndex) in directoriesAndResources"
+                  :key="resourceIndex" :class="{selected: false}">
               <b-td>
                 <!--                    <b-checkbox type="checkbox" :checked="isFileSelected(file)"-->
                 <!--                                v-on:change="toggleFileSelection(file)"-->
@@ -129,7 +130,15 @@
                     <FilePreviewModal :modal-id="`file-preview-modal-${resource.resourceId}`"
                                       :resource-id="resource.resourceId"/>
                   </div>
-                  <router-link v-else :to="`/collections?parentResourceId=${resource.resourceId}`"
+                  <router-link v-else-if="!resource.hasChildren"
+                               :to="`/collections?parentResourceId=${resource.resourceId}`"
+                               v-slot="{ href, route, navigate, isActive,isExactActive }">
+                    <a style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
+                       :class="{active: isExactActive}" :href="href" @click="navigate">
+                      {{ resource.name }}
+                    </a>
+                  </router-link>
+                  <router-link v-else :to="`/collections?parentDirectory=${resource.path}`"
                                v-slot="{ href, route, navigate, isActive,isExactActive }">
                     <a style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
                        :class="{active: isExactActive}" :href="href" @click="navigate">
@@ -383,11 +392,76 @@ export default {
         return null;
       }
     },
+    rootDirectory() {
+      return "/images/GatewayTests/workdir";
+    },
+    parentDirectory() {
+      if (this.$route.query.parentDirectory) {
+        return window.decodeURIComponent(this.$route.query.parentDirectory)
+      } else {
+        return "/";
+      }
+    },
     parentResource() {
       return this.$store.getters["emcResource/getResource"]({resourceId: this.parentResourceId});
     },
     parentResourcePath() {
       return this.$store.getters["emcResource/getResourcePath"]({resourceId: this.parentResourceId});
+    },
+    directoriesAndResources() {
+      if (this.parentResourceId) {
+        return this.resources;
+      } else {
+        return this.directories;
+      }
+    },
+    directories() {
+      if (!this.parentResourceId) {
+        const _directories = [];
+        const _directoriesMap = {};
+
+        this.resources.filter(({resourceId, entityId, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete}) => {
+          const metadata = this.$store.getters["emcResource/getResourceMetadata"]({resourceId});
+          if (metadata && Array.isArray(metadata) && metadata.length > 0) {
+            if (metadata[0].resourcePath
+                && metadata[0].resourcePath.indexOf(`${this.rootDirectory}${this.parentDirectory}`) >= 0) {
+
+              let _directory = metadata[0].resourcePath.replace(`${this.rootDirectory}${this.parentDirectory}`, "");
+              _directory = /^([^/]+)\/?.*$/.exec(_directory);
+              if (_directory && _directory.length > 1) {
+                _directory = _directory[1];
+                if (!_directoriesMap[_directory]) {
+                  _directoriesMap[_directory] = true;
+                  _directories.push({
+                    name: _directory,
+                    path: `${this.parentDirectory}${_directory}/`,
+                    resourcePath: metadata[0].resourcePath,
+                    // createdBy,
+                    hasChildren: `${this.rootDirectory}${this.parentDirectory}${_directory}` !== metadata[0].resourcePath,
+
+                    resourceId,
+                    entityId,
+                    // name,
+                    description,
+                    createdAt,
+                    createdBy,
+                    lastUpdatedAt,
+                    lastUpdatedBy,
+                    status,
+                    type,
+                    note,
+                    permission, canShare, canDelete
+                  });
+                }
+              }
+            }
+          }
+        });
+
+        return _directories;
+      } else {
+        return null;
+      }
     },
     resources() {
       let _resources = [];
@@ -461,12 +535,12 @@ export default {
       }
 
       for (let i = 0; i < this.resources.length; i++) {
-        if (this.resources[i].type === 'FILE') {
-          this.$store.dispatch("emcResource/fetchResourceMetadata", {
-            resourceId: this.resources[i].resourceId,
-            type: this.resources[i].type
-          });
-        }
+        // if (this.resources[i].type === 'FILE') {
+        this.$store.dispatch("emcResource/fetchResourceMetadata", {
+          resourceId: this.resources[i].resourceId,
+          type: this.resources[i].type
+        });
+        // }
       }
     },
     getResourceThumbnailUrl({resourceId, type}) {
