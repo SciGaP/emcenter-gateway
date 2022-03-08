@@ -413,7 +413,7 @@ export default {
           resourceId: this.parentResourceId
         });
         if (parentResourceMetadata && Array.isArray(parentResourceMetadata) && parentResourceMetadata.length > 0) {
-          let _parentDirectory = new RegExp(`${this.rootDirectory.replace(/\//, "\\/")}(\\/.*\\/)(.*\\/)${this.parentResource.name}`).exec(parentResourceMetadata[0].resourcePath);
+          let _parentDirectory = new RegExp(`${this.rootDirectory.replace(/\//, "\\/")}(\\/[^/]+\\/)([^/]+\\/)*${this.parentResource.name}`).exec(parentResourceMetadata[0].resourcePath);
           if (_parentDirectory && _parentDirectory.length > 1) {
             _parentDirectory = _parentDirectory[1];
             return _parentDirectory;
@@ -442,7 +442,7 @@ export default {
       }
     },
     directories() {
-      if (!this.parentResourceId) {
+      if (!this.parentResourceId && this.resources) {
         const _directories = [];
         const _directoriesMap = {};
 
@@ -552,6 +552,11 @@ export default {
           parentResourceType: this.parentResource.type,
           queries: this.searchQuery
         });
+
+        this.$store.dispatch("emcResource/fetchResourceMetadata", {
+          resourceId: this.parentResource.resourceId,
+          type: this.parentResource.type
+        });
       } else {
         await Promise.all(this.types.map(type => this.$store.dispatch("emcResource/fetchResources", {
           parentResourceId: this.parentResourceId,
@@ -566,11 +571,6 @@ export default {
           type: this.resources[i].type
         });
       }
-
-      this.$store.dispatch("emcResource/fetchResourceMetadata", {
-        resourceId: this.parentResource.resourceId,
-        type: this.parentResource.type
-      });
     },
     getResourceThumbnailUrl({resourceId, type}) {
       const metadata = this.$store.getters["emcResource/getResourceMetadata"]({resourceId, type});
