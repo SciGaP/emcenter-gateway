@@ -89,9 +89,11 @@
               <b-th>Created On</b-th>
               <b-th>Last Updated</b-th>
 
-              <b-th v-if="hasCollectionGroups && !((hasCollections || hasDatasets))">Owner</b-th>
-              <b-th v-else-if="!hasCollectionGroups && (hasCollections || hasDatasets)">PI</b-th>
-              <b-th v-else>PI / Owner</b-th>
+              <template v-if="showPiColumn">
+                <b-th v-if="hasCollectionGroups && !((hasCollections || hasDatasets))">Owner</b-th>
+                <b-th v-else-if="!hasCollectionGroups && (hasCollections || hasDatasets)">PI</b-th>
+                <b-th v-else>PI / Owner</b-th>
+              </template>
 
               <b-th></b-th>
             </b-tr>
@@ -153,7 +155,7 @@
               <!--              <b-td>{{ resource.size }}</b-td>-->
               <b-td>{{ resource.createdAt }}</b-td>
               <b-td>{{ resource.lastUpdatedAt }}</b-td>
-              <b-td>
+              <b-td v-if="showPiColumn">
                 <block-tooltip-user :username="resource.createdBy">
                   {{ resource.createdBy }}
                 </block-tooltip-user>
@@ -413,7 +415,7 @@ export default {
           resourceId: this.parentResourceId
         });
         if (parentResourceMetadata && Array.isArray(parentResourceMetadata) && parentResourceMetadata.length > 0) {
-          let _parentDirectory = new RegExp(`${this.rootDirectory.replace(/\//, "\\/")}(\\/.*\\/)(.*\\/)${this.parentResource.name}`).exec(parentResourceMetadata[0].resourcePath);
+          let _parentDirectory = new RegExp(`${this.rootDirectory.replace(/\//, "\\/")}(\\/[^/]+\\/)([^/]+\\/)*${this.parentResource.name}`).exec(parentResourceMetadata[0].resourcePath);
           if (_parentDirectory && _parentDirectory.length > 1) {
             _parentDirectory = _parentDirectory[1];
             return _parentDirectory;
@@ -441,8 +443,11 @@ export default {
         return this.directories;
       }
     },
+    showPiColumn() {
+      return this.parentDirectory !== "/";
+    },
     directories() {
-      if (!this.parentResourceId) {
+      if (!this.parentResourceId && this.resources) {
         const _directories = [];
         const _directoriesMap = {};
 
@@ -552,6 +557,11 @@ export default {
           parentResourceType: this.parentResource.type,
           queries: this.searchQuery
         });
+
+        this.$store.dispatch("emcResource/fetchResourceMetadata", {
+          resourceId: this.parentResource.resourceId,
+          type: this.parentResource.type
+        });
       } else {
         await Promise.all(this.types.map(type => this.$store.dispatch("emcResource/fetchResources", {
           parentResourceId: this.parentResourceId,
@@ -566,11 +576,6 @@ export default {
           type: this.resources[i].type
         });
       }
-
-      this.$store.dispatch("emcResource/fetchResourceMetadata", {
-        resourceId: this.parentResource.resourceId,
-        type: this.parentResource.type
-      });
     },
     getResourceThumbnailUrl({resourceId, type}) {
       const metadata = this.$store.getters["emcResource/getResourceMetadata"]({resourceId, type});
