@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import exampleProfilePicture from "./assets/120493210_1443413932520618_6347067080170311282_n.jpg";
 import "./styles.scss";
 import AppHeader from "./components/AppHeader";
 import AppFooter from "./components/AppFooter";
@@ -28,9 +27,6 @@ export default {
   name: 'App',
   components: {AppFooter, AppHeader},
   store: custosStore,
-  data: () => {
-    return {exampleProfilePicture: exampleProfilePicture}
-  },
   methods: {
     redirectToLoginIfNotAuthenticated() {
       if (!this.authenticated && this.$router.currentRoute.path !== "/") {

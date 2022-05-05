@@ -141,7 +141,6 @@
 
 <script>
 
-import exampleProfilePicture from "../assets/120493210_1443413932520618_6347067080170311282_n.jpg";
 import svgPeople from "../assets/people.svg";
 import svgDashboard from "../assets/dashboard.svg";
 import svgFileRuled from "../assets/file-ruled.svg";
@@ -165,8 +164,7 @@ export default {
       svgPeople: svgPeople,
       svgDashboard: svgDashboard,
       svgFileRuled: svgFileRuled,
-      svgGear: svgGear,
-      exampleProfilePicture: exampleProfilePicture
+      svgGear: svgGear
     }
   },
   computed: {

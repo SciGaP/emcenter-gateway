@@ -6,7 +6,7 @@
 .github/*
 README.md
 Dockerfile
-.env
+#.env
 
 # Artifacts that will be built during image creation.
 # This should contain all files created during `yarn build`.
