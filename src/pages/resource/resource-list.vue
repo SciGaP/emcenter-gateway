@@ -381,7 +381,7 @@ export default {
 
       if (this.parentResourceId) {
         if (this.parentResourcePath) {
-          for (let i = 0; i < this.parentResourcePath.length; i++) {
+          for (let i = this.parentResourcePath.length - 1; i >= 0; i--) {
             _breadcrumbLinks.push({
               to: `/collections?parentResourceId=${this.parentResourcePath[i]}`,
               name: this.$store.getters["emcResource/getResource"]({resourceId: this.parentResourcePath[i]}).name
