@@ -124,7 +124,7 @@
               <b-td>
                 <div style="flex: 1;" class="resource-name" :id="`resource-name-${resource.resourceId}`">
                   <div v-if="resource.type === 'FILE'">
-                    <a href="#"
+                    <a href="#" v-b-tooltip.hover="resource.name"
                        v-b-modal="`file-preview-modal-${resource.resourceId}`"
                        v-on:click.prevent="$bvModal.show(`file-preview-modal-${resource.resourceId}`)">
                       {{ resource.name }}
@@ -136,6 +136,7 @@
                                :to="`/collections?parentResourceId=${resource.resourceId}`"
                                v-slot="{ href, route, navigate, isActive,isExactActive }">
                     <a style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
+                       v-b-tooltip.hover="resource.name"
                        :class="{active: isExactActive}" :href="href" @click="navigate">
                       {{ resource.name }}
                     </a>
@@ -143,14 +144,12 @@
                   <router-link v-else :to="`/collections?parentDirectory=${resource.path}`"
                                v-slot="{ href, route, navigate, isActive,isExactActive }">
                     <a style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
+                       v-b-tooltip.hover="resource.name"
                        :class="{active: isExactActive}" :href="href" @click="navigate">
                       {{ resource.name }}
                     </a>
                   </router-link>
                 </div>
-                <b-tooltip ref="tooltip" :target="`resource-name-${resource.resourceId}`">
-                  {{ resource.name }}
-                </b-tooltip>
               </b-td>
               <!--              <b-td>{{ resource.size }}</b-td>-->
               <b-td>{{ resource.createdAt }}</b-td>
