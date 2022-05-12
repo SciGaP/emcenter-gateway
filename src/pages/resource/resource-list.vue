@@ -17,7 +17,8 @@
         </b-form-text>
       </div>
 
-      <b-modal id="resource-preview-modal" size="lg" :title="resources[selectedResourceIndex].name">
+      <b-modal v-if="resources[selectedResourceIndex]" id="resource-preview-modal" size="lg"
+               :title="resources[selectedResourceIndex].name">
         <template #modal-footer>
           <div class="d-flex flex-row w-100">
             <div class="flex-fill" style="font-size: 12px; line-height: 27px;">
