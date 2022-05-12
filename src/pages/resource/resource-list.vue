@@ -16,59 +16,44 @@
           Eg:- microscope=emc123, angle=35
         </b-form-text>
       </div>
-      <!--      <div class="w-100"-->
-      <!--           style="display: flex; flex-direction: row;min-height:45px; display: inline-flex;align-items: center;">-->
-      <!--        <div style="flex: 1;">-->
-      <!--          <span v-if="numberOfFoldersSelected > 0">-->
-      <!--            {{ numberOfFoldersSelected }} collection<span v-if="numberOfFoldersSelected > 1">s</span>-->
-      <!--          </span>-->
-      <!--          <span v-if="numberOfFoldersSelected > 0 && numberOfFilesSelected > 0">-->
-      <!--            &-->
-      <!--          </span>-->
-      <!--          <span v-if="numberOfFilesSelected > 0">-->
-      <!--            {{ numberOfFilesSelected }} dataset<span v-if="numberOfFilesSelected > 1">s</span>-->
-      <!--          </span>-->
-      <!--          <span v-if="numberOfFoldersSelected > 0 || numberOfFilesSelected > 0">-->
-      <!--            selected-->
-      <!--          </span>-->
-      <!--        </div>-->
-      <!--        <div class="text-left">-->
-      <!--          <b-button variant="link" v-if="hasAnythingSelected()" @click="downloadEverythingSelected()">-->
-      <!--            <b-icon icon="download"></b-icon>-->
-      <!--            Download-->
-      <!--          </b-button>-->
 
-      <!--          <b-button variant="link" v-if="hasAnythingSelected()" v-b-modal="`copy-modal`">-->
-      <!--            <b-icon icon="cloud"></b-icon>-->
-      <!--            Copy to-->
-      <!--          </b-button>-->
-      <!--          <CopyModal modal-id="copy-modal"/>-->
+      <b-modal id="resource-preview-modal" size="lg" :title="resources[selectedResourceIndex].name">
+        <template #modal-footer>
+          <div class="d-flex flex-row w-100">
+            <div class="flex-fill" style="font-size: 12px; line-height: 27px;">
+              Created at {{ resources[selectedResourceIndex].createdAt }}
+            </div>
+            <resource-actions :resource-id="resources[selectedResourceIndex].resourceId"/>
+          </div>
+        </template>
 
-      <!--          <b-button variant="link" v-if="hasAnythingSelected()" v-b-modal="`share-modal`">-->
-      <!--            <b-icon icon="share"></b-icon>-->
-      <!--            Share-->
-      <!--          </b-button>-->
-      <!--          <ShareModal modal-id="share-modal"/>-->
+        <div>
+          <b-carousel
+              id="carousel-1"
+              v-model="selectedResourceIndex"
+              :interval="0"
+              controls no-wrap
+              indicators
+              background="#ababab"
+              style="text-shadow: 1px 1px 2px #333;"
+          >
+            <b-carousel-slide
+                v-for="(resource, resourceIndex) in directoriesAndResources"
+                :key="resourceIndex">
+              <template #img>
+                <div class="w-100 overflow-auto" style="height: 300px;">
+                  <img
+                      class="w-100"
+                      :src="getResourceImageUrl(resource)"
+                      :alt="resource.description"
+                  >
+                </div>
+              </template>
+            </b-carousel-slide>
+          </b-carousel>
+        </div>
+      </b-modal>
 
-      <!--          <b-button variant="link" v-if="hasAnythingSelected()" v-b-modal="`map-to-collection-groups-modal`">-->
-      <!--            <b-icon icon="folder"></b-icon>-->
-      <!--            Group Collections-->
-      <!--          </b-button>-->
-      <!--          <MapSelectedFilesAndFoldersToCollectionGroupsModal modal-id="map-to-collection-groups-modal"-->
-      <!--                                                             :folder-ids="selectedFolderIds"-->
-      <!--                                                             :file-ids="selectedFileIds"/>-->
-
-      <!--          <b-button variant="link" v-if="hasAnythingSelected()">-->
-      <!--            <b-icon icon="archive"></b-icon>-->
-      <!--            Archive-->
-      <!--          </b-button>-->
-
-      <!--          <b-button variant="link" v-if="hasAnythingSelected()">-->
-      <!--            <b-icon icon="trash"></b-icon>-->
-      <!--            Delete-->
-      <!--          </b-button>-->
-      <!--        </div>-->
-      <!--      </div>-->
       <table-overlay-info :rows="5" :columns="6" :data="directoriesAndResources">
         <template #empty>
           <div class="w-100 p-4 text-center">
@@ -100,7 +85,8 @@
           </b-thead>
           <b-tbody>
             <b-tr v-for="(resource, resourceIndex) in directoriesAndResources"
-                  :key="resourceIndex" :class="{selected: false}">
+                  :key="resourceIndex" :class="{selected: selectedResourceIndex === resourceIndex}"
+                  v-on:click="selectedResourceIndex = resourceIndex">
               <b-td>
                 <!--                    <b-checkbox type="checkbox" :checked="isFileSelected(file)"-->
                 <!--                                v-on:change="toggleFileSelection(file)"-->
@@ -125,12 +111,9 @@
                 <div style="flex: 1;" class="resource-name" :id="`resource-name-${resource.resourceId}`">
                   <div v-if="resource.type === 'FILE'">
                     <a href="#" v-b-tooltip.hover="resource.name"
-                       v-b-modal="`file-preview-modal-${resource.resourceId}`"
-                       v-on:click.prevent="$bvModal.show(`file-preview-modal-${resource.resourceId}`)">
+                       v-b-modal="`resource-preview-modal`">
                       {{ resource.name }}
                     </a>
-                    <FilePreviewModal :modal-id="`file-preview-modal-${resource.resourceId}`"
-                                      :resource-id="resource.resourceId"/>
                   </div>
                   <router-link v-else-if="!resource.hasChildren"
                                :to="`/collections?parentResourceId=${resource.resourceId}`"
@@ -152,55 +135,15 @@
                 </div>
               </b-td>
               <!--              <b-td>{{ resource.size }}</b-td>-->
-              <b-td>{{ resource.createdAt }}</b-td>
-              <b-td>{{ resource.lastUpdatedAt }}</b-td>
+              <b-td style="font-size: 12px; line-height: 27px;">{{ resource.createdAt }}</b-td>
+              <b-td style="font-size: 12px; line-height: 27px;">{{ resource.lastUpdatedAt }}</b-td>
               <b-td v-if="showPiColumn">
                 <block-tooltip-user :username="resource.createdBy">
                   {{ resource.createdBy }}
                 </block-tooltip-user>
               </b-td>
               <b-td>
-                <div class="d-flex flex-row" v-if="!resource.hasChildren">
-                  <button-overlay :show="processingDownload[resource.resourceId]">
-                    <b-button variant="link" size="sm" v-on:click="downloadResource(resource)"
-                              :disabled="!isDownloadAllowed(resource)" v-b-tooltip.hover="`Download`">
-                      <b-icon icon="download"></b-icon>
-                    </b-button>
-                  </button-overlay>
-
-                  <b-button variant="link" size="sm" v-b-modal="`share-modal-${resource.resourceId}`"
-                            v-b-tooltip.hover="`Share`" :disabled="!resource.canShare"
-                            v-if="resource.type !== 'COLLECTION_GROUP'">
-                    <b-icon icon="share"></b-icon>
-                  </b-button>
-                  <ModalShareEntity :modal-id="`share-modal-${resource.resourceId}`"
-                                    :entity-id="resource.resourceId"/>
-
-                  <b-button variant="link" size="sm"
-                            v-b-modal="`map-to-collection-groups-modal-${resource.resourceId}`"
-                            v-b-tooltip.hover="`Group Collections`">
-                    <b-icon icon="folder"></b-icon>
-                  </b-button>
-
-                  <MapSelectedFilesAndFoldersToCollectionGroupsModal
-                      :modal-id="`map-to-collection-groups-modal-${resource.resourceId}`"
-                      :resource-ids="[resource.resourceId]"/>
-
-                  <b-button variant="link" size="sm" v-b-tooltip.hover="`Notes`"
-                            v-b-modal="`file-notes-modal-${resource.resourceId}`">
-                    <b-icon icon="chat-square-text"></b-icon>
-                  </b-button>
-                  <NotesModal :modal-id="`file-notes-modal-${resource.resourceId}`" :resource-id="resource.resourceId"/>
-
-                  <b-button variant="link" size="sm" v-b-tooltip.hover="`Metadata`"
-                            v-b-modal="`resource-metadata-modal-${resource.resourceId}`"
-                            v-if="resource.type !== 'COLLECTION_GROUP'">
-                    <b-icon icon="info-circle"></b-icon>
-                  </b-button>
-                  <ResourceMetadataModal :modal-id="`resource-metadata-modal-${resource.resourceId}`"
-                                         :resource-id="resource.resourceId"/>
-
-                </div>
+                <resource-actions :resource-id="resource.resourceId"/>
               </b-td>
             </b-tr>
 
@@ -215,38 +158,21 @@
 <script>
 import store from "../../store";
 import Page from "../../components/Page";
-// import Pagination from "@/components/Pagination";
-import MapSelectedFilesAndFoldersToCollectionGroupsModal
-  from "@/components/modals/map-selected-files-and-folders-to-collection-groups-modal";
-import FilePreviewModal from "@/components/modals/file-preview-modal";
-// import ShareModal from "@/components/modals/share-modal";
-// import CopyModal from "@/components/modals/copy-modal";
-import NotesModal from "@/components/modals/notes-modal";
-import ModalShareEntity from "airavata-custos-portal/src/lib/components/modals/modal-share-entity";
 import EmcResource from "@/service/emc-service/emc-service-resource";
 import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
-import ResourceMetadataModal from "@/components/modals/resource-metadata-modal";
 import custosStore from "airavata-custos-portal/src/lib/store";
-// import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
-import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
 import BlockTooltipUser from "@/components/blocks/block-tooltip-user";
+import ResourceActions from "@/pages/resource/resource-actions";
 
 export default {
   name: "resource-list",
   components: {
-    BlockTooltipUser,
-    ResourceMetadataModal,
-    ModalShareEntity,
-    NotesModal,
-    // CopyModal,
-    // ShareModal,
-    FilePreviewModal, MapSelectedFilesAndFoldersToCollectionGroupsModal, Page,
-    TableOverlayInfo, ButtonOverlay
+    ResourceActions,
+    BlockTooltipUser, Page,
+    TableOverlayInfo
   },
   data() {
     return {
-      processingDelete: {},
-      processingDownload: {},
       errors: [],
 
       searchTyping: "",
@@ -254,7 +180,9 @@ export default {
       defaultTypes: [
         EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION,
         EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET
-      ]
+      ],
+
+      selectedResourceIndex: 0
     }
   },
   store: store,
@@ -529,9 +457,6 @@ export default {
     }
   },
   methods: {
-    isDownloadAllowed(resource) {
-      return resource.type === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET;
-    },
     onSearchEnter() {
       this.search = this.searchTyping;
     },
@@ -584,17 +509,13 @@ export default {
         return null;
       }
     },
-    async downloadResource({resourceId}) {
-      this.processingDownload = {...this.processingDownload, [resourceId]: true};
-      try {
-        await this.$store.dispatch("emcResource/downloadResource", {resourceId});
-      } catch (error) {
-        this.errors.push({
-          title: "Unknown error when downloading.",
-          source: error, variant: "danger"
-        });
+    getResourceImageUrl({resourceId, type}) {
+      const metadata = this.$store.getters["emcResource/getResourceMetadata"]({resourceId, type});
+      if (metadata && metadata.length > 0 && metadata[0].image) {
+        return metadata[0].image;
+      } else {
+        return null;
       }
-      this.processingDownload = {...this.processingDownload, [resourceId]: false};
     }
   },
   watch: {
@@ -632,7 +553,7 @@ export default {
 <style scoped>
 .selected,
 table tbody tr.selected {
-  background-color: #d6e2ed;
+  background-color: #e9eff4;
 }
 
 table label {
