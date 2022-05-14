@@ -87,8 +87,6 @@ export default class EmcService {
             headers: {
                 'Accept': '*/*',
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': "*",
-                'Origin': '*',
                 'Authorization': `Bearer ${custosService.identity.accessToken}`
             }
         })
