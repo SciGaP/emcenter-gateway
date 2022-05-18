@@ -128,7 +128,8 @@ export default {
         await this.$store.dispatch("emcStoragePreference/fetchStoragePreferences");
       } catch (error) {
         this.errors.push({
-          title: `Unknown error when mapping to the collection group.`,
+          title: `Unknown Error`,
+          description: `Unknown error when mapping to the collection group.`,
           source: error, variant: "danger"
         });
       }
@@ -144,7 +145,8 @@ export default {
 
       } catch (error) {
         this.errors.push({
-          title: `Unknown error when deleting the storage preference ${storagePreferenceId}.`,
+          title: `Unknown Error`,
+          description: `Unknown error when deleting the storage preference ${storagePreferenceId}.`,
           source: error, variant: "danger"
         });
       }

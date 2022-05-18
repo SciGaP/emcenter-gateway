@@ -81,11 +81,12 @@ export default {
         });
 
         await this.$router.push(this.collectionsLink);
-
-      } catch (error) {
+      } catch (e) {
         this.errors.push({
-          title: `Unknown error when creating the collection group.`,
-          source: error, variant: "danger"
+          variant: "danger",
+          title: "Unknown Error",
+          description: "Error when creating the resource.",
+          source: e
         });
       }
 

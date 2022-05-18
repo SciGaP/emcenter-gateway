@@ -70,6 +70,7 @@ const actions = {
 
     async fetchParentResources({commit}, {resourceId}) {
         const resources = await emcService.resources.fetchParentResources({resourceId});
+        console.log("### fetchParentResources - resources ", resources);
         const parentResourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note}) => {
             commit("SET_RESOURCE", {
                 resourceId,
@@ -142,7 +143,8 @@ const actions = {
                 a.click();
             } catch (error) {
                 resourceDownload.errors.push({
-                    title: "Unknown error when downloading.",
+                    title: "Unknown Error",
+                    description: "Unknown error when downloading.",
                     source: error, variant: "danger"
                 });
 

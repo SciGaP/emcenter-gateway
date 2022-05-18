@@ -26,7 +26,9 @@ export default {
   },
   data() {
     return {
-      tooltipRef: ""
+      tooltipRef: "",
+
+      errors: []
     }
   },
   computed: {
@@ -36,8 +38,10 @@ export default {
     title() {
       if (this.user) {
         return `${this.user.firstName}, ${this.user.lastName}`
+      } else if(this.errors.length > 0) {
+        return "Error ...";
       } else {
-        return "Loading ..."
+        return "Loading ...";
       }
     },
     profileLink() {
@@ -48,7 +52,16 @@ export default {
     async refreshData() {
       if (!this.user && !this.userFetchStatus[this.username]) {
         this.userFetchStatus[this.username] = "FETCHING";
-        await this.$store.dispatch("user/fetchUsers", {clientId: custosService.clientId, username: this.username});
+        try {
+          await this.$store.dispatch("user/fetchUsers", {clientId: custosService.clientId, username: this.username});
+        } catch (e) {
+          this.errors.push({
+            variant: "danger",
+            title: "Network Error",
+            description: "Please contact the system administrator",
+            source: e
+          });
+        }
         this.userFetchStatus[this.username] = "COMPLETED";
       }
     }

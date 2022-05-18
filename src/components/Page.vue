@@ -13,11 +13,7 @@
           <slot name="header-right"/>
         </div>
       </div>
-      <div class="w-100 p-2">
-        <b-alert v-for="(error, errorIndex) in errors" :key="errorIndex" show dismissible :variant="error.variant">
-          {{ error.title }}
-        </b-alert>
-      </div>
+      <PageErrors :errors="errors"/>
       <div class="w-100" style="">
         <slot></slot>
       </div>
@@ -40,10 +36,11 @@ import AppLeftNav from "@/components/AppLeftNav";
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import {custosStore} from "@/store";
 import config from "@/config";
+import PageErrors from "@/components/PageErrors";
 
 export default {
   name: "Page",
-  components: {AppLeftNav, Breadcrumb},
+  components: {PageErrors, AppLeftNav, Breadcrumb},
   store: custosStore,
   props: {
     title: {
@@ -101,9 +98,26 @@ export default {
     },
   },
   methods: {
-    refreshData() {
-      this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, groupId: config.value('clientUsersGroupId')});
-      this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, groupId: config.value('clientAdminGroupId')});
+    async refreshData() {
+      try {
+        await Promise.all([
+          this.$store.dispatch("user/fetchUsers", {
+            clientId: this.clientId,
+            groupId: config.value('clientUsersGroupId')
+          }),
+          this.$store.dispatch("user/fetchUsers", {
+            clientId: this.clientId,
+            groupId: config.value('clientAdminGroupId')
+          })
+        ]);
+      } catch (e) {
+        this.errors.push({
+          variant: "danger",
+          title: "Network Error",
+          description: "Please contact the system administrator.",
+          source: e
+        });
+      }
     }
   },
   mounted() {

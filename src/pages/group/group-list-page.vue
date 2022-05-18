@@ -96,8 +96,17 @@ export default {
     isDeleteAllowed(group) {
       return this.deleteDisabledGroupIds.indexOf(group.groupId) < 0 && this.currentUsername === group.ownerId
     },
-    refreshData() {
-      this.$store.dispatch("group/fetchGroups", {clientId: this.clientId, username: this.currentUsername});
+    async refreshData() {
+      try {
+        await this.$store.dispatch("group/fetchGroups", {clientId: this.clientId, username: this.currentUsername});
+      } catch (e) {
+        this.errors.push({
+          variant: "danger",
+          title: "Network Error",
+          description: "Error fetching groups.",
+          source: e
+        });
+      }
     },
     async onDeleteClick({groupId, name}) {
       this.processingDelete = {...this.processingDelete, [groupId]: true};
@@ -110,7 +119,8 @@ export default {
         this.refreshData();
       } catch (error) {
         this.errors.push({
-          title: `Unknown error when deleting the group ${name}.`,
+          title: "Error Deleting",
+          description: `Unknown error when deleting the group ${name}.`,
           source: error, variant: "danger"
         });
       }

@@ -3,8 +3,9 @@
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark navbar-lg iu-crimson-bg">
       <div class="container">
         <router-link class="navbar-brand" to="/"><img src="../assets/images/trident-large.png"
-                                            height="30" class="d-inline-block align-top" alt="">
-          Electron Microscopy Center </router-link>
+                                                      height="30" class="d-inline-block align-top" alt="">
+          Electron Microscopy Center
+        </router-link>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -36,6 +37,7 @@
               </div>
               <p>Our goal is to promote the development of researchers that are knowledgeable, confident and
                 comfortable in the use of electron microscopes.</p>
+              <PageErrors :errors="errors"/>
               <button class="btn btn-lg btn-iu-crimson" v-on:click="loadAuthURL">Get Started</button>
               <a href="#howitworks" class="ml-3 btn btn-lg btn-outline-dark">How it works</a>
             </div>
@@ -245,13 +247,29 @@
 // import Login from "./LoginPage";
 
 import custosStore from "airavata-custos-portal/src/lib/store";
+import PageErrors from "@/components/PageErrors";
 
 export default {
   name: "HomePage",
+  components: {PageErrors},
   store: custosStore,
+  data() {
+    return {
+      errors: []
+    }
+  },
   methods: {
     async loadAuthURL() {
-      await this.$store.dispatch("auth/fetchAuthorizationEndpoint");
+      try {
+        await this.$store.dispatch("auth/fetchAuthorizationEndpoint");
+      } catch (e) {
+        this.errors.push({
+          variant: "danger",
+          title: "Network Error",
+          description: "Please contact the system administrator",
+          source: e
+        });
+      }
     },
   }
 }

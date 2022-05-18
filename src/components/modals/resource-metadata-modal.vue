@@ -1,5 +1,6 @@
 <template>
   <b-modal :id="modalId" hide-footer title="Resource Metadata" v-on:show="refreshData">
+    <PageErrors :errors="errors"/>
     <table-overlay-info :columns="1" :rows="5" :data="metadata">
       <template #empty>No metadata to be displayed.</template>
       <pre>{{ metadata }}</pre>
@@ -10,10 +11,11 @@
 <script>
 import store from "../../store";
 import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
+import PageErrors from "@/components/PageErrors";
 
 export default {
   name: "resource-metadata-modal",
-  components: {TableOverlayInfo},
+  components: {PageErrors, TableOverlayInfo},
   store: store,
   props: {
     modalId: {
@@ -39,10 +41,19 @@ export default {
     async refreshData() {
       this.processing = true;
 
-      await this.$store.dispatch("emcResource/fetchResourceMetadata", {
-        resourceId: this.resourceId,
-        type: this.resource.type
-      });
+      try {
+        await this.$store.dispatch("emcResource/fetchResourceMetadata", {
+          resourceId: this.resourceId,
+          type: this.resource.type
+        });
+      } catch (e) {
+        this.errors.push({
+          variant: "danger",
+          title: "Network Error",
+          description: "Please contact the system administrator",
+          source: e
+        });
+      }
 
       this.processing = false;
     }

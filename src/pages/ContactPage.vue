@@ -3,8 +3,9 @@
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark navbar-lg iu-crimson-bg">
       <div class="container">
         <router-link class="navbar-brand" to="/"><img src="../assets/images/trident-large.png"
-                                            height="30" class="d-inline-block align-top" alt="">
-          Electron Microscopy Center </router-link>
+                                                      height="30" class="d-inline-block align-top" alt="">
+          Electron Microscopy Center
+        </router-link>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -47,18 +48,8 @@
 </template>
 
 <script>
-// import Login from "./LoginPage";
-
-import custosStore from "airavata-custos-portal/src/lib/store";
-
 export default {
-  name: "ContactPage",
-  store: custosStore,
-  methods: {
-    async loadAuthURL() {
-      await this.$store.dispatch("auth/fetchAuthorizationEndpoint");
-    },
-  }
+  name: "ContactPage"
 }
 </script>
 

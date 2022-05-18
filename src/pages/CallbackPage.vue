@@ -1,27 +1,38 @@
 <template>
-  <p></p>
+  <PageErrors :errors="errors"/>
 </template>
 
 <script>
 
 import store from "airavata-custos-portal/src/lib/store";
 import config from "@/config";
+import PageErrors from "@/components/PageErrors";
 // import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 
 export default {
   name: "Callback",
+  components: {PageErrors},
   store: store,
+  data() {
+    return {
+      errors: []
+    }
+  },
   methods: {
     async authenticate() {
       let code = this.$route.query.code
       let params = {code: code};
-      await this.$store.dispatch('auth/authenticateUsingCode', params)
-      // await this.$store.dispatch("user/addRolesToUser", {
-      //   clientId: custosService.clientId,
-      //   username: this.$store.getters["auth/currentUsername"],
-      //   realmRoles: ["tenant-requester"],
-      //   clientLevel: false
-      // });
+
+      try {
+        await this.$store.dispatch('auth/authenticateUsingCode', params)
+      } catch (e) {
+        this.errors.push({
+          variant: "danger",
+          title: "Authentication Error",
+          description: "Please contact the system administrator",
+          source: e
+        });
+      }
 
       const currentUsername = this.$store.getters["auth/currentUsername"];
       this.$store.dispatch("group/addUserToGroup", {
@@ -31,8 +42,10 @@ export default {
         membershipType: "MEMBER"
       }).catch(error => {
         this.errors.push({
-          title: `Unknown error when adding the user '${currentUsername}' to users group`,
-          source: error, variant: "danger"
+          title: "Unknown Error",
+          description: `Unknown error when adding the user '${currentUsername}' to users group`,
+          variant: "danger",
+          source: error
         });
       });
     }

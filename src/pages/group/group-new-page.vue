@@ -107,7 +107,8 @@ export default {
           await this.$router.push(`/groups/${groupId}`);
         } catch (error) {
           this.errors.push({
-            title: "Unknown error when creating the group.",
+            title: "Unknown Error",
+            description: "Unknown error when creating the group.",
             source: error, variant: "danger"
           });
         }
