@@ -28,6 +28,8 @@
           </div>
         </template>
 
+        <PageErrors :errors="errors"/>
+
         <div>
           <b-carousel
               id="carousel-1"
@@ -144,7 +146,7 @@
                 </block-tooltip-user>
               </b-td>
               <b-td>
-                <resource-actions :resource-id="resource.resourceId"/>
+                <resource-actions :resource-id="resource.resourceId" :errors="errors"/>
               </b-td>
             </b-tr>
 
@@ -164,10 +166,12 @@ import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/
 import custosStore from "airavata-custos-portal/src/lib/store";
 import BlockTooltipUser from "@/components/blocks/block-tooltip-user";
 import ResourceActions from "@/pages/resource/resource-actions";
+import PageErrors from "@/components/PageErrors";
 
 export default {
   name: "resource-list",
   components: {
+    PageErrors,
     ResourceActions,
     BlockTooltipUser, Page,
     TableOverlayInfo
