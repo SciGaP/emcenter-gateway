@@ -49,12 +49,16 @@ import MapSelectedFilesAndFoldersToCollectionGroupsModal
 import NotesModal from "@/components/modals/notes-modal";
 import ResourceMetadataModal from "@/components/modals/resource-metadata-modal";
 import ModalShareEntity from "airavata-custos-portal/src/lib/components/modals/modal-share-entity";
+import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
 import store from "@/store";
 
 export default {
   name: "resource-actions",
   store: store,
-  components: {ResourceMetadataModal, ModalShareEntity, NotesModal, MapSelectedFilesAndFoldersToCollectionGroupsModal},
+  components: {
+    ResourceMetadataModal, ModalShareEntity, NotesModal, MapSelectedFilesAndFoldersToCollectionGroupsModal,
+    ButtonOverlay
+  },
   props: ["resourceId"],
   data() {
     return {
@@ -83,7 +87,7 @@ export default {
       }
       this.processingDownload = {...this.processingDownload, [resourceId]: false};
     }
-  }, 
+  },
   beforeMount() {
     this.modalHash = window.performance.now();
   }

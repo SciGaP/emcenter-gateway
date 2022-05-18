@@ -17,7 +17,7 @@
         </b-form-text>
       </div>
 
-      <b-modal v-if="resources[selectedResourceIndex]" id="resource-preview-modal" size="lg"
+      <b-modal v-if="resources && resources[selectedResourceIndex]" id="resource-preview-modal" size="lg"
                :title="resources[selectedResourceIndex].name">
         <template #modal-footer>
           <div class="d-flex flex-row w-100">
@@ -309,7 +309,7 @@ export default {
 
       if (this.parentResourceId) {
         if (this.parentResourcePath) {
-          for (let i = this.parentResourcePath.length - 1; i >= 0; i--) {
+          for (let i = 0; i < this.parentResourcePath.length; i++) {
             _breadcrumbLinks.push({
               to: `/collections?parentResourceId=${this.parentResourcePath[i]}`,
               name: this.$store.getters["emcResource/getResource"]({resourceId: this.parentResourcePath[i]}).name
