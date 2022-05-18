@@ -39,15 +39,13 @@
                     <b-form-input id="form-input-password" type="password" v-model="password"
                                   placeholder="Password"></b-form-input>
                   </div>
+                  <PageErrors :errors="errors"/>
                   <div class="p-2">
                     <b-button type="submit" variant="primary"
                               v-on:click="this.login" :disabled="this.loginDisabled">
                       Login
                       <b-spinner small v-if="this.loginDisabled"></b-spinner>
                     </b-button>
-                    <div v-if="this.loginError" class="text-danger w-100 mt-4 text-left form-error-message">
-                      Invalid Username or Password
-                    </div>
                     <!--                    <p class="mt-3 w-100 additional-links text-center">-->
                     <!--                      Don't have an account?-->
                     <!--                      <router-link to="/register">Create an account</router-link>-->
@@ -87,9 +85,11 @@
 <script>
 import {mapGetters, mapActions} from "vuex";
 import custosStore from "airavata-custos-portal/src/lib/store";
+import PageErrors from "@/components/PageErrors";
 
 export default {
   name: 'LoginPage',
+  components: {PageErrors},
   store: custosStore,
   props: {
     msg: String,
@@ -102,7 +102,9 @@ export default {
       username: "",
       password: "",
       loginDisabled: false,
-      loginError: false
+      loginError: false,
+
+      errors: []
     }
   },
   computed: {
@@ -118,20 +120,41 @@ export default {
     async login() {
       this.loginDisabled = true
       if (this.username != null && this.username != '' && this.password != null && this.password != '') {
-        await this.authenticateLocally({
-          username: this.username,
-          password: this.password
-        });
+        try {
+          await this.authenticateLocally({
+            username: this.username,
+            password: this.password
+          });
+        } catch (e) {
+          this.errors.push({
+            variant: "danger",
+            title: "Authentication Error",
+            description: "Please check username and password",
+            source: e
+          });
+        }
+
       } else {
-        this.loginError = true
+        this.errors.push({
+          variant: "danger",
+          title: "Authentication Error",
+          description: "Username or Password is not valid.",
+          source: null
+        });
       }
       this.loginDisabled = false
     },
-    async callDismissed() {
-      this.loginError = false
-    },
     async loadAuthURL() {
-      await this.fetchAuthorizationEndpoint();
+      try {
+        await this.fetchAuthorizationEndpoint();
+      } catch (e) {
+        this.errors.push({
+          variant: "danger",
+          title: "Network Error",
+          description: "Please contact the system administrator",
+          source: e
+        });
+      }
     },
     redirectIfAuthenticated() {
       if (this.authenticated === true) {

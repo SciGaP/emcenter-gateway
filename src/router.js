@@ -99,20 +99,6 @@ export default new Router({
                 import("./pages/resource/resource-list")
         },
         {
-            path: "/labs",
-            name: "labs",
-            beforeEnter: _validateAuthenticationBeforeEnter,
-            component: () =>
-                import("./pages/resource/lab/lab-list")
-        },
-        {
-            path: "/labs/:resourceId",
-            name: "lab",
-            beforeEnter: _validateAuthenticationBeforeEnter,
-            component: () =>
-                import("./pages/resource/lab/lab-page")
-        },
-        {
             path: "/collections/new",
             name: "collections-new",
             beforeEnter: _validateAuthenticationBeforeEnter,

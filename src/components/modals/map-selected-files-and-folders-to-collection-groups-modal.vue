@@ -1,5 +1,6 @@
 <template>
   <b-modal :id="modalId" size="sm" hide-footer title="Add to collection groups" v-on:show="refreshData">
+    <PageErrors :errors="errors"/>
     <table-overlay-info :columns="1" :rows="5" :data="processing ? null : collectionGroups">
       <template #empty>No collection groups to be mapped. Please create one.</template>
       <ul>
@@ -26,11 +27,12 @@
 import store from "../../store";
 import EmcResource from "@/service/emc-service/emc-service-resource";
 import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
+import PageErrors from "@/components/PageErrors";
 // import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
 
 export default {
   name: "map-selected-files-and-folders-to-collection-groups-modal",
-  components: {TableOverlayInfo},
+  components: {PageErrors, TableOverlayInfo},
   store: store,
   props: {
     modalId: {
@@ -127,7 +129,8 @@ export default {
         };
 
         this.errors.push({
-          title: `Unknown error when mapping to the collection group.`,
+          title: "Unknown Error",
+          description: `Unknown error when mapping to the collection group.`,
           source: error, variant: "danger"
         });
       }
@@ -137,15 +140,24 @@ export default {
     async refreshData() {
       this.processing = true;
 
-      await this.$store.dispatch("emcResource/fetchResources", {
-        type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
-      });
-
-      await Promise.all(this.resourceIds.map(resourceId => {
-        this.$store.dispatch("emcResource/fetchParentResources", {
-          resourceId: resourceId
+      try {
+        await this.$store.dispatch("emcResource/fetchResources", {
+          type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP
         });
-      }));
+
+        await Promise.all(this.resourceIds.map(resourceId => {
+          this.$store.dispatch("emcResource/fetchParentResources", {
+            resourceId: resourceId
+          });
+        }));
+      } catch (e) {
+        this.errors.push({
+          variant: "danger",
+          title: "Network Error",
+          description: "Please contact the system administrator",
+          source: e
+        });
+      }
 
       this.processing = false;
     }

@@ -107,11 +107,13 @@ export default {
           membershipType: "MEMBER"
         }).catch(error => {
           this.errors.push({
-            title: `Unknown error when adding the user '${newUser.username}'`,
+            title: "Unknown Error ",
+            description: `Unknown error when adding the user '${newUser.username}'`,
             source: error, variant: "danger"
           });
         });
       }));
+
       this.refreshData();
 
       this.processingAddNewUsers = false;
@@ -126,16 +128,29 @@ export default {
         });
       } catch (error) {
         this.errors.push({
-          title: `Unknown error when removing the user '${username}'`,
+          title: "Unknown Error",
+          description: `Unknown error when removing the user '${username}'`,
           source: error, variant: "danger"
         });
       }
       this.refreshData();
       this.processingRemoveUser = {...this.processingRemoveUser, [username]: false};
     },
-    refreshData() {
-      this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, groupId: this.groupId});
-      this.$store.dispatch("group/fetchGroup", {clientId: this.clientId, groupId: this.groupId});
+    async refreshData() {
+      try {
+        await Promise.all([
+          this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, groupId: this.groupId}),
+          this.$store.dispatch("group/fetchGroup", {clientId: this.clientId, groupId: this.groupId})
+        ]);
+      } catch (e) {
+        this.errors.push({
+          variant: "danger",
+          title: "Network Error",
+          description: "Error when fetching groups.",
+          source: e
+        });
+      }
+
     }
   },
   beforeMount() {

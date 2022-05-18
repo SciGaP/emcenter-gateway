@@ -59,7 +59,7 @@ export default {
     ResourceMetadataModal, ModalShareEntity, NotesModal, MapSelectedFilesAndFoldersToCollectionGroupsModal,
     ButtonOverlay
   },
-  props: ["resourceId"],
+  props: ["resourceId", "errors"],
   data() {
     return {
       processingDownload: {},
@@ -79,12 +79,15 @@ export default {
       this.processingDownload = {...this.processingDownload, [resourceId]: true};
       try {
         await this.$store.dispatch("emcResource/downloadResource", {resourceId});
-      } catch (error) {
+      } catch (e) {
         this.errors.push({
-          title: "Unknown error when downloading.",
-          source: error, variant: "danger"
+          variant: "danger",
+          title: "Error Downloading.",
+          description: "Please contact the system administrator",
+          source: e
         });
       }
+
       this.processingDownload = {...this.processingDownload, [resourceId]: false};
     }
   },

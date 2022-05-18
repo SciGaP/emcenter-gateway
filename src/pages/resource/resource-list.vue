@@ -24,7 +24,7 @@
             <div class="flex-fill" style="font-size: 12px; line-height: 27px;">
               Created at {{ resources[selectedResourceIndex].createdAt }}
             </div>
-            <resource-actions :resource-id="resources[selectedResourceIndex].resourceId"/>
+            <resource-actions :resource-id="resources[selectedResourceIndex].resourceId" :errors="errors"/>
           </div>
         </template>
 
@@ -471,34 +471,43 @@ export default {
       return _dataLink;
     },
     async refreshData() {
-      if (this.parentResourceId) {
-        await Promise.all([
-          this.$store.dispatch("emcResource/fetchResource", {resourceId: this.parentResourceId}),
-          this.$store.dispatch("emcResource/fetchParentResources", {resourceId: this.parentResourceId})
-        ]);
+      try {
+        if (this.parentResourceId) {
+          await Promise.all([
+            this.$store.dispatch("emcResource/fetchResource", {resourceId: this.parentResourceId}),
+            this.$store.dispatch("emcResource/fetchParentResources", {resourceId: this.parentResourceId})
+          ]);
 
-        await this.$store.dispatch("emcResource/fetchResources", {
-          parentResourceId: this.parentResourceId,
-          parentResourceType: this.parentResource.type,
-          queries: this.searchQuery
-        });
+          await this.$store.dispatch("emcResource/fetchResources", {
+            parentResourceId: this.parentResourceId,
+            parentResourceType: this.parentResource.type,
+            queries: this.searchQuery
+          });
 
-        this.$store.dispatch("emcResource/fetchResourceMetadata", {
-          resourceId: this.parentResource.resourceId,
-          type: this.parentResource.type
-        });
-      } else {
-        await Promise.all(this.types.map(type => this.$store.dispatch("emcResource/fetchResources", {
-          parentResourceId: this.parentResourceId,
-          type: type,
-          queries: this.searchQuery
-        })));
-      }
+          this.$store.dispatch("emcResource/fetchResourceMetadata", {
+            resourceId: this.parentResource.resourceId,
+            type: this.parentResource.type
+          });
+        } else {
+          await Promise.all(this.types.map(type => this.$store.dispatch("emcResource/fetchResources", {
+            parentResourceId: this.parentResourceId,
+            type: type,
+            queries: this.searchQuery
+          })));
+        }
 
-      for (let i = 0; i < this.resources.length; i++) {
-        this.$store.dispatch("emcResource/fetchResourceMetadata", {
-          resourceId: this.resources[i].resourceId,
-          type: this.resources[i].type
+        for (let i = 0; i < this.resources.length; i++) {
+          this.$store.dispatch("emcResource/fetchResourceMetadata", {
+            resourceId: this.resources[i].resourceId,
+            type: this.resources[i].type
+          });
+        }
+      } catch (e) {
+        this.errors.push({
+          variant: "danger",
+          title: "Network Error",
+          description: "Please contact the system administrator.",
+          source: e
         });
       }
     },

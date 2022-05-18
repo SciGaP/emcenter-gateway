@@ -1,124 +1,69 @@
 <template>
-  <div v-if="authenticated" class="p-3">
-    <!--    <CollectionToastQueue/>-->
-    <ul>
-      <!--      <li>-->
-      <!--        <router-link to="/dashboard" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">-->
-      <!--          <a :class="{active: isExactActive}" :href="href" @click="navigate">-->
-      <!--            <img :src="svgDashboard" style="width: 16px;height: 16px;"/>-->
-      <!--            Dashboard-->
-      <!--          </a>-->
-      <!--        </router-link>-->
-      <!--      </li>-->
-      <li>
-        <router-link to="/collections" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
-          <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <img :src="svgFileRuled" style="width: 16px;height: 16px;"/>
-            My Collections
-          </a>
-        </router-link>
-      </li>
-      <li>
-        <router-link to="/collections?sharedByMe=true" v-slot="{ href, route, navigate, isActive, isExactActive}"
-                     tag="">
-          <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <img :src="svgFileRuled" style="width: 16px;height: 16px;"/>
-            Shared By Me
-          </a>
-        </router-link>
-      </li>
-      <li>
-        <router-link to="/collections?sharedWithMe=true" v-slot="{ href, route, navigate, isActive, isExactActive}"
-                     tag="">
-          <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <img :src="svgFileRuled" style="width: 16px;height: 16px;"/>
-            Shared With Me
-          </a>
-        </router-link>
-      </li>
-      <!--      <li>-->
-      <!--        <router-link to="/downloaded" v-slot="{ href, route, navigate, isActive}" tag="">-->
-      <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
-      <!--            <b-icon icon="download"></b-icon>-->
-      <!--            Downloaded-->
-      <!--          </a>-->
-      <!--        </router-link>-->
-      <!--      </li>-->
-      <!--      <li>-->
-      <!--        <router-link to="/shared" v-slot="{ href, route, navigate, isActive}" tag="">-->
-      <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
-      <!--            <b-icon icon="share"></b-icon>-->
-      <!--            Shared-->
-      <!--          </a>-->
-      <!--        </router-link>-->
-      <!--      </li>-->
-      <li>
-        <router-link :to="`/collections?types=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP}`"
-                     v-slot="{ href, route, navigate, isExactActive}" tag="">
-          <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <b-icon icon="folder-symlink"></b-icon>
-            Collection Groups
-          </a>
-        </router-link>
-      </li>
-      <!--      <li v-if="hasEmcAdminRole">-->
-      <!--        <router-link :to="`/labs`"-->
-      <!--                     v-slot="{ href, route, navigate, isExactActive}" tag="">-->
-      <!--          <a :class="{active: isExactActive}" :href="href" @click="navigate">-->
-      <!--            <b-icon icon="box-seam"></b-icon>-->
-      <!--            Labs-->
-      <!--          </a>-->
-      <!--        </router-link>-->
-      <!--      </li>-->
-      <!--      <li>-->
-      <!--        <router-link to="/archived" v-slot="{ href, route, navigate, isActive}" tag="">-->
-      <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
-      <!--            <b-icon icon="archive"></b-icon>-->
-      <!--            Archived-->
-      <!--          </a>-->
-      <!--        </router-link>-->
-      <!--      </li>-->
-      <li v-if="hasEmcAdminRole">
-        <router-link to="/groups" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
-          <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <b-icon icon="people"></b-icon>
-            My Groups
-          </a>
-        </router-link>
-      </li>
-      <li v-if="hasEmcAdminRole">
-        <router-link to="/storages" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
-          <a :class="{active: isExactActive}" :href="href" @click="navigate">
-            <b-icon icon="gear"></b-icon>
-            Storage Settings
-          </a>
-        </router-link>
-      </li>
-      <!--      <li>-->
-      <!--        <router-link to="/notifications" v-slot="{ href, route, navigate, isActive}" tag="">-->
-      <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
-      <!--            <b-icon icon="bell"></b-icon>-->
-      <!--            Notifications-->
-      <!--          </a>-->
-      <!--        </router-link>-->
-      <!--      </li>-->
-      <!--      <li>-->
-      <!--        <router-link to="/profile" v-slot="{ href, route, navigate, isActive}" tag="">-->
-      <!--          <a :class="{active: isActive}" :href="href" @click="navigate">-->
-      <!--            <b-icon icon="person"></b-icon>-->
-      <!--            Profile-->
-      <!--          </a>-->
-      <!--        </router-link>-->
-      <!--      </li>-->
-      <li v-if="hasEmcAdminRole">
-        <router-link to="/notifications" v-slot="{ href, route, navigate, isActive}" tag="">
-          <a :class="{active: isActive}" :href="href" @click="navigate">
-            <b-icon icon="bell"></b-icon>
-            Data Scan Notifications
-          </a>
-        </router-link>
-      </li>
-    </ul>
+  <div>
+    <PageErrors :errors="errors"/>
+    <div v-if="authenticated" class="p-3">
+      <ul>
+        <li>
+          <router-link to="/collections" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+            <a :class="{active: isExactActive}" :href="href" @click="navigate">
+              <img :src="svgFileRuled" style="width: 16px;height: 16px;"/>
+              My Collections
+            </a>
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/collections?sharedByMe=true" v-slot="{ href, route, navigate, isActive, isExactActive}"
+                       tag="">
+            <a :class="{active: isExactActive}" :href="href" @click="navigate">
+              <img :src="svgFileRuled" style="width: 16px;height: 16px;"/>
+              Shared By Me
+            </a>
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/collections?sharedWithMe=true" v-slot="{ href, route, navigate, isActive, isExactActive}"
+                       tag="">
+            <a :class="{active: isExactActive}" :href="href" @click="navigate">
+              <img :src="svgFileRuled" style="width: 16px;height: 16px;"/>
+              Shared With Me
+            </a>
+          </router-link>
+        </li>
+        <li>
+          <router-link :to="`/collections?types=${EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP}`"
+                       v-slot="{ href, route, navigate, isExactActive}" tag="">
+            <a :class="{active: isExactActive}" :href="href" @click="navigate">
+              <b-icon icon="folder-symlink"></b-icon>
+              Collection Groups
+            </a>
+          </router-link>
+        </li>
+        <li v-if="hasEmcAdminRole">
+          <router-link to="/groups" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+            <a :class="{active: isExactActive}" :href="href" @click="navigate">
+              <b-icon icon="people"></b-icon>
+              My Groups
+            </a>
+          </router-link>
+        </li>
+        <li v-if="hasEmcAdminRole">
+          <router-link to="/storages" v-slot="{ href, route, navigate, isActive, isExactActive}" tag="">
+            <a :class="{active: isExactActive}" :href="href" @click="navigate">
+              <b-icon icon="gear"></b-icon>
+              Storage Settings
+            </a>
+          </router-link>
+        </li>
+        <li v-if="hasEmcAdminRole">
+          <router-link to="/notifications" v-slot="{ href, route, navigate, isActive}" tag="">
+            <a :class="{active: isActive}" :href="href" @click="navigate">
+              <b-icon icon="bell"></b-icon>
+              Data Scan Notifications
+            </a>
+          </router-link>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -134,9 +79,11 @@ import EmcResource from '@/service/emc-service/emc-service-resource';
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import {custosStore} from "../store";
 import config from "@/config";
+import PageErrors from "@/components/PageErrors";
 
 export default {
   name: "AppLeftNav",
+  components: {PageErrors},
   // components: {CollectionToastQueue},
   store: custosStore,
   data: () => {
@@ -146,7 +93,9 @@ export default {
       svgPeople: svgPeople,
       svgDashboard: svgDashboard,
       svgFileRuled: svgFileRuled,
-      svgGear: svgGear
+      svgGear: svgGear,
+
+      errors: []
     }
   },
   computed: {
@@ -180,10 +129,26 @@ export default {
     }
   },
   methods: {
-    logout: () => custosStore.dispatch("auth/logout"),
-    refreshData() {
-      this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, groupId: config.value('clientUsersGroupId')});
-      this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, groupId: config.value('clientAdminGroupId')});
+    async refreshData() {
+      try {
+        await Promise.all([
+          this.$store.dispatch("user/fetchUsers", {
+            clientId: this.clientId,
+            groupId: config.value('clientUsersGroupId')
+          }),
+          this.$store.dispatch("user/fetchUsers", {
+            clientId: this.clientId,
+            groupId: config.value('clientAdminGroupId')
+          })
+        ]);
+      } catch (e) {
+        this.errors.push({
+          variant: "danger",
+          title: "Network Error",
+          description: "Please contact the system administrator",
+          source: e
+        });
+      }
     }
   },
   mounted() {

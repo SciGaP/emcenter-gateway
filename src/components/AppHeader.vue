@@ -1,63 +1,61 @@
 <template>
-  <b-navbar toggleable="lg" type="light" variant="light" class="bg-white" v-if="authenticated"
-            style="box-shadow: 0px 0px 4px 0px #adb5bd;">
-    <router-link class="navbar-brand" to="/" style="font-size: 1.6rem;color: #9a0002;padding-left: 20px;">
-      {{ $t('app.top-header.title') }}
-    </router-link>
+  <div class="w-100">
+    <PageErrors :errors="errors"/>
+    <b-navbar toggleable="lg" type="light" variant="light" class="bg-white" v-if="authenticated"
+              style="box-shadow: 0px 0px 4px 0px #adb5bd;">
+      <router-link class="navbar-brand" to="/" style="font-size: 1.6rem;color: #9a0002;padding-left: 20px;">
+        {{ $t('app.top-header.title') }}
+      </router-link>
 
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-    <b-collapse id="nav-collapse" is-nav>
-      <b-navbar-nav>
-        <!--        <router-link to="/settings" v-slot="{ href, route, navigate, isActive, isExactActive}">-->
-        <!--          <b-nav-item :active="isExactActive" :href="href" @click="navigate">Settings</b-nav-item>-->
-        <!--        </router-link>-->
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <!--        <router-link to="/settings" v-slot="{ href, route, navigate, isActive, isExactActive}">-->
+          <!--          <b-nav-item :active="isExactActive" :href="href" @click="navigate">Settings</b-nav-item>-->
+          <!--        </router-link>-->
 
-        <!--        <b-nav-item href="#" disabled>Data</b-nav-item>-->
-      </b-navbar-nav>
+          <!--        <b-nav-item href="#" disabled>Data</b-nav-item>-->
+        </b-navbar-nav>
 
-      <!-- Right aligned nav items -->
-      <b-navbar-nav class="ml-auto">
-        <!--        <b-nav-form>-->
-        <!--          <b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>-->
-        <!--          <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>-->
-        <!--        </b-nav-form>-->
-
-        <!--        <b-nav-item-dropdown text="Lang" right>-->
-        <!--          <b-dropdown-item href="#">EN</b-dropdown-item>-->
-        <!--          <b-dropdown-item href="#">ES</b-dropdown-item>-->
-        <!--          <b-dropdown-item href="#">RU</b-dropdown-item>-->
-        <!--          <b-dropdown-item href="#">FA</b-dropdown-item>-->
-        <!--        </b-nav-item-dropdown>-->
-
-        <b-nav-item-dropdown right no-caret>
-          <!-- Using 'button-content' slot -->
-          <template #button-content>
-            <div class="text-center text-dark">
-              <div>
-                <b-icon icon="person-circle"></b-icon>
+        <!-- Right aligned nav items -->
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item-dropdown right no-caret>
+            <!-- Using 'button-content' slot -->
+            <template #button-content>
+              <div class="text-center text-dark">
+                <div>
+                  <b-icon icon="person-circle"></b-icon>
+                </div>
+                <div><small>{{ currentUsername }}</small></div>
               </div>
-              <div><small>{{ currentUsername }}</small></div>
-            </div>
-          </template>
-          <router-link to="/profile" v-slot="{href, navigate}" tag="">
-            <b-dropdown-item :href="href" @click="navigate">Profile</b-dropdown-item>
-          </router-link>
-          <b-dropdown-item href="#" v-on:click="logout">Sign Out</b-dropdown-item>
-        </b-nav-item-dropdown>
-      </b-navbar-nav>
-    </b-collapse>
-  </b-navbar>
+            </template>
+            <router-link to="/profile" v-slot="{href, navigate}" tag="">
+              <b-dropdown-item :href="href" @click="navigate">Profile</b-dropdown-item>
+            </router-link>
+            <b-dropdown-item href="#" v-on:click="logout">Sign Out</b-dropdown-item>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+  </div>
 </template>
 
 <script>
 
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import {custosStore} from "../store";
+import PageErrors from "@/components/PageErrors";
 
 export default {
   name: "AppHeader.vue",
+  components: {PageErrors},
   store: custosStore,
+  data() {
+    return {
+      errors: []
+    }
+  },
   computed: {
     authenticated() {
       return this.$store.getters["auth/authenticated"]
@@ -76,7 +74,18 @@ export default {
     }
   },
   methods: {
-    logout: () => custosStore.dispatch("auth/logout")
+    async logout() {
+      try {
+        await custosStore.dispatch("auth/logout");
+      } catch (e) {
+        this.errors.push({
+          variant: "danger",
+          title: "Network Error",
+          description: "Please contact the system administrator",
+          source: e
+        });
+      }
+    }
   }
 }
 </script>

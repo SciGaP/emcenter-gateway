@@ -217,7 +217,8 @@ export default {
           await this.$router.push(`/storages`);
         } catch (error) {
           this.errors.push({
-            title: `Unknown error while creating the storage preference.`,
+            title: `Unknown Error`,
+            description: `Unknown error while creating the storage preference.`,
             source: error, variant: "danger"
           });
         }
@@ -242,7 +243,8 @@ export default {
         this.credentialToken = entityId;
       } catch (error) {
         this.errors.push({
-          title: "Unknown error when creating the entity.",
+          title: "Unknown Error",
+          description: "Unknown error when creating the entity.",
           source: error, variant: "danger"
         });
       }

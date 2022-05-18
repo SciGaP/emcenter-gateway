@@ -1,5 +1,6 @@
 <template>
   <b-modal :id="modalId" :title="notificationId" size="lg" v-on:show="refreshData">
+    <PageErrors :errors="errors"/>
     <div>
       <table-overlay-info :data="statuses" :rows="5" :columns="5">
         <b-table-simple>
@@ -36,12 +37,14 @@ import store from "../../store";
 import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
 import config from "@/config";
 import axios from "axios";
+import PageErrors from "@/components/PageErrors";
 
 
 export default {
   name: "notification-statuses-modal",
   store: store,
   components: {
+    PageErrors,
     TableOverlayInfo
   },
   props: {

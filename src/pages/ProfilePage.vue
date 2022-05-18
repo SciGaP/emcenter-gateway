@@ -43,37 +43,6 @@
             <b-form-invalid-feedback>
             </b-form-invalid-feedback>
           </div>
-
-          <!--          <div class="pt-3" v-if="availableTenantRoles && availableTenantRoles.length > 0">-->
-          <!--            <label class="form-label" for="realm-roles">Roles</label>-->
-          <!--            <b-form-checkbox-group-->
-          <!--                v-model="realmRoles"-->
-          <!--                :options="availableTenantRoles"-->
-          <!--                :state="inputState.realmRoles"-->
-          <!--                id="realm-roles"-->
-          <!--                trim-->
-          <!--                size="sm"-->
-          <!--                aria-describedby="scope-help-block">-->
-          <!--            </b-form-checkbox-group>-->
-          <!--            <b-form-text id="scope-help-block"></b-form-text>-->
-          <!--            <b-form-invalid-feedback></b-form-invalid-feedback>-->
-          <!--          </div>-->
-
-          <!--          <div class="pt-3" v-if="tenant && tenant.hasAdminPrivileges">-->
-          <!--            <label class="form-label" for="client-roles">Client Roles</label>-->
-          <!--            <b-form-checkbox-group-->
-          <!--                v-model="clientRoles"-->
-          <!--                :options="availableClientRoles"-->
-          <!--                :state="inputState.clientRoles"-->
-          <!--                id="client-roles"-->
-          <!--                trim-->
-          <!--                size="sm"-->
-          <!--                aria-describedby="scope-help-block">-->
-          <!--            </b-form-checkbox-group>-->
-          <!--            <b-form-text id="scope-help-block"></b-form-text>-->
-          <!--            <b-form-invalid-feedback></b-form-invalid-feedback>-->
-          <!--          </div>-->
-
         </div>
 
         <div style="flex: 1;padding-left: 10px;">
@@ -323,10 +292,12 @@ export default {
               }).filter(({key}) => key.length > 0)
             });
           }
-        } catch (error) {
+        } catch (e) {
           this.errors.push({
-            title: "Unknown error when updating the user profile.",
-            source: error, variant: "danger"
+            variant: "danger",
+            title: "Network Error",
+            description: "Unknown error when updating the user profile.",
+            source: e
           });
         }
 

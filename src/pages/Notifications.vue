@@ -77,11 +77,12 @@ export default {
 
         this.notifications = notifications;
 
-
       } catch (error) {
         this.errors.push({
-          title: `Unknown error when fetching the notifications.`,
-          source: error, variant: "danger"
+          title: `Unknown error`,
+          description: `Unknown error when fetching the notifications.`,
+          variant: "danger",
+          source: error,
         });
       }
       this.processing = false;
