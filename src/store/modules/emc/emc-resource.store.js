@@ -121,16 +121,14 @@ const actions = {
             resourceDownload.progress = 0;
             commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
 
-            // try {
-
-            let url = await emcService.resources.downloadResource({resourceId});
-            let filename = `${window.performance.now()}`;
-
-            resourceDownload.processing = false;
-            resourceDownload.progress = 100;
-            commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
-
             try {
+                let url = await emcService.resources.downloadResource({resourceId});
+                let filename = `${window.performance.now()}`;
+
+                resourceDownload.processing = false;
+                resourceDownload.progress = 100;
+                commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
+
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
@@ -147,6 +145,9 @@ const actions = {
                     description: "Unknown error when downloading.",
                     source: error, variant: "danger"
                 });
+
+                resourceDownload.processing = false;
+                commit("SET_RESOURCE_DOWNLOAD", {resourceId, ...resourceDownload});
 
                 throw error;
             }
