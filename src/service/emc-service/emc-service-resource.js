@@ -103,7 +103,8 @@ export default class EmcResource {
                 },
                 type,
                 // parentResourcePath,
-                resourceName
+                resourceName,
+                resourcePath
             } = resourceMap[key];
 
             resources.push({
@@ -116,9 +117,12 @@ export default class EmcResource {
                 lastUpdatedAt: new Date(parseInt(lastModifiedTime)).toLocaleString(),
                 lastUpdatedBy: "",
                 status: "",
-                type
+                type,
+                resourcePath
             });
         }
+
+        resources.sort((a, b) => a.resourcePath.length - b.resourcePath.length);
 
         return resources;
     }
