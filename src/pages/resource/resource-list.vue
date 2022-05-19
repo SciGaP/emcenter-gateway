@@ -299,7 +299,7 @@ export default {
 
       let _breadcrumbLinks = [{to: collectionsLink, name: this.title}]
 
-      if (this.parentDirectory) {
+      if (this.parentDirectory && this.parentDirectory.length > 0) {
         const parentDirectories = this.parentDirectory.replace(/^\//, "").replace(/\/$/, "").split("/")
         let nextParentDirectoryPath = "/";
         for (let i = 0; i < parentDirectories.length; i++) {
@@ -465,15 +465,6 @@ export default {
     onSearchEnter() {
       this.search = this.searchTyping;
     },
-    getDataLink({folderId} = {}) {
-      let _dataLink = "/collections?";
-
-      if (folderId) {
-        _dataLink += `parentResourceId=${folderId}&`
-      }
-
-      return _dataLink;
-    },
     async refreshData() {
       try {
         if (this.parentResourceId) {
@@ -498,13 +489,6 @@ export default {
             type: type,
             queries: this.searchQuery
           })));
-        }
-
-        for (let i = 0; i < this.resources.length; i++) {
-          this.$store.dispatch("emcResource/fetchResourceMetadata", {
-            resourceId: this.resources[i].resourceId,
-            type: this.resources[i].type
-          });
         }
       } catch (e) {
         this.errors.push({
@@ -555,6 +539,20 @@ export default {
     searchQuery(a, b) {
       if (JSON.stringify(a) !== JSON.stringify(b)) {
         this.refreshData();
+      }
+    },
+    async resources() {
+      if (this.resources) {
+        try {
+          await Promise.all(this.resources.map(resource => {
+            return this.$store.dispatch("emcResource/fetchResourceMetadata", {
+              resourceId: resource.resourceId,
+              type: resource.type
+            });
+          }));
+        } catch (e) {
+          // TODO
+        }
       }
     }
   },
