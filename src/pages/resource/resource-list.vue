@@ -465,15 +465,6 @@ export default {
     onSearchEnter() {
       this.search = this.searchTyping;
     },
-    getDataLink({folderId} = {}) {
-      let _dataLink = "/collections?";
-
-      if (folderId) {
-        _dataLink += `parentResourceId=${folderId}&`
-      }
-
-      return _dataLink;
-    },
     async refreshData() {
       try {
         if (this.parentResourceId) {
