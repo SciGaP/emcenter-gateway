@@ -360,7 +360,9 @@ export default {
       return this.$store.getters["emcResource/getResourcePath"]({resourceId: this.parentResourceId});
     },
     directoriesAndResources() {
-      if (this.parentResourceId) {
+      if (this.types.indexOf("COLLECTION_GROUP") >= 0) {
+        return this.resources;
+      } else if (this.parentResourceId) {
         return this.resources;
       } else {
         return this.directories;
