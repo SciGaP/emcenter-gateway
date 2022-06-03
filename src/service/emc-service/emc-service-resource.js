@@ -264,7 +264,8 @@ export default class EmcResource {
                 },
                 type,
                 // parentResourcePath,
-                resourceName
+                resourceName,
+                resourcePath
             }
         ) => {
             return {
@@ -281,7 +282,8 @@ export default class EmcResource {
                 note,
                 permission,
                 canShare: permission === "OWNER" || permission === "EDITOR",
-                canDelete: permission === "OWNER"
+                canDelete: permission === "OWNER",
+                resourcePath
             }
         });
     }

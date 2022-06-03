@@ -343,16 +343,16 @@ export default {
     },
     parentDirectory() {
       if (this.parentResourceId) {
-        const parentResourceMetadata = this.$store.getters["emcResource/getResourceMetadata"]({
-          resourceId: this.parentResourceId
-        });
-        if (parentResourceMetadata && Array.isArray(parentResourceMetadata) && parentResourceMetadata.length > 0) {
-          let _parentDirectory = new RegExp(`${this.rootDirectory.replace(/\//, "\\/")}(\\/[^/]+\\/)([^/]+\\/)*${this.parentResource.name}`).exec(parentResourceMetadata[0].resourcePath);
-          if (_parentDirectory && _parentDirectory.length > 1) {
-            _parentDirectory = _parentDirectory[1];
-            return _parentDirectory;
-          }
+        // const parentResourceMetadata = this.$store.getters["emcResource/getResourceMetadata"]({
+        //   resourceId: this.parentResourceId
+        // });
+        // if (parentResourceMetadata && Array.isArray(parentResourceMetadata) && parentResourceMetadata.length > 0) {
+        let _parentDirectory = new RegExp(`${this.rootDirectory.replace(/\//, "\\/")}(\\/[^/]+\\/)([^/]+\\/)*${this.parentResource.name}`).exec(this.parentResource.resourcePath);
+        if (_parentDirectory && _parentDirectory.length > 1) {
+          _parentDirectory = _parentDirectory[1];
+          return _parentDirectory;
         }
+        // }
 
         return null;
 
@@ -383,42 +383,38 @@ export default {
         const _directories = [];
         const _directoriesMap = {};
 
-        this.resources.filter(({resourceId, entityId, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete}) => {
-          const metadata = this.$store.getters["emcResource/getResourceMetadata"]({resourceId});
-          if (metadata && Array.isArray(metadata) && metadata.length > 0) {
-            if (metadata[0].resourcePath
-                && metadata[0].resourcePath.indexOf(`${this.rootDirectory}${this.parentDirectory}`) >= 0) {
+        this.resources.filter(({resourceId, entityId, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete, resourcePath}) => {
+          if (resourcePath && resourcePath.indexOf(`${this.rootDirectory}${this.parentDirectory}`) >= 0) {
+            let _directory = resourcePath.replace(`${this.rootDirectory}${this.parentDirectory}`, "");
+            _directory = /^([^/]+)\/?.*$/.exec(_directory);
+            if (_directory && _directory.length > 1) {
+              _directory = _directory[1];
+              if (!_directoriesMap[_directory]) {
+                _directoriesMap[_directory] = true;
+                _directories.push({
+                  name: _directory,
+                  path: `${this.parentDirectory}${_directory}/`,
+                  resourcePath: resourcePath,
+                  // createdBy,
+                  hasChildren: `${this.rootDirectory}${this.parentDirectory}${_directory}` !== resourcePath,
 
-              let _directory = metadata[0].resourcePath.replace(`${this.rootDirectory}${this.parentDirectory}`, "");
-              _directory = /^([^/]+)\/?.*$/.exec(_directory);
-              if (_directory && _directory.length > 1) {
-                _directory = _directory[1];
-                if (!_directoriesMap[_directory]) {
-                  _directoriesMap[_directory] = true;
-                  _directories.push({
-                    name: _directory,
-                    path: `${this.parentDirectory}${_directory}/`,
-                    resourcePath: metadata[0].resourcePath,
-                    // createdBy,
-                    hasChildren: `${this.rootDirectory}${this.parentDirectory}${_directory}` !== metadata[0].resourcePath,
-
-                    resourceId,
-                    entityId,
-                    // name,
-                    description,
-                    createdAt,
-                    createdBy,
-                    lastUpdatedAt,
-                    lastUpdatedBy,
-                    status,
-                    type,
-                    note,
-                    permission, canShare, canDelete
-                  });
-                }
+                  resourceId,
+                  entityId,
+                  // name,
+                  description,
+                  createdAt,
+                  createdBy,
+                  lastUpdatedAt,
+                  lastUpdatedBy,
+                  status,
+                  type,
+                  note,
+                  permission, canShare, canDelete
+                });
               }
             }
           }
+          //}
         });
 
         return _directories;
@@ -477,11 +473,6 @@ export default {
             parentResourceId: this.parentResourceId,
             parentResourceType: this.parentResource.type,
             queries: this.searchQuery
-          });
-
-          this.$store.dispatch("emcResource/fetchResourceMetadata", {
-            resourceId: this.parentResource.resourceId,
-            type: this.parentResource.type
           });
         } else {
           await Promise.all(this.types.map(type => this.$store.dispatch("emcResource/fetchResources", {
@@ -544,7 +535,7 @@ export default {
     async resources() {
       if (this.resources) {
         try {
-          await Promise.all(this.resources.map(resource => {
+          await Promise.all(this.resources.filter(({type}) => type === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET).map(resource => {
             return this.$store.dispatch("emcResource/fetchResourceMetadata", {
               resourceId: resource.resourceId,
               type: resource.type
