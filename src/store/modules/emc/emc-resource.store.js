@@ -16,26 +16,13 @@ const actions = {
         const queryString = JSON.stringify({parentResourceId, type, queries});
 
         const resources = await emcService.resources.fetchResources({
-            parentResourceId,
-            parentResourceType,
-            type,
-            queries
+            parentResourceId, parentResourceType, type, queries
         });
 
-        const resourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete}) => {
+        const resourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete, resourcePath}) => {
             commit("SET_RESOURCE", {
-                resourceId,
-                entityId,
-                name,
-                description,
-                createdAt,
-                createdBy,
-                lastUpdatedAt,
-                lastUpdatedBy,
-                status,
-                type,
-                note,
-                permission, canShare, canDelete
+                resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt,
+                lastUpdatedBy, status, type, note, permission, canShare, canDelete, resourcePath
             });
 
             return resourceId;
@@ -46,7 +33,7 @@ const actions = {
 
     async fetchResource({commit}, {resourceId} = {}) {
         const resource = await emcService.resources.fetchResource({resourceId});
-        const {entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete} = resource;
+        const {entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete, resourcePath} = resource;
         commit("SET_RESOURCE", {
             resourceId,
             entityId,
@@ -59,7 +46,7 @@ const actions = {
             status,
             type,
             note,
-            permission, canShare, canDelete
+            permission, canShare, canDelete, resourcePath
         });
     },
 
@@ -70,7 +57,6 @@ const actions = {
 
     async fetchParentResources({commit}, {resourceId}) {
         const resources = await emcService.resources.fetchParentResources({resourceId});
-        console.log("### fetchParentResources - resources ", resources);
         const parentResourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note}) => {
             commit("SET_RESOURCE", {
                 resourceId,
@@ -180,7 +166,7 @@ const mutations = {
             [resourceId]: metadata
         }
     },
-    SET_RESOURCE(state, {resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission = null, canShare = false, canDelete = false}) {
+    SET_RESOURCE(state, {resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission = null, canShare = false, canDelete = false, resourcePath}) {
         state.resourceMap = {
             ...state.resourceMap,
             [resourceId]: {
@@ -196,7 +182,7 @@ const mutations = {
                 status,
                 type,
                 note,
-                permission, canShare, canDelete
+                permission, canShare, canDelete, resourcePath
             }
         };
     },
