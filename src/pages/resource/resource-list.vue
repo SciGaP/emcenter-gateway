@@ -118,16 +118,7 @@
                       {{ resource.name }}
                     </a>
                   </div>
-                  <router-link v-else-if="!resource.hasChildren"
-                               :to="`/collections?parentResourceId=${resource.resourceId}`"
-                               v-slot="{ href, route, navigate, isActive,isExactActive }">
-                    <a style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
-                       v-b-tooltip.hover="resource.name"
-                       :class="{active: isExactActive}" :href="href" @click="navigate">
-                      {{ resource.name }}
-                    </a>
-                  </router-link>
-                  <router-link v-else :to="`/collections?parentDirectory=${resource.path}`"
+                  <router-link v-else :to="getResourceLink(resource)"
                                v-slot="{ href, route, navigate, isActive,isExactActive }">
                     <a style="flex: 1;display: inline; padding-left: 5px;line-height: 24px;"
                        v-b-tooltip.hover="resource.name"
@@ -458,6 +449,24 @@ export default {
     }
   },
   methods: {
+    getResourceLink(resource) {
+      let resourceLink;
+      if (resource.hasChildren) {
+        resourceLink = `/collections?parentDirectory=${resource.path}`;
+      } else {
+        resourceLink = `/collections?parentResourceId=${resource.resourceId}`;
+      }
+
+      if (this.sharedBy) {
+        resourceLink += `&sharedByMe=true`;
+      }
+
+      if (this.sharedWith) {
+        resourceLink += `&sharedWithMe=true`;
+      }
+
+      return resourceLink;
+    },
     onSearchEnter() {
       this.search = this.searchTyping;
     },
