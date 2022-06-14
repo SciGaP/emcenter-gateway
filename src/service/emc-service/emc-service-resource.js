@@ -172,7 +172,8 @@ export default class EmcResource {
                     },
                     type,
                     // parentResourcePath,
-                    resourceName
+                    resourceName,
+                    resourcePath
                 }
             }
         } = response;
@@ -182,6 +183,7 @@ export default class EmcResource {
             entityId,
             name: resourceName,
             description: description,
+            resourcePath: resourcePath,
             createdAt: new Date(parseInt(createdTime)).toLocaleString(),
             createdBy: owner,
             lastUpdatedAt: new Date(parseInt(lastModifiedTime)).toLocaleString(),
