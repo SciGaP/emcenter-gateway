@@ -333,7 +333,7 @@ export default {
       return "/images/GatewayTests/workdir";
     },
     parentDirectory() {
-      if (this.parentResourceId) {
+      if (this.parentResourceId && this.parentResource) {
         // const parentResourceMetadata = this.$store.getters["emcResource/getResourceMetadata"]({
         //   resourceId: this.parentResourceId
         // });

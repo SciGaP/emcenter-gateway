@@ -38,8 +38,12 @@
               <p>Our goal is to promote the development of researchers that are knowledgeable, confident and
                 comfortable in the use of electron microscopes.</p>
               <PageErrors :errors="errors"/>
-              <button class="btn btn-lg btn-iu-crimson" v-on:click="loadAuthURL">Get Started</button>
-              <a href="#howitworks" class="ml-3 btn btn-lg btn-outline-dark">How it works</a>
+              <div>
+                <button-overlay :show="processingLogin">
+                  <button class="btn btn-lg btn-iu-crimson" v-on:click="loadAuthURL">Get Started</button>
+                </button-overlay>
+                <a href="#howitworks" class="ml-3 btn btn-lg btn-outline-dark">How it works</a>
+              </div>
             </div>
             <div class="col-lg-4">
               <img src="../assets/images/0.svg" class="img-fluid pt-5 mt-5" alt="">
@@ -247,19 +251,22 @@
 // import Login from "./LoginPage";
 
 import custosStore from "airavata-custos-portal/src/lib/store";
+import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
 import PageErrors from "@/components/PageErrors";
 
 export default {
   name: "HomePage",
-  components: {PageErrors},
+  components: {PageErrors, ButtonOverlay},
   store: custosStore,
   data() {
     return {
+      processingLogin: false,
       errors: []
     }
   },
   methods: {
     async loadAuthURL() {
+      this.processingLogin = true;
       try {
         await this.$store.dispatch("auth/fetchAuthorizationEndpoint");
       } catch (e) {
@@ -270,6 +277,7 @@ export default {
           source: e
         });
       }
+      this.processingLogin = false;
     },
   }
 }
