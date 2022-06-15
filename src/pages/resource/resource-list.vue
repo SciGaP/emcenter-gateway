@@ -128,16 +128,21 @@
                   </router-link>
                 </div>
               </b-td>
-              <!--              <b-td>{{ resource.size }}</b-td>-->
-              <b-td style="font-size: 12px; line-height: 27px;">{{ resource.createdAt }}</b-td>
-              <b-td style="font-size: 12px; line-height: 27px;">{{ resource.lastUpdatedAt }}</b-td>
+              <b-td style="font-size: 12px; line-height: 27px;">
+                <template v-if="resource.createdAt">{{ resource.createdAt }}</template>
+                <template v-else>-- -- -- -- -- --</template>
+              </b-td>
+              <b-td style="font-size: 12px; line-height: 27px;">
+                <template v-if="resource.lastUpdatedAt">{{ resource.lastUpdatedAt }}</template>
+                <template v-else>-- -- -- -- -- --</template>
+              </b-td>
               <b-td v-if="showPiColumn">
                 <block-tooltip-user :username="resource.createdBy">
                   {{ resource.createdBy }}
                 </block-tooltip-user>
               </b-td>
               <b-td>
-                <resource-actions v-if="!resource.hasChildren" :resource-id="resource.resourceId" :errors="errors"/>
+                <resource-actions v-if="!!resource.resourceId" :resource-id="resource.resourceId" :errors="errors"/>
               </b-td>
             </b-tr>
 
@@ -376,41 +381,36 @@ export default {
         const _directories = [];
         const _directoriesMap = {};
 
-        this.resources.filter(({resourceId, entityId, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete, resourcePath}) => {
-          if (resourcePath && resourcePath.indexOf(`${this.rootDirectory}${this.parentDirectory}`) >= 0) {
-            let _directory = resourcePath.replace(`${this.rootDirectory}${this.parentDirectory}`, "");
+        this.resources.filter((resource) => {
+          if (resource.resourcePath && resource.resourcePath.indexOf(`${this.rootDirectory}${this.parentDirectory}`) >= 0) {
+            let _directory = resource.resourcePath.replace(`${this.rootDirectory}${this.parentDirectory}`, "");
             _directory = /^([^/]+)\/?.*$/.exec(_directory);
             if (_directory && _directory.length > 1) {
               _directory = _directory[1];
-              if (!_directoriesMap[_directory]) {
-                _directoriesMap[_directory] = true;
-                _directories.push({
+
+              let directoryExists = !!_directoriesMap[_directory];
+
+              if (`${this.rootDirectory}${this.parentDirectory}${_directory}` === resource.resourcePath) {
+                _directoriesMap[_directory] = resource;
+              } else if (!directoryExists) {
+                _directoriesMap[_directory] = {
                   name: _directory,
                   path: `${this.parentDirectory}${_directory}/`,
-                  resourcePath: resourcePath,
-                  // createdBy,
-                  hasChildren: `${this.rootDirectory}${this.parentDirectory}${_directory}` !== resourcePath,
-
-                  resourceId,
-                  entityId,
-                  // name,
-                  description,
-                  createdAt,
-                  createdBy,
-                  lastUpdatedAt,
-                  lastUpdatedBy,
-                  status,
-                  type,
-                  note,
-                  permission, canShare, canDelete
-                });
+                  resourcePath: resource.resourcePath,
+                  createdBy: resource.createdBy,
+                  type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION
+                }
               }
+
+              if (!directoryExists) {
+                _directories.push(_directory);
+              }
+
             }
           }
-          //}
         });
 
-        return _directories;
+        return _directories.map(directory => _directoriesMap[directory]);
       } else {
         return null;
       }
@@ -453,10 +453,10 @@ export default {
   methods: {
     getResourceLink(resource) {
       let resourceLink;
-      if (resource.hasChildren) {
-        resourceLink = `/collections?parentDirectory=${resource.path}`;
-      } else {
+      if (resource.resourceId) {
         resourceLink = `/collections?parentResourceId=${resource.resourceId}`;
+      } else if (resource.path) {
+        resourceLink = `/collections?parentDirectory=${resource.path}`;
       }
 
       if (this.sharedBy) {
