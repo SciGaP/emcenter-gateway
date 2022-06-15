@@ -8,6 +8,11 @@
                                     v-on:users="onAddNewUsers"/>
     </template>
     <table-overlay-info :rows="5" :columns="2" :data="users">
+      <template #empty>
+        <div class="w-100 p-4 text-center">
+          No group members available or authorized to access.
+        </div>
+      </template>
       <b-table-simple>
         <b-thead>
           <b-tr>

@@ -6,6 +6,11 @@
       </router-link>
     </template>
     <table-overlay-info :rows="5" :columns="1" :data="groups">
+      <template #empty>
+        <div class="w-100 p-4 text-center">
+          No groups available or authorized to access.
+        </div>
+      </template>
       <b-table-simple>
         <b-thead>
           <b-tr>

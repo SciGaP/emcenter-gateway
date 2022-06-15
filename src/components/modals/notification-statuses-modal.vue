@@ -3,6 +3,7 @@
     <PageErrors :errors="errors"/>
     <div>
       <table-overlay-info :data="statuses" :rows="5" :columns="5">
+        <template #empty>No notifications available or authorized to access.</template>
         <b-table-simple>
           <b-thead>
             <b-tr>

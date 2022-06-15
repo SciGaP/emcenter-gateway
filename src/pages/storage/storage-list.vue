@@ -38,7 +38,7 @@
           <div v-if="!storageExpanded[storage.storageId]" class="w-100 p-3">
             <table-overlay-info :rows="5" :columns="5" :data="storagePreferencesByStorageId[storage.storageId]">
               <template #empty>
-                <div class="p-2" style="text-align: center">
+                <div class="w-100 p-4 text-center">
                   <span>No Storage Preferences for this particular storage.</span>
                 </div>
               </template>
