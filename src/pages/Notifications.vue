@@ -1,6 +1,11 @@
 <template>
   <Page title="Data Scan Notifications" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <table-overlay-info :data="notifications" :rows="5" :columns="5">
+      <template #empty>
+        <div class="w-100 p-4 text-center">
+          No notifications available or authorized to access.
+        </div>
+      </template>
       <b-table-simple>
         <b-thead>
           <b-tr>
