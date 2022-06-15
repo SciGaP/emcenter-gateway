@@ -137,7 +137,7 @@
                 </block-tooltip-user>
               </b-td>
               <b-td>
-                <resource-actions :resource-id="resource.resourceId" :errors="errors"/>
+                <resource-actions v-if="!resource.hasChildren" :resource-id="resource.resourceId" :errors="errors"/>
               </b-td>
             </b-tr>
 

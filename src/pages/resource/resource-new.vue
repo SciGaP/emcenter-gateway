@@ -95,16 +95,16 @@ export default {
     refreshData() {
       let name = "resource";
       if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION_GROUP) {
-        name = "collection-group";
+        name = "Collection Group";
       } else if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_LAB) {
-        name = "lab";
+        name = "Lab";
       } else if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION) {
-        name = "collection";
+        name = "Collection";
       } else if (this.resourceType === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET) {
-        name = "dataset";
+        name = "Dataset";
       }
 
-      this.name = `new-${name}-${window.performance.now()}`;
+      this.name = `New ${name} ${new Date().toLocaleString()}`;
     }
   },
   mounted() {
