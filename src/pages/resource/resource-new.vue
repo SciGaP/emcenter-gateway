@@ -104,7 +104,7 @@ export default {
         name = "Dataset";
       }
 
-      this.name = `New ${name} ${new Date().toLocaleString()}`;
+      this.name = `New ${name} ${new Date().toLocaleString('en-US')}`;
     }
   },
   mounted() {
