@@ -22,7 +22,7 @@
         <template #modal-footer>
           <div class="d-flex flex-row w-100">
             <div class="flex-fill" style="font-size: 12px; line-height: 27px;">
-              Created at {{ resources[selectedResourceIndex].createdAt }}
+              Created at {{ getDateString(resources[selectedResourceIndex].createdAt) }}
             </div>
             <resource-actions :resource-id="resources[selectedResourceIndex].resourceId" :errors="errors"/>
           </div>
@@ -129,11 +129,11 @@
                 </div>
               </b-td>
               <b-td style="font-size: 12px; line-height: 27px;">
-                <template v-if="resource.createdAt">{{ resource.createdAt }}</template>
+                <template v-if="resource.createdAt">{{ getDateString(resource.createdAt) }}</template>
                 <template v-else>-- -- -- -- -- --</template>
               </b-td>
               <b-td style="font-size: 12px; line-height: 27px;">
-                <template v-if="resource.lastUpdatedAt">{{ resource.lastUpdatedAt }}</template>
+                <template v-if="resource.lastUpdatedAt">{{ getDateString(resource.lastUpdatedAt) }}</template>
                 <template v-else>-- -- -- -- -- --</template>
               </b-td>
               <b-td v-if="showPiColumn">
@@ -398,12 +398,17 @@ export default {
                   path: `${this.parentDirectory}${_directory}/`,
                   resourcePath: resource.resourcePath,
                   createdBy: resource.createdBy,
+                  createdAt: resource.createdAt,
+                  lastUpdatedAt: resource.lastUpdatedAt,
                   type: EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_COLLECTION
                 }
               }
 
               if (!directoryExists) {
                 _directories.push(_directory);
+              } else {
+                _directoriesMap[_directory].createdAt = Math.min(_directoriesMap[_directory].createdAt, resource.createdAt);
+                _directoriesMap[_directory].lastUpdatedAt = Math.max(_directoriesMap[_directory].lastUpdatedAt, resource.lastUpdatedAt);
               }
 
             }
@@ -451,6 +456,9 @@ export default {
     }
   },
   methods: {
+    getDateString(dateInt) {
+      return new Date(dateInt).toLocaleString('en-US');
+    },
     getResourceLink(resource) {
       let resourceLink;
       if (resource.resourceId) {
