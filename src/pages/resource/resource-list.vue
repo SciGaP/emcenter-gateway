@@ -556,6 +556,9 @@ export default {
           // TODO
         }
       }
+    },
+    $route() {
+      this.errors = [];
     }
   },
   beforeMount() {
