@@ -1,7 +1,7 @@
 <template>
   <b-modal :id="modalId" title="Notes" hide-footer v-on:show="refreshData">
 
-    <PageErrors :errors="errors"/>
+    <Errors :errors="errors"/>
 
     <div>
       <b-textarea v-model="note"/>
@@ -15,11 +15,11 @@
 
 <script>
 import store from "@/store";
-import PageErrors from "@/components/PageErrors";
+import Errors from "@/components/Errors";
 
 export default {
   name: "notes-modal",
-  components: {PageErrors},
+  components: {Errors},
   props: {
     modalId: {
       default: "share-modal"
@@ -64,6 +64,8 @@ export default {
       this.processing = false;
     },
     async refreshData() {
+      this.errors = [];
+
       try {
         await this.$store.dispatch("emcResource/fetchResource", {resourceId: this.resourceId});
         this.note = this.resource.note;

@@ -28,7 +28,7 @@
           </div>
         </template>
 
-        <PageErrors :errors="errors"/>
+        <Errors :errors="errors"/>
 
         <div>
           <b-carousel
@@ -162,12 +162,12 @@ import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/
 import custosStore from "airavata-custos-portal/src/lib/store";
 import BlockTooltipUser from "@/components/blocks/block-tooltip-user";
 import ResourceActions from "@/pages/resource/resource-actions";
-import PageErrors from "@/components/PageErrors";
+import Errors from "@/components/Errors";
 
 export default {
   name: "resource-list",
   components: {
-    PageErrors,
+    Errors,
     ResourceActions,
     BlockTooltipUser, Page,
     TableOverlayInfo
@@ -301,7 +301,7 @@ export default {
         for (let i = 0; i < parentDirectories.length; i++) {
           nextParentDirectoryPath = `${nextParentDirectoryPath}${parentDirectories[i]}/`
           _breadcrumbLinks.push({
-            to: `/collections?parentDirectory=${nextParentDirectoryPath}`,
+            to: `/collections?parentDirectory=${nextParentDirectoryPath}&${queryParams.join("&")}`,
             name: parentDirectories[i]
           });
         }
@@ -311,7 +311,7 @@ export default {
         if (this.parentResourcePath) {
           for (let i = 0; i < this.parentResourcePath.length; i++) {
             _breadcrumbLinks.push({
-              to: `/collections?parentResourceId=${this.parentResourcePath[i]}`,
+              to: `/collections?parentResourceId=${this.parentResourcePath[i]}&${queryParams.join("&")}`,
               name: this.$store.getters["emcResource/getResource"]({resourceId: this.parentResourcePath[i]}).name
             });
           }

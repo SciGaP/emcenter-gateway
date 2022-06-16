@@ -48,7 +48,7 @@ import MapSelectedFilesAndFoldersToCollectionGroupsModal
   from "@/components/modals/map-selected-files-and-folders-to-collection-groups-modal";
 import NotesModal from "@/components/modals/notes-modal";
 import ResourceMetadataModal from "@/components/modals/resource-metadata-modal";
-import ModalShareEntity from "airavata-custos-portal/src/lib/components/modals/modal-share-entity";
+import ModalShareEntity from "@/components/modals/share-modal";
 import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
 import store from "@/store";
 

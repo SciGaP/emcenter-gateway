@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageErrors :errors="errors"/>
+    <Errors :errors="errors"/>
     <div v-if="authenticated" class="p-3">
       <ul>
         <li>
@@ -79,11 +79,11 @@ import EmcResource from '@/service/emc-service/emc-service-resource';
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import {custosStore} from "../store";
 import config from "@/config";
-import PageErrors from "@/components/PageErrors";
+import Errors from "@/components/Errors";
 
 export default {
   name: "AppLeftNav",
-  components: {PageErrors},
+  components: {Errors},
   // components: {CollectionToastQueue},
   store: custosStore,
   data: () => {
@@ -130,6 +130,8 @@ export default {
   },
   methods: {
     async refreshData() {
+      this.errors = [];
+
       try {
         await Promise.all([
           this.$store.dispatch("user/fetchUsers", {

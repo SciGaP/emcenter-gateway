@@ -1,6 +1,6 @@
 <template>
   <b-modal :id="modalId" size="sm" hide-footer title="Add to collection groups" v-on:show="refreshData">
-    <PageErrors :errors="errors"/>
+    <Errors :errors="errors"/>
     <table-overlay-info :columns="1" :rows="5" :data="processing ? null : collectionGroups">
       <template #empty>No collection groups to be mapped. Please create one.</template>
       <ul>
@@ -27,12 +27,12 @@
 import store from "../../store";
 import EmcResource from "@/service/emc-service/emc-service-resource";
 import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
-import PageErrors from "@/components/PageErrors";
+import Errors from "@/components/Errors";
 // import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
 
 export default {
   name: "map-selected-files-and-folders-to-collection-groups-modal",
-  components: {PageErrors, TableOverlayInfo},
+  components: {Errors, TableOverlayInfo},
   store: store,
   props: {
     modalId: {
@@ -138,6 +138,7 @@ export default {
       this.processingMapChild = {...this.processingMapChild, [collectionGroup.resourceId]: false};
     },
     async refreshData() {
+      this.errors = [];
       this.processing = true;
 
       try {
