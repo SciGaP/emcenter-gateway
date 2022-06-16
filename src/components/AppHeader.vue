@@ -1,6 +1,6 @@
 <template>
   <div class="w-100">
-    <PageErrors :errors="errors"/>
+    <Errors :errors="errors"/>
     <b-navbar toggleable="lg" type="light" variant="light" class="bg-white" v-if="authenticated"
               style="box-shadow: 0px 0px 4px 0px #adb5bd;">
       <router-link class="navbar-brand" to="/" style="font-size: 1.6rem;color: #9a0002;padding-left: 20px;">
@@ -45,11 +45,11 @@
 
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import {custosStore} from "../store";
-import PageErrors from "@/components/PageErrors";
+import Errors from "@/components/Errors";
 
 export default {
   name: "AppHeader.vue",
-  components: {PageErrors},
+  components: {Errors},
   store: custosStore,
   data() {
     return {
@@ -75,6 +75,8 @@ export default {
   },
   methods: {
     async logout() {
+      this.errors = [];
+
       try {
         await custosStore.dispatch("auth/logout");
       } catch (e) {

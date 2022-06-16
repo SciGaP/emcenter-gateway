@@ -39,7 +39,7 @@
                     <b-form-input id="form-input-password" type="password" v-model="password"
                                   placeholder="Password"></b-form-input>
                   </div>
-                  <PageErrors :errors="errors"/>
+                  <Errors :errors="errors"/>
                   <div class="p-2">
                     <b-button type="submit" variant="primary"
                               v-on:click="this.login" :disabled="this.loginDisabled">
@@ -85,11 +85,11 @@
 <script>
 import {mapGetters, mapActions} from "vuex";
 import custosStore from "airavata-custos-portal/src/lib/store";
-import PageErrors from "@/components/PageErrors";
+import Errors from "@/components/Errors";
 
 export default {
   name: 'LoginPage',
-  components: {PageErrors},
+  components: {Errors},
   store: custosStore,
   props: {
     msg: String,
@@ -118,6 +118,8 @@ export default {
       fetchAuthorizationEndpoint: "auth/fetchAuthorizationEndpoint"
     }),
     async login() {
+      this.errors = [];
+
       this.loginDisabled = true
       if (this.username != null && this.username != '' && this.password != null && this.password != '') {
         try {
@@ -145,6 +147,8 @@ export default {
       this.loginDisabled = false
     },
     async loadAuthURL() {
+      this.errors = [];
+
       try {
         await this.fetchAuthorizationEndpoint();
       } catch (e) {

@@ -13,7 +13,7 @@
           <slot name="header-right"/>
         </div>
       </div>
-      <PageErrors :errors="errors"/>
+      <Errors :errors="errors"/>
       <div class="w-100" style="">
         <slot></slot>
       </div>
@@ -36,11 +36,11 @@ import AppLeftNav from "@/components/AppLeftNav";
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import {custosStore} from "@/store";
 import config from "@/config";
-import PageErrors from "@/components/PageErrors";
+import Errors from "@/components/Errors";
 
 export default {
   name: "Page",
-  components: {PageErrors, AppLeftNav, Breadcrumb},
+  components: {Errors, AppLeftNav, Breadcrumb},
   store: custosStore,
   props: {
     title: {

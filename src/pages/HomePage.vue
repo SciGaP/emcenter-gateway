@@ -37,7 +37,7 @@
               </div>
               <p>Our goal is to promote the development of researchers that are knowledgeable, confident and
                 comfortable in the use of electron microscopes.</p>
-              <PageErrors :errors="errors"/>
+              <Errors :errors="errors"/>
               <div>
                 <button-overlay :show="processingLogin">
                   <button class="btn btn-lg btn-iu-crimson" v-on:click="loadAuthURL">Get Started</button>
@@ -252,11 +252,11 @@
 
 import custosStore from "airavata-custos-portal/src/lib/store";
 import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
-import PageErrors from "@/components/PageErrors";
+import Errors from "@/components/Errors";
 
 export default {
   name: "HomePage",
-  components: {PageErrors, ButtonOverlay},
+  components: {Errors, ButtonOverlay},
   store: custosStore,
   data() {
     return {
@@ -266,6 +266,8 @@ export default {
   },
   methods: {
     async loadAuthURL() {
+      this.errors = [];
+
       this.processingLogin = true;
       try {
         await this.$store.dispatch("auth/fetchAuthorizationEndpoint");

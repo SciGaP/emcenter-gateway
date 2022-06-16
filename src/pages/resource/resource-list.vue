@@ -28,7 +28,7 @@
           </div>
         </template>
 
-        <PageErrors :errors="errors"/>
+        <Errors :errors="errors"/>
 
         <div>
           <b-carousel
@@ -162,12 +162,12 @@ import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/
 import custosStore from "airavata-custos-portal/src/lib/store";
 import BlockTooltipUser from "@/components/blocks/block-tooltip-user";
 import ResourceActions from "@/pages/resource/resource-actions";
-import PageErrors from "@/components/PageErrors";
+import Errors from "@/components/Errors";
 
 export default {
   name: "resource-list",
   components: {
-    PageErrors,
+    Errors,
     ResourceActions,
     BlockTooltipUser, Page,
     TableOverlayInfo

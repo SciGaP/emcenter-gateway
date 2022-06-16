@@ -1,6 +1,6 @@
 <template>
   <b-modal :id="modalId" :title="notificationId" size="lg" v-on:show="refreshData">
-    <PageErrors :errors="errors"/>
+    <Errors :errors="errors"/>
     <div>
       <table-overlay-info :data="statuses" :rows="5" :columns="5">
         <template #empty>No notifications available or authorized to access.</template>
@@ -38,14 +38,14 @@ import store from "../../store";
 import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
 import config from "@/config";
 import axios from "axios";
-import PageErrors from "@/components/PageErrors";
+import Errors from "@/components/Errors";
 
 
 export default {
   name: "notification-statuses-modal",
   store: store,
   components: {
-    PageErrors,
+    Errors,
     TableOverlayInfo
   },
   props: {
@@ -63,6 +63,8 @@ export default {
   computed: {},
   methods: {
     async refreshData() {
+      this.errors = [];
+
       this.processing = true;
       try {
         const baseUrl = config.value('datalakeDrmsUrl');

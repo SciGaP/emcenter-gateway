@@ -1,17 +1,17 @@
 <template>
-  <PageErrors :errors="errors"/>
+  <Errors :errors="errors"/>
 </template>
 
 <script>
 
 import store from "airavata-custos-portal/src/lib/store";
 import config from "@/config";
-import PageErrors from "@/components/PageErrors";
+import Errors from "@/components/Errors";
 // import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 
 export default {
   name: "Callback",
-  components: {PageErrors},
+  components: {Errors},
   store: store,
   data() {
     return {
@@ -20,6 +20,8 @@ export default {
   },
   methods: {
     async authenticate() {
+      this.errors = [];
+
       let code = this.$route.query.code
       let params = {code: code};
 

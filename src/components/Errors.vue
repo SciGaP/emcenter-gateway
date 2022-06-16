@@ -28,7 +28,7 @@
 
 <script>
 export default {
-  name: "PageErrors",
+  name: "Errors",
   props: {
     errors: {
       // {title, description, variant, source}
