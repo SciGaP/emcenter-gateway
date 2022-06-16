@@ -377,7 +377,9 @@ export default {
         _directoriesAndResources = this.directories;
       }
 
-      _directoriesAndResources = _directoriesAndResources.sort((a, b) => b.lastUpdatedAt - a.lastUpdatedAt);
+      if (_directoriesAndResources) {
+        _directoriesAndResources = _directoriesAndResources.sort((a, b) => b.lastUpdatedAt - a.lastUpdatedAt);
+      }
 
       return _directoriesAndResources;
     },
