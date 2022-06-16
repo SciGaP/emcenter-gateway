@@ -77,7 +77,7 @@ export default {
         const baseUrl = config.value('datalakeDrmsUrl');
         const {data: {notifications}} = await axios.get(`${baseUrl}/v1.0/api/dataorch/notifications`);
         for (let i = 0; i < notifications.length; i++) {
-          notifications[i].occuredTime = new Date(parseInt(notifications[i].occuredTime)).toLocaleString()
+          notifications[i].occuredTime = new Date(parseInt(notifications[i].occuredTime)).toLocaleString('en-US')
         }
 
         this.notifications = notifications;

@@ -73,7 +73,7 @@ export default {
         this.statuses = statuses.filter(status => status.notificationId === this.notificationId).sort((f, s) => f.publishedTime - s.publishedTime);
 
         for (let i = 0; i < statuses.length; i++) {
-          statuses[i].publishedTime = new Date(parseInt(statuses[i].publishedTime)).toLocaleString();
+          statuses[i].publishedTime = new Date(parseInt(statuses[i].publishedTime)).toLocaleString('en-US');
         }
       } catch (error) {
         this.errors.push({
