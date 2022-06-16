@@ -301,7 +301,7 @@ export default {
         for (let i = 0; i < parentDirectories.length; i++) {
           nextParentDirectoryPath = `${nextParentDirectoryPath}${parentDirectories[i]}/`
           _breadcrumbLinks.push({
-            to: `/collections?parentDirectory=${nextParentDirectoryPath}`,
+            to: `/collections?parentDirectory=${nextParentDirectoryPath}&${queryParams.join("&")}`,
             name: parentDirectories[i]
           });
         }
@@ -311,7 +311,7 @@ export default {
         if (this.parentResourcePath) {
           for (let i = 0; i < this.parentResourcePath.length; i++) {
             _breadcrumbLinks.push({
-              to: `/collections?parentResourceId=${this.parentResourcePath[i]}`,
+              to: `/collections?parentResourceId=${this.parentResourcePath[i]}&${queryParams.join("&")}`,
               name: this.$store.getters["emcResource/getResource"]({resourceId: this.parentResourcePath[i]}).name
             });
           }
