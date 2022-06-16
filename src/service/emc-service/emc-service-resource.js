@@ -246,7 +246,6 @@ export default class EmcResource {
                 EmcService.ENDPOINTS.CHILDREN,
                 {
                     params: {
-                        "queries": queries,
                         "resourceId": parentResourceId,
                         "type": parentResourceType,
                         "depth": 1
