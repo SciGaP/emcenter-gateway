@@ -1,158 +1,242 @@
 <template>
-  <b-modal :id="modalId" size="md" title="Share" v-on:show="reset">
-    <EntitySelectInput v-on:change="onEntitySelect"/>
-    <ul>
-      <li v-for="user in users" :key="user.username">
-        <div>
-          <b-icon icon="person"></b-icon>
-          {{ user.firstName }} {{ user.lastName }}
-        </div>
-        <b-dropdown :id="`${modalId}-user-${user.username}`" v-model="userToPermissionMap[user.username]" offset="30"
-                    :text="userToPermissionMap[user.username]" variant="link" size="sm">
-          <b-dropdown-item v-for="permissionType in permissionTypes" :key="permissionType"
-                           v-on:click="onEntitySelect(user, permissionType)" href="#">
-            {{ permissionType }}
-          </b-dropdown-item>
-        </b-dropdown>
-        <b-button variant="link" size="sm" v-on:click="onEntitySelect(user, false)">
-          <b-icon icon="x"></b-icon>
-        </b-button>
-      </li>
-    </ul>
-    <ul>
-      <li v-for="group in groups" :key="group.groupId">
-        <div>
-          <b-icon icon="people"></b-icon>
-          {{ group.name }}
-        </div>
-        <b-dropdown :id="`${modalId}-group-${group.groupId}`" v-model="groupToPermissionMap[group.groupId]" offset="30"
-                    :text="groupToPermissionMap[group.groupId]" variant="link" size="sm">
-          <b-dropdown-item v-for="permissionType in permissionTypes" :key="permissionType"
-                           v-on:click="onEntitySelect(group, permissionType)" href="#">
-            {{ permissionType }}
-          </b-dropdown-item>
-        </b-dropdown>
-        <b-button variant="link" size="sm" v-on:click="onEntitySelect(group, false)">
-          <b-icon icon="x"></b-icon>
-        </b-button>
-      </li>
-    </ul>
-    <template #modal-footer={close}>
-      <div class="text-right">
-        <b-button variant="primary" size="sm" v-on:click="close">Save</b-button>
-        <b-button class="ml-2" variant="secondary" size="sm" v-on:click="close">Cancel</b-button>
-      </div>
+  <b-modal :id="modalId" :title="title" v-on:show="reset" size="md">
+    <Errors :errors="errors"/>
+    <input-select-users-or-groups :client-id="clientId" v-on:change="onSelect"/>
+    <b-overlay :show="processing">
+      <b-skeleton-table v-if="processing" :rows="4" :columns="3"/>
+      <ul v-else style="list-style: none;">
+        <li v-for="(owner, ownerIndex) in notDroppedOwners" :key="ownerIndex">
+          <div style="display: flex; flex-direction: row;line-height: 38px;">
+            <div style="flex: 1;">
+              <small v-if="owner.ownerType=== 'group'">GROUP&nbsp;</small>
+              {{ getOwnerName(owner) }}
+            </div>
+            <div>
+              <b-dropdown variant="outline-secondary" size="sm" :id="`dropdown-permission-type-${ownerIndex}`"
+                          offset="25"
+                          :text=" getPermissionTypeName(owner) " style="min-width: 100px;"
+                          :disabled="owner.permissionTypeId === 'OWNER'">
+                <b-dropdown-item v-for="permissionType in permissionTypes" :key="permissionType.id" href="#"
+                                 v-on:click="owner.saved = false; owner.permissionTypeId = permissionType.id"
+                                 :disabled="permissionType.id === 'OWNER'">
+                  {{ permissionType.name }}
+                </b-dropdown-item>
+              </b-dropdown>
+            </div>
+            <div>
+              <button-overlay :show="processingDrop[owner.ownerId]">
+                <b-button variant="link" v-on:click="onDropShare(owner)" :disabled="owner.permissionTypeId === 'OWNER'">
+                  <b-icon icon="x"></b-icon>
+                </b-button>
+              </button-overlay>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </b-overlay>
+    <template #modal-footer="{close}">
+      <b-button variant="primary" size="sm" v-on:click="onClickSave">Save</b-button>
+      <b-button variant="secondary" size="sm" @click="close">Cancel</b-button>
     </template>
   </b-modal>
 </template>
 
 <script>
-import store from "../../store";
-import EntitySelectInput from "@/components/EntitySelectInput";
+import store from "airavata-custos-portal/src/lib/store";
+import InputSelectUsersOrGroups
+  from "airavata-custos-portal/src/lib/components/input-fields/input-select-users-or-groups";
+import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
+import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
+import Errors from "@/components/Errors";
 
 export default {
   name: "share-modal",
-  components: {EntitySelectInput},
+  components: {Errors, ButtonOverlay, InputSelectUsersOrGroups},
+  store: store,
   props: {
-    modalId: {
-      default: "share-modal"
+    modalId: {},
+    clientId: {
+      default: custosService.clientId
     },
-    fileIds: {
-      default() {
-        return []
-      }
-    },
-    folderIds: {
-      default() {
-        return []
-      }
-    },
-    permissionTypes: {
-      type: Array,
-      default() {
-        return ["Viewer", "Editor", "Owner"]
-      }
-    },
-    defaultPermissionType: {
-      default: "Viewer"
+    entityId: {},
+    title: {
+      default: "Select Users or Groups"
     }
   },
-  store: store,
   data() {
     return {
-      userToPermissionMap: {},
-      groupToPermissionMap: {}
+      processing: false,
+      processingDrop: {},
+      errors: [],
+
+      owners: []
     }
   },
   computed: {
-    users() {
-      const _users = [];
-      for (let username in this.userToPermissionMap) {
-        if (this.userToPermissionMap[username]) {
-          _users.push(this.$store.getters["user/getUser"]({username}));
-        }
-      }
-
-      return _users;
+    permissionTypes() {
+      return this.$store.getters["sharing/getPermissionTypes"]({clientId: this.clientId});
     },
-    groups() {
-      const _groups = [];
-      for (let groupId in this.groupToPermissionMap) {
-        if (this.groupToPermissionMap[groupId]) {
-          _groups.push(this.$store.getters["group/getGroup"]({groupId}));
-        }
-      }
-
-      return _groups;
+    savedOwners() {
+      return this.$store.getters["sharing/getEntitySharedOwners"]({clientId: this.clientId, entityId: this.entityId});
+    },
+    notDroppedOwners() {
+      return this.owners.filter(({dropped}) => !dropped);
+    },
+    currentUsername() {
+      return this.$store.getters["auth/currentUsername"];
     }
   },
   methods: {
-    reset() {
-      this.userToPermissionMap = {};
-      this.groupToPermissionMap = {};
-    },
-    onEntitySelect({username, groupId}, permissionType = this.defaultPermissionType) {
-      if (username) {
-        this.userToPermissionMap = {
-          ...this.userToPermissionMap,
-          [username]: permissionType
-        };
-      } else if (groupId) {
-        this.groupToPermissionMap = {
-          ...this.groupToPermissionMap,
-          [groupId]: permissionType
-        };
+    getPermissionTypeName({permissionTypeId}) {
+      const permissionType = this.getPermissionType({permissionTypeId});
+      if (permissionType) {
+        return permissionType.name;
       }
+    },
+    getPermissionType({permissionTypeId}) {
+      return this.$store.getters["sharing/getPermissionType"]({clientId: this.clientId, id: permissionTypeId});
+    },
+    getOwnerName({ownerId, ownerType}) {
+      if (ownerType === "group") {
+        const group = this.$store.getters["group/getGroup"]({clientId: this.clientId, groupId: ownerId});
+        if (group) {
+          return group.name;
+        }
+      } else if (ownerType === "user") {
+        const user = this.$store.getters["user/getUser"]({clientId: this.clientId, username: ownerId});
+        if (user) {
+          return `${user.firstName}, ${user.lastName}`;
+        }
+      }
+    },
+    async refreshData() {
+      this.processing = true;
+
+      try {
+        await this.$store.dispatch("sharing/fetchPermissionTypes", {clientId: this.clientId});
+        await this.$store.dispatch("sharing/fetchSharedOwners", {clientId: this.clientId, entityId: this.entityId});
+
+        const promises = []
+        if (this.savedOwners) {
+          this.owners = this.savedOwners.map(({ownerId, ownerType, permission}) => {
+            let _promise;
+            if (ownerType === "group") {
+              _promise = this.$store.dispatch("group/fetchGroup", {clientId: this.clientId, groupId: ownerId});
+            } else if (ownerType === "user") {
+              _promise = this.$store.dispatch("user/fetchUsers", {clientId: this.clientId, username: ownerId});
+            }
+
+            promises.push(_promise);
+
+            return {ownerId, ownerType, permissionTypeId: permission.id, dropped: false, saved: true};
+          });
+        }
+
+        await Promise.all(promises);
+      } catch (e) {
+        this.errors.push({
+          title: "Unknown Error",
+          description: `Unknown error when fetching sharing details.`,
+          source: e, variant: "danger"
+        });
+      }
+
+      this.processing = false;
+    },
+    indexOf({ownerId, ownerType}) {
+      for (let i = 0; i < this.owners.length; i++) {
+        const owner = this.owners[i];
+        if (owner.ownerId === ownerId && owner.ownerType === ownerType) {
+          return i;
+        }
+      }
+
+      return -1;
+    },
+    onSelect(obj) {
+      let ownerId = null;
+      let ownerType = null;
+      if (obj.username) {
+        ownerId = obj.username;
+        ownerType = "user";
+      } else if (obj.groupId) {
+        ownerId = obj.groupId;
+        ownerType = "group";
+      }
+
+      const newOwner = {
+        ownerId: ownerId,
+        ownerType: ownerType,
+        permissionTypeId: null,
+        dropped: false,
+        saved: false
+      };
+      const existingIndex = this.indexOf(newOwner);
+
+      if (existingIndex >= 0) {
+        if (this.owners[existingIndex].dropped) {
+          this.owners = this.owners.map((owner, ownerIndex) => {
+            return ownerIndex === existingIndex ? newOwner : owner;
+          });
+        }
+      } else {
+        this.owners.push(newOwner)
+      }
+    },
+    onDropShare({ownerId, ownerType, saved}) {
+      this.processingDrop[ownerId] = true;
+      const _owners = [];
+      for (let i = 0; i < this.owners.length; i++) {
+        const owner = this.owners[i];
+        if (owner.permissionTypeId === "OWNER" || !(owner.ownerId === ownerId && owner.ownerType === ownerType)) {
+          _owners.push(owner);
+        } else if (saved) {
+          owner.dropped = true;
+          _owners.push(owner);
+        }
+      }
+
+      this.owners = _owners;
+      this.processingDrop[ownerId] = false;
+    },
+    onClickSave() {
+      for (let i = 0; i < this.owners.length; i++) {
+        const owner = this.owners[i];
+        if (owner.dropped) {
+          this.$store.dispatch("sharing/dropEntitySharedOwner", {
+            clientId: this.clientId,
+            entityId: this.entityId,
+            permissionTypeId: owner.permissionTypeId,
+            groupIds: owner.ownerType === "group" ? [owner.ownerId] : [],
+            usernames: owner.ownerType === "user" ? [owner.ownerId] : [],
+            sharedBy: this.currentUsername
+          });
+        } else if (!owner.saved && owner.permissionTypeId) {
+          this.$store.dispatch("sharing/shareEntity", {
+            clientId: this.clientId,
+            entityId: this.entityId,
+            permissionTypeId: owner.permissionTypeId,
+            groupIds: owner.ownerType === "group" ? [owner.ownerId] : [],
+            usernames: owner.ownerType === "user" ? [owner.ownerId] : [],
+            sharedBy: this.currentUsername
+          });
+        }
+      }
+
+
+      this.$emit("close");
+      this.$bvModal.hide(this.modalId);
+    },
+    reset() {
+      this.errors = [];
+      this.selectedUsersMap = {};
+      this.selectedGroupsMap = {};
+      this.refreshData();
     }
   }
 }
 </script>
 
 <style scoped>
-ul {
-  list-style: none;
-  margin: 0px;
-  padding: 0px;
-}
 
-ul li {
-  margin: 5px;
-  padding: 5px 20px;
-  display: flex;
-  flex-direction: row;
-  line-height: 31px;
-  border-radius: 3px;
-}
-
-ul li:hover {
-  background-color: #f0f1f2;
-}
-
-ul li div:first-child {
-  flex: 1;
-}
-
-ul li div:nth-child(2) {
-  width: 100px;
-}
 </style>
