@@ -27,7 +27,6 @@
               <router-link :to="`/groups/${group.groupId}`" v-slot="{href, navigate}">
                 <b-link :href="href" v-on:click="navigate">{{ group.groupId }}</b-link>
               </router-link>
-              <button-copy :value="group.groupId"/>
             </b-td>
             <b-td>
               {{ group.name }}
@@ -64,7 +63,6 @@
 import store from "airavata-custos-portal/src/lib/store"
 import TableOverlayInfo from "airavata-custos-portal/src/lib/components/overlay/table-overlay-info";
 import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
-import ButtonCopy from "airavata-custos-portal/src/lib/components/button/button-copy";
 import ButtonDeleteAfterConfirmation
   from "airavata-custos-portal/src/lib/components/button/button-delete-after-confirmation";
 import Page from "../../components/Page";
@@ -73,7 +71,7 @@ import config from "@/config";
 export default {
   name: "group-list-page",
   store: store,
-  components: {Page, ButtonCopy, ButtonOverlay, TableOverlayInfo, ButtonDeleteAfterConfirmation},
+  components: {Page, ButtonOverlay, TableOverlayInfo, ButtonDeleteAfterConfirmation},
   data() {
     return {
       processingDelete: {},
