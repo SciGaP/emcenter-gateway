@@ -339,16 +339,19 @@ export default {
     },
     parentDirectory() {
       if (this.parentResourceId && this.parentResource) {
-        // const parentResourceMetadata = this.$store.getters["emcResource/getResourceMetadata"]({
-        //   resourceId: this.parentResourceId
-        // });
-        // if (parentResourceMetadata && Array.isArray(parentResourceMetadata) && parentResourceMetadata.length > 0) {
-        let _parentDirectory = new RegExp(`${this.rootDirectory.replace(/\//, "\\/")}(\\/[^/]+\\/)([^/]+\\/)*${this.parentResource.name}`).exec(this.parentResource.resourcePath);
+
+        let accessibleParentResourcePathStr = "";
+        if (this.parentResourcePath && this.parentResourcePath.length > 0) {
+          accessibleParentResourcePathStr = this.parentResourcePath.map(resourceId => {
+            return this.$store.getters["emcResource/getResource"]({resourceId}).name;
+          }).join("/") + "/";
+        }
+
+        let _parentDirectory = new RegExp(`${this.rootDirectory.replace(/\//, "\\/")}(\\/([^/]+\\/)*)${accessibleParentResourcePathStr}${this.parentResource.name}`).exec(this.parentResource.resourcePath);
         if (_parentDirectory && _parentDirectory.length > 1) {
           _parentDirectory = _parentDirectory[1];
           return _parentDirectory;
         }
-        // }
 
         return null;
 
