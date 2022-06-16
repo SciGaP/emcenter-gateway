@@ -365,13 +365,18 @@ export default {
       return this.$store.getters["emcResource/getResourcePath"]({resourceId: this.parentResourceId});
     },
     directoriesAndResources() {
+      let _directoriesAndResources;
       if (this.types.indexOf("COLLECTION_GROUP") >= 0) {
-        return this.resources;
+        _directoriesAndResources = this.resources;
       } else if (this.parentResourceId) {
-        return this.resources;
+        _directoriesAndResources = this.resources;
       } else {
-        return this.directories;
+        _directoriesAndResources = this.directories;
       }
+
+      _directoriesAndResources = _directoriesAndResources.sort((a, b) => b.lastUpdatedAt - a.lastUpdatedAt);
+
+      return _directoriesAndResources;
     },
     showPiColumn() {
       return this.parentDirectory !== "/";
