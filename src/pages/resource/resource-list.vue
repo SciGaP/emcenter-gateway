@@ -46,10 +46,12 @@
               <template #img>
                 <div class="w-100 overflow-auto" style="height: 300px;">
                   <img
-                      class="w-100"
+                      class="w-100" v-if="getResourceImageUrl(resource)"
                       :src="getResourceImageUrl(resource)"
                       :alt="resource.description"
                   >
+                  <b-icon v-else-if="resource.type === 'FILE'" icon="card-image" aria-hidden="true"
+                          class="w-100 h-100"></b-icon>
                 </div>
               </template>
             </b-carousel-slide>
