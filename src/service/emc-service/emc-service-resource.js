@@ -96,10 +96,11 @@ export default class EmcResource {
 
         for (let key in resourceMap) {
             const {
-                // resourceId, resourcePath,
+                resourceId,
+                // resourcePath,
                 properties: {
-                    // entityType, tenantId, name,
-                    description, createdTime, entityId, lastModifiedTime, owner
+                    // entityType, tenantId, name, entityId
+                    description, createdTime, lastModifiedTime, owner
                 },
                 type,
                 // parentResourcePath,
@@ -108,8 +109,8 @@ export default class EmcResource {
             } = resourceMap[key];
 
             resources.push({
-                resourceId: entityId,
-                entityId,
+                resourceId,
+                entityId: resourceId,
                 name: resourceName,
                 description: description,
                 createdAt: parseInt(createdTime),
@@ -167,8 +168,8 @@ export default class EmcResource {
                 resource: {
                     // resourceId, resourcePath,
                     properties: {
-                        // entityType, tenantId, name,
-                        description, createdTime, entityId, lastModifiedTime, owner, note, permission
+                        // entityType, tenantId, name, entityId,
+                        description, createdTime, lastModifiedTime, owner, note, permission
                     },
                     type,
                     // parentResourcePath,
@@ -179,8 +180,8 @@ export default class EmcResource {
         } = response;
 
         return {
-            resourceId: entityId,
-            entityId,
+            resourceId,
+            entityId: resourceId,
             name: resourceName,
             description: description,
             resourcePath: resourcePath,
@@ -258,10 +259,11 @@ export default class EmcResource {
 
         return resources.map((
             {
-                // resourceId, resourcePath,
+                resourceId,
+                // resourcePath,
                 properties: {
-                    // entityType, tenantId, name,
-                    description, createdTime, entityId, lastModifiedTime, owner, note, permission
+                    // entityType, tenantId, name, entityId
+                    description, createdTime, lastModifiedTime, owner, note, permission
                 },
                 type,
                 // parentResourcePath,
@@ -270,8 +272,8 @@ export default class EmcResource {
             }
         ) => {
             return {
-                resourceId: entityId,
-                entityId,
+                resourceId,
+                entityId: resourceId,
                 name: resourceName,
                 description: description,
                 createdAt: parseInt(createdTime),
