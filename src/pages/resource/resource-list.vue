@@ -521,20 +521,16 @@ export default {
         });
       }
     },
-    getResourceThumbnailUrl({resourceId, type}) {
-      const metadata = this.$store.getters["emcResource/getResourceMetadata"]({resourceId, type});
-      if (metadata && metadata.length > 0 && metadata[0].thumbnail) {
-        return metadata[0].thumbnail;
-      } else {
-        return null;
+    getResourceThumbnailUrl({resourceId}) {
+      const resource = this.$store.getters["emcResource/getResource"]({resourceId});
+      if (resource) {
+        return resource.thumbnail;
       }
     },
-    getResourceImageUrl({resourceId, type}) {
-      const metadata = this.$store.getters["emcResource/getResourceMetadata"]({resourceId, type});
-      if (metadata && metadata.length > 0 && metadata[0].image) {
-        return metadata[0].image;
-      } else {
-        return null;
+    getResourceImageUrl({resourceId}) {
+      const resource = this.$store.getters["emcResource/getResource"]({resourceId});
+      if (resource) {
+        return resource.image;
       }
     }
   },
@@ -566,12 +562,12 @@ export default {
     async resources() {
       if (this.resources) {
         try {
-          await Promise.all(this.resources.filter(({type}) => type === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET).map(resource => {
-            return this.$store.dispatch("emcResource/fetchResourceMetadata", {
-              resourceId: resource.resourceId,
-              type: resource.type
-            });
-          }));
+          // await Promise.all(this.resources.filter(({type}) => type === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET).map(resource => {
+          //   return this.$store.dispatch("emcResource/fetchResourceMetadata", {
+          //     resourceId: resource.resourceId,
+          //     type: resource.type
+          //   });
+          // }));
         } catch (e) {
           // TODO
         }
