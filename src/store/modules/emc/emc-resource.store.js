@@ -19,10 +19,11 @@ const actions = {
             parentResourceId, parentResourceType, type, queries
         });
 
-        const resourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete, resourcePath}) => {
+        const resourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete, resourcePath, image, thumbnail}) => {
             commit("SET_RESOURCE", {
                 resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt,
-                lastUpdatedBy, status, type, note, permission, canShare, canDelete, resourcePath
+                lastUpdatedBy, status, type, note, permission, canShare, canDelete, resourcePath,
+                image, thumbnail
             });
 
             return resourceId;
@@ -33,7 +34,7 @@ const actions = {
 
     async fetchResource({commit}, {resourceId} = {}) {
         const resource = await emcService.resources.fetchResource({resourceId});
-        const {entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete, resourcePath} = resource;
+        const {entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete, resourcePath, image, thumbnail} = resource;
         commit("SET_RESOURCE", {
             resourceId,
             entityId,
@@ -46,7 +47,8 @@ const actions = {
             status,
             type,
             note,
-            permission, canShare, canDelete, resourcePath
+            permission, canShare, canDelete, resourcePath,
+            image, thumbnail
         });
     },
 
@@ -57,7 +59,7 @@ const actions = {
 
     async fetchParentResources({commit}, {resourceId}) {
         const resources = await emcService.resources.fetchParentResources({resourceId});
-        const parentResourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note}) => {
+        const parentResourceIds = resources.map(({resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, image, thumbnail}) => {
             commit("SET_RESOURCE", {
                 resourceId,
                 entityId,
@@ -69,7 +71,8 @@ const actions = {
                 lastUpdatedBy,
                 status,
                 type,
-                note
+                note,
+                image, thumbnail
             });
 
             return resourceId;
@@ -166,7 +169,7 @@ const mutations = {
             [resourceId]: metadata
         }
     },
-    SET_RESOURCE(state, {resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission = null, canShare = false, canDelete = false, resourcePath}) {
+    SET_RESOURCE(state, {resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission = null, canShare = false, canDelete = false, resourcePath, image, thumbnail}) {
         state.resourceMap = {
             ...state.resourceMap,
             [resourceId]: {
@@ -182,7 +185,8 @@ const mutations = {
                 status,
                 type,
                 note,
-                permission, canShare, canDelete, resourcePath
+                permission, canShare, canDelete, resourcePath,
+                image, thumbnail
             }
         };
     },

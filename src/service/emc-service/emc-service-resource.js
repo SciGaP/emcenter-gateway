@@ -169,7 +169,7 @@ export default class EmcResource {
                     // resourceId, resourcePath,
                     properties: {
                         // entityType, tenantId, name, entityId,
-                        description, createdTime, lastModifiedTime, owner, note, permission
+                        description, createdTime, lastModifiedTime, owner, note, permission, image, thumbnail
                     },
                     type,
                     // parentResourcePath,
@@ -194,7 +194,9 @@ export default class EmcResource {
             note,
             permission,
             canShare: permission === "OWNER" || permission === "EDITOR",
-            canDelete: permission === "OWNER"
+            canDelete: permission === "OWNER",
+            image,
+            thumbnail
         };
     }
 
@@ -263,7 +265,7 @@ export default class EmcResource {
                 // resourcePath,
                 properties: {
                     // entityType, tenantId, name, entityId
-                    description, createdTime, lastModifiedTime, owner, note, permission
+                    description, createdTime, lastModifiedTime, owner, note, permission, image, thumbnail
                 },
                 type,
                 // parentResourcePath,
@@ -286,7 +288,9 @@ export default class EmcResource {
                 permission,
                 canShare: permission === "OWNER" || permission === "EDITOR",
                 canDelete: permission === "OWNER",
-                resourcePath
+                resourcePath,
+                image,
+                thumbnail
             }
         });
     }
