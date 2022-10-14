@@ -109,6 +109,15 @@ export default {
         }
       }
     },
+    getPermissionTypeLevel({id}) {
+      if (id === "OWNER") {
+        return 1;
+      } else if (id === "EDITOR") {
+        return 2;
+      } else if (id === "VIEWER") {
+        return 3;
+      }
+    },
     async refreshData() {
       this.processing = true;
 
@@ -118,7 +127,10 @@ export default {
 
         const promises = []
         if (this.savedOwners) {
-          this.owners = this.savedOwners.map(({ownerId, ownerType, permission}) => {
+          this.owners = this.savedOwners.map(({ownerId, ownerType, permissions}) => {
+            permissions = permissions.sort((a, b) => this.getPermissionTypeLevel(a) - this.getPermissionTypeLevel(b));
+            const permission = permissions[0];
+
             let _promise;
             if (ownerType === "group") {
               _promise = this.$store.dispatch("group/fetchGroup", {clientId: this.clientId, groupId: ownerId});
@@ -139,6 +151,7 @@ export default {
           description: `Unknown error when fetching sharing details.`,
           source: e, variant: "danger"
         });
+        throw e;
       }
 
       this.processing = false;
