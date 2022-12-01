@@ -279,6 +279,11 @@ export default {
       let collectionsLink = '/collections';
 
       let queryParams = [];
+      if (this.sharedBy) {
+        queryParams.push("sharedByMe=true");
+      } else if (this.sharedWith) {
+        queryParams.push("sharedWithMe=true");
+      }
       // if (this.sharedBy) {
       //   queryParams.push("sharedByMe=true");
       // } else if (this.sharedWith) {
@@ -389,12 +394,12 @@ export default {
       return this.parentDirectory !== "/";
     },
     directories() {
-      if (this.resources && (this.sharedWith || this.sharedBy)) {
-        return this.resources.map(resource => {
-          let _directory = resource.resourcePath.replace(`${this.rootDirectory}${this.parentDirectory}`, "");
-          return {...resource, name: _directory};
-        });
-      }
+      // if (this.resources && (this.sharedWith || this.sharedBy)) {
+      //   return this.resources.map(resource => {
+      //     let _directory = resource.resourcePath.replace(`${this.rootDirectory}${this.parentDirectory}`, "");
+      //     return {...resource, name: _directory};
+      //   });
+      // }
 
       if (!this.parentResourceId && this.resources) {
         const _directories = [];
@@ -486,6 +491,13 @@ export default {
         resourceLink = `/collections?parentDirectory=${resource.path}`;
       }
 
+      if (this.sharedBy) {
+        resourceLink += `&sharedByMe=true`;
+      }
+
+      if (this.sharedWith) {
+        resourceLink += `&sharedWithMe=true`;
+      }
       // if (this.sharedBy) {
       //   resourceLink += `&sharedByMe=true`;
       // }
