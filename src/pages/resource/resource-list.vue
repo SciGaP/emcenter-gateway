@@ -571,6 +571,7 @@ export default {
       if (JSON.stringify(a) !== JSON.stringify(b)) {
         this.searchTyping = "";
         this.search = "";
+        this.refreshData();
       }
     },
     searchQuery(a, b) {
