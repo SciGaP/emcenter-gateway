@@ -24,7 +24,8 @@
             <div class="flex-fill" style="font-size: 12px; line-height: 27px;">
               Created at {{ getDateString(resources[selectedResourceIndex].createdAt) }}
             </div>
-            <resource-actions :resource-id="resources[selectedResourceIndex].resourceId" :errors="errors"/>
+            <resource-actions :resource-id="resources[selectedResourceIndex].resourceId" :errors="errors"
+                              v-on:changeCollectionGroups="onCollectionGroupsMappingChanged"/>
           </div>
         </template>
 
@@ -480,6 +481,11 @@ export default {
     }
   },
   methods: {
+    onCollectionGroupsMappingChanged() {
+      if (this.hasCollectionGroups) {
+        this.refreshData();
+      }
+    },
     getDateString(dateInt) {
       return new Date(dateInt).toLocaleString('en-US');
     },
