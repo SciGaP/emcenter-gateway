@@ -15,7 +15,7 @@
               <b-dropdown variant="outline-secondary" size="sm" :id="`dropdown-permission-type-${ownerIndex}`"
                           offset="25"
                           :text=" getPermissionTypeName(owner) " style="min-width: 100px;"
-                          :disabled="owner.permissionTypeId === 'OWNER'">
+                          :disabled="disablePermissions(owner)">
                 <b-dropdown-item v-for="permissionType in permissionTypes" :key="permissionType.id" href="#"
                                  v-on:click="owner.saved = false; owner.permissionTypeId = permissionType.id"
                                  :disabled="permissionType.id === 'OWNER'">
@@ -25,7 +25,7 @@
             </div>
             <div>
               <button-overlay :show="processingDrop[owner.ownerId]">
-                <b-button variant="link" v-on:click="onDropShare(owner)" :disabled="owner.permissionTypeId === 'OWNER'">
+                <b-button variant="link" v-on:click="onDropShare(owner)" :disabled="disablePermissions(owner)">
                   <b-icon icon="x"></b-icon>
                 </b-button>
               </button-overlay>
@@ -48,6 +48,7 @@ import InputSelectUsersOrGroups
 import ButtonOverlay from "airavata-custos-portal/src/lib/components/overlay/button-overlay";
 import {custosService} from "airavata-custos-portal/src/lib/store/util/custos.util";
 import Errors from "@/components/Errors";
+import config from "../../config";
 
 export default {
   name: "share-modal",
@@ -65,6 +66,8 @@ export default {
   },
   data() {
     return {
+      restrictedOwners: [config.value("clientUsersGroupId"), config.value("clientAdminGroupId")],
+
       processing: false,
       processingDrop: {},
       errors: [],
@@ -95,6 +98,9 @@ export default {
     },
     getPermissionType({permissionTypeId}) {
       return this.$store.getters["sharing/getPermissionType"]({clientId: this.clientId, id: permissionTypeId});
+    },
+    disablePermissions({ownerId, permissionTypeId}) {
+      return permissionTypeId === 'OWNER' || this.restrictedOwners.indexOf(ownerId) >= 0
     },
     getOwnerName({ownerId, ownerType}) {
       if (ownerType === "group") {
