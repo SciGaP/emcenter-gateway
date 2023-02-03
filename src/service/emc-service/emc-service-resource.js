@@ -180,6 +180,7 @@ export default class EmcResource {
         } = response;
 
         return {
+            response, // For PUT requests. Relates to https://github.com/SciGaP/emcenter-gateway/issues/139
             resourceId,
             entityId: resourceId,
             name: resourceName,
@@ -217,7 +218,7 @@ export default class EmcResource {
         );
     }
 
-    async updateResource({resourceId, type, name, description, note}) {
+    async updateResource({response, resourceId, type, name, description, note}) {
         await this.emcService.axiosInstanceWithTokenAuthorization.put(
             EmcService.ENDPOINTS.RESOURCE,
             {
@@ -226,6 +227,7 @@ export default class EmcResource {
                     type,
                     resourceName: name,
                     properties: {
+                        ...response.data.resource.properties,
                         name, description, note
                     }
                 }
