@@ -120,6 +120,8 @@ export default {
           }));
         }
 
+        this.$emit("change");
+
       } catch (error) {
 
         // Rollback the state if the saving causes any error.

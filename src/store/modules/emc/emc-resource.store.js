@@ -34,8 +34,9 @@ const actions = {
 
     async fetchResource({commit}, {resourceId} = {}) {
         const resource = await emcService.resources.fetchResource({resourceId});
-        const {entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete, resourcePath, image, thumbnail} = resource;
+        const {response, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission, canShare, canDelete, resourcePath, image, thumbnail} = resource;
         commit("SET_RESOURCE", {
+            response,
             resourceId,
             entityId,
             name,
@@ -85,8 +86,13 @@ const actions = {
         return await emcService.resources.createResource({type, name});
     },
 
-    async updateResource(obj, {resourceId, type, name, description, note}) {
-        return await emcService.resources.updateResource({resourceId, type, name, description, note});
+    async updateResource({getters}, {resourceId, type, name, description, note}) {
+        const resource = getters.getResource({resourceId})
+        return await emcService.resources.updateResource({
+            response: resource.response, /* For the PUT request.
+                                            Relates to https://github.com/SciGaP/emcenter-gateway/issues/139 */
+            resourceId, type, name, description, note
+        });
     },
 
     async mapChildResource(obj, {parentResourceId, parentResourceType, childResourceId, childResourceType}) {
@@ -169,11 +175,12 @@ const mutations = {
             [resourceId]: metadata
         }
     },
-    SET_RESOURCE(state, {resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission = null, canShare = false, canDelete = false, resourcePath, image, thumbnail}) {
+    SET_RESOURCE(state, {response, resourceId, entityId, name, description, createdAt, createdBy, lastUpdatedAt, lastUpdatedBy, status, type, note, permission = null, canShare = false, canDelete = false, resourcePath, image, thumbnail}) {
         state.resourceMap = {
             ...state.resourceMap,
             [resourceId]: {
                 ...state.resourceMap[resourceId],
+                response, // Is available only through fetchResource. It's used for PUT requests.
                 resourceId,
                 entityId,
                 name,

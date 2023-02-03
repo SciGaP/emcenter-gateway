@@ -23,7 +23,7 @@
 
     <MapSelectedFilesAndFoldersToCollectionGroupsModal
         :modal-id="`${modalHash}-map-to-collection-groups-modal-${resource.resourceId}`"
-        :resource-ids="[resource.resourceId]"/>
+        :resource-ids="[resource.resourceId]" v-on:change="onCollectionGroupsChanged"/>
 
     <b-button variant="link" size="sm" v-b-tooltip.hover="`Notes`"
               v-b-modal="`${modalHash}-file-notes-modal-${resource.resourceId}`">
@@ -72,6 +72,9 @@ export default {
     }
   },
   methods: {
+    onCollectionGroupsChanged() {
+      this.$emit("changeCollectionGroups");
+    },
     isDownloadAllowed(resource) {
       return resource.type === EmcResource.EMC_RESOURCE_TYPE.EMC_RESOURCE_TYPE_DATASET;
     },
