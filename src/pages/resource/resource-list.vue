@@ -343,7 +343,7 @@ export default {
       }
     },
     rootDirectory() {
-      return "/images/GatewayTests/workdir";
+      return "/images";
     },
     parentDirectory() {
       if (this.parentResourceId && this.parentResource) {
